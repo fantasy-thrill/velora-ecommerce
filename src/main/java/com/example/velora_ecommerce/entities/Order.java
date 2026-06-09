@@ -1,10 +1,11 @@
 package com.example.velora_ecommerce.entities;
 
+import com.example.velora_ecommerce.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,5 +35,9 @@ public class Order {
     private BigDecimal totalPrice;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private LocalDateTime date;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderStatus status;
 }

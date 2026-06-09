@@ -18,7 +18,7 @@ public class Customer {
     private Long id;
 
     @Column(nullable = false)
-    private String username;
+    private String email;
 
     @Column(nullable = false)
     private String password;
@@ -37,9 +37,6 @@ public class Customer {
 
     @Column(nullable = false)
     private String state;
-
-    @Column(nullable = false)
-    private String email;
 
     @OneToMany(mappedBy = "customer")
     private List<Order> orders = new ArrayList<>();

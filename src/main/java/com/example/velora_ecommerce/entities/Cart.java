@@ -3,6 +3,7 @@ package com.example.velora_ecommerce.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class Cart {
     )
     private List<CartItem> items = new ArrayList<>();
 
+    @Column
+    private BigDecimal discount = BigDecimal.ZERO;
+
     public void addItem(CartItem item) {
         items.add(item);
         item.setCart(this);
@@ -37,4 +41,15 @@ public class Cart {
         items.remove(item);
         item.setCart(null);
     }
+
+    public BigDecimal calculateSubtotal() {
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (CartItem item : this.items) {
+            total = total.add(item.getSubtotal());
+        }
+
+        return total;
+    }
+
 }

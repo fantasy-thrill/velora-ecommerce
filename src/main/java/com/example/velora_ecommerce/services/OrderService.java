@@ -1,19 +1,22 @@
-package com.example.velora_ecommerce.repositories;
+package com.example.velora_ecommerce.services;
 
 import com.example.velora_ecommerce.entities.Customer;
 import com.example.velora_ecommerce.entities.Order;
 import com.example.velora_ecommerce.enums.OrderStatus;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface OrderRepository extends JpaRepository<Order, Long> {
-    List<Order> findByCustomerAndOrderDateBetween(
+public interface OrderService {
+    Order createOrder(Order order);
+
+    List<Order> getOrdersByCustomerAndDateRange(
             Customer customer,
             LocalDateTime startDate,
             LocalDateTime endDate
     );
 
-    List<Order> findByCustomerAndStatus(Customer customer, OrderStatus status);
+    List<Order> getOrdersByCustomerAndStatus(Customer customer, OrderStatus status);
+
+    void cancelOrder(Long id);
 }
