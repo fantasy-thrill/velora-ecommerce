@@ -1,6 +1,8 @@
 package com.example.velora_ecommerce.services;
 
+import com.example.velora_ecommerce.dtos.ChangePasswordDto;
 import com.example.velora_ecommerce.dtos.CustomerRegistrationDto;
+import com.example.velora_ecommerce.dtos.CustomerUpdateDto;
 import com.example.velora_ecommerce.entities.Customer;
 
 import java.util.Optional;
@@ -12,9 +14,9 @@ public interface CustomerService {
 
     Customer registerCustomer(CustomerRegistrationDto dto);
 
-//    void login(LoginDto dto);
+    Customer updateCustomer(Long id, CustomerUpdateDto updateDto);
 
-    Customer updateCustomer(Long id, Customer customer);
+    Customer changePassword(Long id, ChangePasswordDto updateDto);
 
     void deleteCustomer(Long id);
 }

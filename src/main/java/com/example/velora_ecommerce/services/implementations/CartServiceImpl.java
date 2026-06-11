@@ -1,31 +1,15 @@
 package com.example.velora_ecommerce.services.implementations;
 
-import com.example.velora_ecommerce.entities.Cart;
-import com.example.velora_ecommerce.entities.CartItem;
-import com.example.velora_ecommerce.entities.Category;
-import com.example.velora_ecommerce.repositories.CartRepository;
+import com.example.velora_ecommerce.entities.*;
 import com.example.velora_ecommerce.services.CartService;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+@Service
 public class CartServiceImpl implements CartService {
-    private final CartRepository cartRepository;
-
-    public CartServiceImpl(CartRepository cartRepository) {
-        this.cartRepository = cartRepository;
-    }
-
-    @Override
-    public Cart createCart(Cart cart) {
-        return cartRepository.save(cart);
-    }
-
-    @Override
-    public void deleteCart(Cart cart) {
-        cartRepository.delete(cart);
-    }
 
     @Override
     public BigDecimal calculateCheckoutTotal(Cart cart) {

@@ -34,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    // TODO: Write more logic for this method once administrator features are implemented.
     public Product createProduct(Product product) {
         return productRepository.save(product);
     }

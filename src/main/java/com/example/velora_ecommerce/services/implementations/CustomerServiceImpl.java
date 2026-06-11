@@ -1,26 +1,36 @@
 package com.example.velora_ecommerce.services.implementations;
 
+import com.example.velora_ecommerce.dtos.ChangePasswordDto;
 import com.example.velora_ecommerce.dtos.CustomerRegistrationDto;
+import com.example.velora_ecommerce.dtos.CustomerUpdateDto;
+import com.example.velora_ecommerce.entities.Cart;
 import com.example.velora_ecommerce.entities.Customer;
+import com.example.velora_ecommerce.repositories.CartRepository;
 import com.example.velora_ecommerce.repositories.CustomerRepository;
 import com.example.velora_ecommerce.services.CustomerService;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class CustomerServiceImpl implements CustomerService, UserDetailsService {
+public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
 
     private final PasswordEncoder passwordEncoder;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {
+    private final CartRepository cartRepository;
+
+    public CustomerServiceImpl(
+            CustomerRepository customerRepository,
+            PasswordEncoder passwordEncoder,
+            CartRepository cartRepository
+    ) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
+        this.cartRepository = cartRepository;
     }
 
     @Override
@@ -36,6 +46,7 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
     @Override
     public Customer registerCustomer(CustomerRegistrationDto dto) {
         Customer customer = new Customer();
+        Cart cart = new Cart();
 
         customer.setEmail(dto.getEmail());
         customer.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -45,33 +56,34 @@ public class CustomerServiceImpl implements CustomerService, UserDetailsService 
         customer.setCity(dto.getCity());
         customer.setState(dto.getState());
 
+        cart.setCustomer(customer);
+        cartRepository.save(cart);
+
         return customerRepository.save(customer);
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Customer customer = customerRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
-
-        return User.builder()
-                .username(customer.getEmail())
-                .password(customer.getPassword())
-                .roles("CUSTOMER")
-                .build();
-    }
-
-    @Override
-    public Customer updateCustomer(Long id, Customer updatedCustomer) {
+    public Customer updateCustomer(Long id, CustomerUpdateDto updatedDto) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
-        customer.setEmail(updatedCustomer.getEmail());
-        customer.setPassword(passwordEncoder.encode(updatedCustomer.getPassword()));
-        customer.setFirstName(updatedCustomer.getFirstName());
-        customer.setLastName(updatedCustomer.getLastName());
-        customer.setStreetAddress(updatedCustomer.getStreetAddress());
-        customer.setCity(updatedCustomer.getCity());
-        customer.setState(updatedCustomer.getState());
+        customer.setEmail(updatedDto.getEmail());
+        customer.setFirstName(updatedDto.getFirstName());
+        customer.setLastName(updatedDto.getLastName());
+        customer.setStreetAddress(updatedDto.getStreetAddress());
+        customer.setCity(updatedDto.getCity());
+        customer.setState(updatedDto.getState());
+
+        return customerRepository.save(customer);
+    }
+
+    @Override
+    public Customer changePassword(Long id, ChangePasswordDto updateDto) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
+        String newPassword = updateDto.getPassword();
+        customer.setPassword(passwordEncoder.encode(newPassword));
 
         return customerRepository.save(customer);
     }

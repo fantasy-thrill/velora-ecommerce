@@ -37,6 +37,10 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime date;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "payment_method_id")
+    private PaymentMethod paymentMethod;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status;

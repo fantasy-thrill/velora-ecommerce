@@ -1,6 +1,7 @@
 package com.example.velora_ecommerce.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -41,6 +42,14 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private List<Order> orders = new ArrayList<>();
 
-    @OneToOne(mappedBy = "customer")
+    @OneToOne(
+            mappedBy = "customer",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @NotNull
     private Cart cart;
+
+    @OneToMany(mappedBy = "customer")
+    private List<PaymentMethod> paymentMethods = new ArrayList<>();
 }

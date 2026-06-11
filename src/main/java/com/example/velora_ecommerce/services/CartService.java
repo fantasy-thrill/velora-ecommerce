@@ -6,9 +6,5 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface CartService {
-    Cart createCart(Cart cart);
-
-    void deleteCart(Cart cart);
-
     BigDecimal calculateCheckoutTotal(Cart cart);
 }
