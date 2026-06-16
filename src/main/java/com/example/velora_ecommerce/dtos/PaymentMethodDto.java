@@ -1,18 +1,13 @@
 package com.example.velora_ecommerce.dtos;
 
 import com.example.velora_ecommerce.enums.CardType;
-import com.example.velora_ecommerce.enums.ShippingSpeed;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class CheckoutDto implements PaymentDto {
-
-    private Long paymentMethodId;
-
+public class PaymentMethodDto implements PaymentDto {
     @NotBlank(message = "Name is required")
     private String cardholderName;
 
@@ -27,7 +22,4 @@ public class CheckoutDto implements PaymentDto {
 
     @NotBlank(message = "CVV is required")
     private String cvv;
-
-    @NotNull
-    private ShippingSpeed shippingSpeed;
 }

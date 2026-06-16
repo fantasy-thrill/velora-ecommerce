@@ -7,6 +7,7 @@ import com.example.velora_ecommerce.repositories.OrderRepository;
 import com.example.velora_ecommerce.repositories.PaymentMethodRepository;
 import com.example.velora_ecommerce.services.CartService;
 import com.example.velora_ecommerce.services.OrderService;
+import com.example.velora_ecommerce.services.PaymentMethodService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -18,15 +19,17 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final PaymentMethodRepository paymentMethodRepository;
+    private final PaymentMethodService paymentMethodService;
     private final CartService cartService;
 
     public OrderServiceImpl(
             OrderRepository orderRepository,
-            PaymentMethodRepository paymentMethodRepository,
+            PaymentMethodRepository paymentMethodRepository, PaymentMethodService paymentMethodService,
             CartService cartService
     ) {
         this.orderRepository = orderRepository;
         this.paymentMethodRepository = paymentMethodRepository;
+        this.paymentMethodService = paymentMethodService;
         this.cartService = cartService;
     }
 
@@ -48,15 +51,7 @@ public class OrderServiceImpl implements OrderService {
             order.setPaymentMethod(paymentMethod);
 
         } else {
-            PaymentMethod paymentMethod = new PaymentMethod();
-
-            paymentMethod.setCardType(dto.getCardType());
-            paymentMethod.setLastFourDigits(dto.getCardNumber()
-                    .substring(dto.getCardNumber().length() - 4)
-            );
-            paymentMethod.setCustomer(customer);
-
-            paymentMethodRepository.save(paymentMethod);
+            PaymentMethod paymentMethod = paymentMethodService.addPaymentMethod(customer, dto);
             order.setPaymentMethod(paymentMethod);
         }
 
