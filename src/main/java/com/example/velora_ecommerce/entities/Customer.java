@@ -51,5 +51,8 @@ public class Customer {
     private Cart cart;
 
     @OneToMany(mappedBy = "customer")
-    private List<PaymentMethod> paymentMethods = new ArrayList<>();
+    private List<PaymentCard> paymentCards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "customer")
+    private List<GiftCard> giftCards = new ArrayList<>();
 }

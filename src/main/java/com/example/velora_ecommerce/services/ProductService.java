@@ -2,22 +2,56 @@ package com.example.velora_ecommerce.services;
 
 import com.example.velora_ecommerce.entities.Category;
 import com.example.velora_ecommerce.entities.Product;
+import com.example.velora_ecommerce.repositories.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductService {
-    List<Product> getAllProducts();
+@Service
+public class ProductService {
+    private final ProductRepository productRepository;
 
-    Optional<Product> getProductById(Long id);
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
-    Product createProduct(Product product);
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
 
-    Product updateProduct(Long id, Product product);
+    public Optional<Product> getProductById(Long id) {
+        return productRepository.findById(id);
+    }
 
-    void deleteProduct(Long id);
+    public List<Product> getProductsByCategory(Category category) {
+        return productRepository.findByCategory(category);
+    }
 
-    List<Product> getProductsByCategory(Category category);
+    // TODO: Write more logic for this method once administrator features are implemented.
+    public Product createProduct(Product product) {
+        return productRepository.save(product);
+    }
 
-    List<Product> searchProducts(String keyword);
+    public Product updateProduct(Long id, Product updatedProduct) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
+        product.setName(updatedProduct.getName());
+        product.setPrice(updatedProduct.getPrice());
+        product.setDescription(updatedProduct.getDescription());
+        product.setStockQuantity(updatedProduct.getStockQuantity());
+        product.setImageUrl(updatedProduct.getImageUrl());
+
+        return productRepository.save(product);
+    }
+
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
+
+    public List<Product> searchProducts(String keyword) {
+        return productRepository.findByNameContainingIgnoreCase(keyword);
+    }
 }

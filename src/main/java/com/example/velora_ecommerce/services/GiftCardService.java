@@ -1,0 +1,31 @@
+package com.example.velora_ecommerce.services;
+
+import com.example.velora_ecommerce.dtos.GiftCardDto;
+import com.example.velora_ecommerce.entities.Customer;
+import com.example.velora_ecommerce.entities.GiftCard;
+import com.example.velora_ecommerce.repositories.GiftCardRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class GiftCardService {
+    private GiftCardRepository giftCardRepository;
+
+    public GiftCardService(GiftCardRepository giftCardRepository) {
+        this.giftCardRepository = giftCardRepository;
+    }
+
+    public List<GiftCard> getGiftCardsForCustomer(Customer customer) {
+        return giftCardRepository.findAllGiftCardsByCustomer(customer);
+    }
+
+    public GiftCard addGiftCard(Customer customer, GiftCardDto dto) {
+        GiftCard giftCard = new GiftCard();
+        giftCard.setBalance(dto.getBalance());
+        giftCard.setCode(dto.getCode());
+        giftCard.setCustomer(customer);
+
+        return giftCardRepository.save(giftCard);
+    }
+}

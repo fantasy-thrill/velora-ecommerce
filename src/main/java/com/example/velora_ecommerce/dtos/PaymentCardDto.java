@@ -1,5 +1,6 @@
 package com.example.velora_ecommerce.dtos;
 
+import com.example.velora_ecommerce.enums.CardProcessor;
 import com.example.velora_ecommerce.enums.CardType;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -7,9 +8,12 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PaymentMethodDto implements PaymentDto {
+public class PaymentCardDto {
     @NotBlank(message = "Name is required")
     private String cardholderName;
+
+    @NotNull
+    private CardProcessor cardProcessor;
 
     @NotNull
     private CardType cardType;

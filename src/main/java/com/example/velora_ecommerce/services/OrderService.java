@@ -1,23 +1,106 @@
 package com.example.velora_ecommerce.services;
 
 import com.example.velora_ecommerce.dtos.CheckoutDto;
-import com.example.velora_ecommerce.entities.Customer;
-import com.example.velora_ecommerce.entities.Order;
+import com.example.velora_ecommerce.dtos.PaymentCardDto;
+import com.example.velora_ecommerce.entities.*;
 import com.example.velora_ecommerce.enums.OrderStatus;
+import com.example.velora_ecommerce.repositories.OrderRepository;
+import com.example.velora_ecommerce.repositories.PaymentCardRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface OrderService {
-    Order placeOrder(Customer customer, CheckoutDto dto);
+@Service
+public class OrderService {
+    private final OrderRepository orderRepository;
+    private final PaymentCardRepository paymentCardRepository;
+    private final PaymentCardService paymentCardService;
+    private final CartService cartService;
 
-    List<Order> getOrdersByCustomerAndDateRange(
+    public OrderService(
+            OrderRepository orderRepository,
+            PaymentCardRepository paymentCardRepository, PaymentCardService paymentCardService,
+            CartService cartService
+    ) {
+        this.orderRepository = orderRepository;
+        this.paymentCardRepository = paymentCardRepository;
+        this.paymentCardService = paymentCardService;
+        this.cartService = cartService;
+    }
+
+    public Order placeOrder(Customer customer, CheckoutDto dto) {
+        Order order = new Order();
+        List<CartItem> cartItems = customer.getCart().getItems();
+        BigDecimal totalPrice = cartService.calculateCheckoutTotal(customer.getCart());
+
+        if (dto.getPaymentMethodId() != null) {
+            PaymentCard paymentCard = paymentCardRepository
+                    .findById(dto.getPaymentMethodId())
+                    .orElseThrow(() -> new EntityNotFoundException("Credit or debit card not found"));
+
+            if (!paymentCard.getCustomer().getId()
+                    .equals(customer.getId()))
+                throw new IllegalStateException("Credit or debit card does not belong to customer");
+
+            order.setPaymentCard(paymentCard);
+
+        } else {
+            PaymentCardDto cardDto = new PaymentCardDto();
+
+            cardDto.setCardType(dto.getCardType());
+            cardDto.setCardProcessor(dto.getCardProcessor());
+            cardDto.setCardNumber(dto.getCardNumber());
+
+            PaymentCard paymentCard = paymentCardService.addPaymentCard(customer, cardDto);
+            order.setPaymentCard(paymentCard);
+        }
+
+        order.setCustomer(customer);
+        order.setTotalPrice(totalPrice);
+        order.setDate(LocalDateTime.now());
+        order.setStatus(OrderStatus.PENDING);
+
+        for (CartItem item : cartItems) {
+            OrderItem orderItem = new OrderItem();
+
+            orderItem.setOrder(order);
+            orderItem.setProduct(item.getProduct());
+            orderItem.setQuantity(item.getQuantity());
+            orderItem.setPurchasePrice(item.getProduct().getPrice());
+
+            order.getItems().add(orderItem);
+        }
+
+        return orderRepository.save(order);
+    }
+
+    public List<Order> getOrdersByCustomerAndDateRange(
             Customer customer,
             LocalDateTime startDate,
             LocalDateTime endDate
-    );
+    ) {
+        return orderRepository.findByCustomerAndOrderDateBetween(customer, startDate, endDate);
+    }
 
-    List<Order> getOrdersByCustomerAndStatus(Customer customer, OrderStatus status);
+    public List<Order> getOrdersByCustomerAndStatus(Customer customer, OrderStatus status) {
+        return orderRepository.findByCustomerAndStatus(customer, status);
+    }
 
-    void cancelOrder(Long id);
+    public void cancelOrder(Long id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        LocalDateTime currentDateAndTime = LocalDateTime.now();
+
+        if (currentDateAndTime.isAfter(order.getDate().plusHours(12))) {
+            throw new IllegalStateException(
+                    "Order has been placed more than 12 hours ago. Therefore, it cannot be canceled."
+            );
+        } else {
+            order.setStatus(OrderStatus.CANCELED);
+            orderRepository.save(order);
+        }
+    }
 }

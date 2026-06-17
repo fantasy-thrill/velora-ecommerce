@@ -32,6 +32,9 @@ public class Cart {
     @Column
     private BigDecimal discount = BigDecimal.ZERO;
 
+    @Column(nullable = true)
+    private GiftCard giftCard;
+
     public void addItem(CartItem item) {
         items.add(item);
         item.setCart(this);

@@ -38,8 +38,12 @@ public class Order {
     private LocalDateTime date;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "payment_method_id")
-    private PaymentMethod paymentMethod;
+    @JoinColumn(name = "payment_card_id", nullable = false)
+    private PaymentCard paymentCard;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "gift_card_id", nullable = true)
+    private GiftCard giftCard;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

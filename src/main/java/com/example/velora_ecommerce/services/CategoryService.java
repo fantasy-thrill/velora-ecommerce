@@ -1,15 +1,32 @@
 package com.example.velora_ecommerce.services;
 
 import com.example.velora_ecommerce.entities.Category;
+import com.example.velora_ecommerce.repositories.CategoryRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface CategoryService {
-    Category createCategory(Category category);
+@Service
+public class CategoryService {
+    private final CategoryRepository categoryRepository;
 
-    List<Category> getAllCategories();
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
-    List<Category> getAllCategoriesAlphabetically();
+    public Category createCategory(Category category) {
+        return categoryRepository.save(category);
+    }
 
-    void deleteCategory(Long id);
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
+    }
+
+    public List<Category> getAllCategoriesAlphabetically() {
+        return categoryRepository.findAllByOrderByNameAsc();
+    }
+
+    public void deleteCategory(Long id) {
+        categoryRepository.deleteById(id);
+    }
 }
