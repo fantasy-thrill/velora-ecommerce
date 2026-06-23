@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Table(name = "products")
@@ -34,4 +36,13 @@ public class Product {
 
     @Column(nullable = false)
     private String imageUrl;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "product_specifications",
+            joinColumns = @JoinColumn(name = "product_id")
+    )
+    @MapKeyColumn(name = "spec_name")
+    @Column(name = "spec_value")
+    private Map<String, String> specifications = new HashMap<>();
 }

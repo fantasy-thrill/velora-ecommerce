@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 public class GiftCardService {
-    private GiftCardRepository giftCardRepository;
+    private final GiftCardRepository giftCardRepository;
 
     public GiftCardService(GiftCardRepository giftCardRepository) {
         this.giftCardRepository = giftCardRepository;

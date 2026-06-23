@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velora Electronics</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+    <div class="header-top">
+        <div class="logo-container">
+            <a th:href="@{/}">
+                <img th:src="@{/images/velora_logo.png}" alt="Velora Logo">
+            </a>
+        </div>
+
+        <div class="search-container">
+            <form th:action="@{/products/search}" method="get">
+                <input type="text" name="keyword" placeholder="Search products...">
+
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+
+        <div class="cart-container">
+            <a th:href="@{/cart}">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="dropdown">
+            <button class="nav-button">Account</button>
+
+            <div class="dropdown-content">
+                <a th:href="@{/login}">Login</a>
+
+                <a th:href="@{/register}">Register</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button class="nav-button">Shop</button>
+
+            <div class="dropdown-content">
+                <a th:each="category : ${categories}"
+                   th:href="@{/products/category/{name}(name=${category.name})}"
+                   th:text="${category.name}">
+                    Category Name
+                </a>
+            </div>
+        </div>
+
+        <a th:href="@{/deals}">Deals</a>
+
+        <a th:href="@{/about}">About</a>
+
+        <a th:href="@{/support}">Support</a>
+    </nav>
+</header>
+
+<!-- Hero section -->
+<section class="hero-section">
+    <img th:src="@{/images/hero-banner.jpg}" alt="Velora Promotional Banner">
+</section>
+
+<!-- Why choose Velora? -->
+<section class="about-section">
+    <h2>Why Choose Velora?</h2>
+
+    <p>
+        At Velora, we provide high-quality technology products at competitive prices. Whether you're searching for a
+        powerful desktop computer, a lightweight laptop, or the perfect accessories, we're committed to helping you find
+        technology that fits your lifestyle.
+    </p>
+</section>
+
+<!-- Product category tiles -->
+<section class="category-section">
+    <a class="category-card" th:href="@{/products/category/desktops}">
+        Browse Desktop PCs
+    </a>
+
+    <a class="category-card" th:href="@{/products/category/laptops}">
+        Browse Laptops
+    </a>
+
+    <a class="category-card" th:href="@{/products/category/tablets}">
+        Browse Tablets
+    </a>
+
+    <a class="category-card" th:href="@{/products/category/accessories}">
+        Browse Accessories
+    </a>
+</section>
+
+<!-- Featured products -->
+<section class="featured-products">
+    <h2>Featured Products</h2>
+
+    <div class="product-grid">
+        <div class="product-card" th:each="product : ${featuredProducts}">
+            <img th:src="${product.imageUrl}" alt="Product Image">
+
+            <h3 th:text="${product.name}">Product Name</h3>
+
+            <p th:text="'$' + ${product.price}">$0.00</p>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter -->
+<section class="newsletter-section">
+    <div class="newsletter-content">
+        <div>
+            <h2>Our Consumer Newsletter</h2>
+
+            <p>
+                Sign up for our weekly newsletter to receive
+                news, alerts, and the newest deals we have to offer.
+            </p>
+
+            <form th:action="@{/newsletter/subscribe}" method="post">
+                <input type="email" name="email" placeholder="Enter e-mail">
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+        <div>
+            <img th:src="@{/images/newsletter-banner.jpg}" alt="Newsletter Promotional Image">
+        </div>
+    </div>
+</section>
+
+<!-- Business partners -->
+<section class="partners-section">
+    <h2>Manufacturers and Business Partners</h2>
+
+    <div class="partner-grid">
+        <img th:src="@{/images/partners/dell.png}" alt="Dell">
+
+        <img th:src="@{/images/partners/lenovo.png}" alt="Lenovo">
+
+        <img th:src="@{/images/partners/asus.png}" alt="ASUS">
+
+        <img th:src="@{/images/partners/logitech.png}" alt="Logitech">
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>© 2026 Velora Electronics. This is not a real company.</p>
+
+    <div class="footer-links">
+        <a th:href="@{/about}">About Velora</a>
+
+        <a th:href="@{/contact}">Contact Us</a>
+
+        <a th:href="@{/privacy}">Privacy Policy</a>
+
+        <a th:href="@{/terms}">Terms and Conditions</a>
+    </div>
+</footer>
+
+</body>
+</html>
