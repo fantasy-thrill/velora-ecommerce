@@ -5,6 +5,8 @@ import com.example.velora_ecommerce.enums.CardType;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,7 +24,7 @@ public class PaymentCardDto {
     private String cardNumber;
 
     @NotBlank(message = "Expiration date is required")
-    private String expirationDate;
+    private LocalDate expirationDate;
 
     @NotBlank(message = "CVV is required")
     private String cvv;

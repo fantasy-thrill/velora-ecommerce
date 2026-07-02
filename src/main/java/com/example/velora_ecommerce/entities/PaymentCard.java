@@ -4,6 +4,8 @@ import com.example.velora_ecommerce.enums.CardProcessor;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "payment_cards")
 @Getter
@@ -21,6 +23,9 @@ public class PaymentCard extends PaymentMethod {
 
     @Column(nullable = false)
     private String lastFourDigits;
+
+    @Column(nullable = false)
+    private LocalDate expirationDate;
 
     public String displayString() {
         return this.getCardProcessor() + " ending in " + this.getLastFourDigits();

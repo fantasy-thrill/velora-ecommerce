@@ -2,6 +2,7 @@ package com.example.velora_ecommerce.entities;
 
 import com.example.velora_ecommerce.enums.OrderStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -23,6 +24,10 @@ public class Order {
     @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @Embedded
+    @NotNull
+    private Address shippingAddress;
 
     @OneToMany(
             mappedBy = "order",

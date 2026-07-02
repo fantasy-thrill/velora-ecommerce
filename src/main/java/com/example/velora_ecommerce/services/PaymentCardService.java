@@ -30,6 +30,7 @@ public class PaymentCardService {
         paymentCard.setLastFourDigits(dto.getCardNumber()
                 .substring(dto.getCardNumber().length() - 4)
         );
+        paymentCard.setExpirationDate(dto.getExpirationDate());
         paymentCard.setCustomer(customer);
 
         return paymentCardRepository.save(paymentCard);
@@ -45,6 +46,7 @@ public class PaymentCardService {
         paymentCard.setLastFourDigits(dto.getCardNumber()
                 .substring(dto.getCardNumber().length() - 4)
         );
+        paymentCard.setExpirationDate(dto.getExpirationDate());
 
         return paymentCardRepository.save(paymentCard);
     }

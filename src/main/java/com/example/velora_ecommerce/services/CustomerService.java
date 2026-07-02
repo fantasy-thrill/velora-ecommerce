@@ -3,6 +3,7 @@ package com.example.velora_ecommerce.services;
 import com.example.velora_ecommerce.dtos.ChangePasswordDto;
 import com.example.velora_ecommerce.dtos.CustomerRegistrationDto;
 import com.example.velora_ecommerce.dtos.CustomerUpdateDto;
+import com.example.velora_ecommerce.entities.Address;
 import com.example.velora_ecommerce.entities.Cart;
 import com.example.velora_ecommerce.entities.Customer;
 import com.example.velora_ecommerce.repositories.CartRepository;
@@ -51,9 +52,19 @@ public class CustomerService {
         customer.setPassword(passwordEncoder.encode(dto.getPassword()));
         customer.setFirstName(dto.getFirstName());
         customer.setLastName(dto.getLastName());
-        customer.setStreetAddress(dto.getStreetAddress());
-        customer.setCity(dto.getCity());
-        customer.setState(dto.getState());
+        customer.setPhoneNumber(dto.getPhoneNumber());
+
+        Address address = new Address();
+        Address dtoAddress = dto.getAddress();
+        
+        address.setFirstName(dto.getFirstName());
+        address.setLastName(dto.getLastName());
+        address.setStreet(dtoAddress.getStreet());
+        address.setCity(dtoAddress.getCity());
+        address.setState(dtoAddress.getState());
+        address.setZipCode(dtoAddress.getZipCode());
+
+        customer.setAddress(address);
 
         cart.setCustomer(customer);
         cartRepository.save(cart);
@@ -69,9 +80,14 @@ public class CustomerService {
         customer.setEmail(updatedDto.getEmail());
         customer.setFirstName(updatedDto.getFirstName());
         customer.setLastName(updatedDto.getLastName());
-        customer.setStreetAddress(updatedDto.getStreetAddress());
-        customer.setCity(updatedDto.getCity());
-        customer.setState(updatedDto.getState());
+
+        Address address = customer.getAddress();
+        Address dtoAddress = updatedDto.getAddress();
+        
+        address.setStreet(dtoAddress.getStreet());
+        address.setCity(dtoAddress.getCity());
+        address.setState(dtoAddress.getState());
+        address.setZipCode(dtoAddress.getZipCode());
 
         return customerRepository.save(customer);
     }

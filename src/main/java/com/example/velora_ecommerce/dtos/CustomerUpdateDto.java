@@ -1,5 +1,7 @@
 package com.example.velora_ecommerce.dtos;
 
+import com.example.velora_ecommerce.entities.Address;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -18,12 +20,10 @@ public class CustomerUpdateDto {
     @Email(message = "Please enter a valid e-mail address.")
     private String email;
 
-    @NotBlank(message = "Street address is required")
-    private String streetAddress;
+    @NotNull
+    @Valid
+    private Address address;
 
-    @NotBlank(message = "City is required")
-    private String city;
-
-    @NotBlank(message = "State is required")
-    private String state;
+    @NotBlank(message = "Phone number is required.")
+    private String phoneNumber;
 }

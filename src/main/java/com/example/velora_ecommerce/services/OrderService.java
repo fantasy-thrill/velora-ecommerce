@@ -33,6 +33,8 @@ public class OrderService {
 
     public Order placeOrder(Customer customer, CheckoutDto dto) {
         Order order = new Order();
+        Address address = new Address();
+        Address dtoAddress = dto.getAddress();
         List<CartItem> cartItems = customer.getCart().getItems();
         BigDecimal totalPrice = cartService.calculateCheckoutTotal(customer.getCart());
 
@@ -58,7 +60,15 @@ public class OrderService {
             order.setPaymentCard(paymentCard);
         }
 
+        address.setFirstName(customer.getFirstName());
+        address.setLastName(customer.getLastName());
+        address.setStreet(dtoAddress.getStreet());
+        address.setCity(dtoAddress.getCity());
+        address.setState(dtoAddress.getState());
+        address.setZipCode(dtoAddress.getZipCode());
+
         order.setCustomer(customer);
+        order.setShippingAddress(address);
         order.setTotalPrice(totalPrice);
         order.setDate(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);

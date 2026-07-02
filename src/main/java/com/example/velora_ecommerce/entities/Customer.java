@@ -1,6 +1,7 @@
 package com.example.velora_ecommerce.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -30,14 +31,13 @@ public class Customer {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
-    private String streetAddress;
+    @Embedded
+    @NotNull
+    @Valid
+    private Address address;
 
     @Column(nullable = false)
-    private String city;
-
-    @Column(nullable = false)
-    private String state;
+    private String phoneNumber;
 
     @OneToMany(mappedBy = "customer")
     private List<Order> orders = new ArrayList<>();
