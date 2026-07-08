@@ -1,32 +1,66 @@
 package com.example.velora_ecommerce.services;
 
-import com.example.velora_ecommerce.entities.Category;
+import com.example.velora_ecommerce.dtos.ProductResponseDto;
+import com.example.velora_ecommerce.dtos.ProductFilterDto;
 import com.example.velora_ecommerce.entities.Product;
+import com.example.velora_ecommerce.enums.Category;
+import com.example.velora_ecommerce.mappers.ProductMapper;
 import com.example.velora_ecommerce.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
 
+    private LocalDate featuredDate;
+
+    private List<ProductResponseDto> featuredProducts;
+
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Page<ProductResponseDto> getAllProducts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productRepository.findAll(pageable);
+
+        return products.map(ProductMapper::toResponseDto);
     }
 
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findById(id);
+    public List<ProductResponseDto> getFeaturedProducts() {
+        LocalDate today = LocalDate.now();
+
+        if (!today.equals(featuredDate)) {
+            List<Product> products = productRepository.findAll();
+            Collections.shuffle(products);
+
+            featuredProducts = products.stream()
+                    .limit(4)
+                    .map(ProductMapper::toResponseDto)
+                    .toList();
+
+            featuredDate = today;
+        }
+
+        return featuredProducts;
     }
 
-    public List<Product> getProductsByCategory(Category category) {
-        return productRepository.findByCategory(category);
+    public ProductResponseDto getProductById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
+        return ProductMapper.toResponseDto(product);
+    }
+
+    public Page<ProductResponseDto> getProductsByCategory(Category category) {
+        Page<Product> products = productRepository.findByCategory(category);
+        return products.map(ProductMapper::toResponseDto);
     }
 
     // TODO: Write more logic for this method once administrator features are implemented.
@@ -51,8 +85,32 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    // TODO: Revise search method for supporting filters.
-    public List<Product> searchProducts(String query) {
-        return productRepository.findByNameContainingIgnoreCase(query);
+    public Page<ProductResponseDto> searchProducts(ProductFilterDto searchDto) {
+        Sort springSort = Sort.unsorted();
+
+        if (searchDto.getSortOption() != null) {
+            switch (searchDto.getSortOption()) {
+                case PRICE_LOW_TO_HIGH -> springSort = Sort.by("price").ascending();
+
+                case PRICE_HIGH_TO_LOW -> springSort = Sort.by("price").descending();
+            }
+        }
+
+        Pageable pageable = PageRequest.of(searchDto.getPage(), 12, springSort);
+
+        Page<Product> products;
+
+        if (searchDto.getBrands() == null || searchDto.getBrands().isEmpty()) {
+            products = productRepository.findByNameContainingIgnoreCase(searchDto.getQuery(), pageable);
+
+        } else {
+            products = productRepository.findByNameContainingIgnoreCaseAndBrandIn(
+                    searchDto.getQuery(),
+                    searchDto.getBrands(),
+                    pageable
+            );
+        }
+
+        return products.map(ProductMapper::toResponseDto);
     }
 }

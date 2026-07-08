@@ -1,6 +1,8 @@
-package com.example.velora_ecommerce.entities;
+package com.example.velora_ecommerce.mappers;
 
 import com.example.velora_ecommerce.dtos.*;
+import com.example.velora_ecommerce.entities.Address;
+import com.example.velora_ecommerce.entities.Customer;
 import org.springframework.stereotype.Component;
 
 @Component

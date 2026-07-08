@@ -1,6 +1,7 @@
 package com.example.velora_ecommerce.services;
 
 import com.example.velora_ecommerce.entities.*;
+import com.example.velora_ecommerce.enums.Category;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

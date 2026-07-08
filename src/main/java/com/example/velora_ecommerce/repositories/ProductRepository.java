@@ -1,13 +1,20 @@
 package com.example.velora_ecommerce.repositories;
 
-import com.example.velora_ecommerce.entities.Category;
 import com.example.velora_ecommerce.entities.Product;
+import com.example.velora_ecommerce.enums.Brand;
+import com.example.velora_ecommerce.enums.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    public List<Product> findByCategory(Category category);
+    Page<Product> findAll(Pageable pageable);
 
-    public List<Product> findByNameContainingIgnoreCase(String keyword);
+    public Page<Product> findByCategory(Category category);
+
+    public Page<Product> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
+
+    Page<Product> findByNameContainingIgnoreCaseAndBrandIn(String query, List<Brand> brands, Pageable pageable);
 }

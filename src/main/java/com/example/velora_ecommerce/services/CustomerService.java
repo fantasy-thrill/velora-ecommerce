@@ -4,7 +4,7 @@ import com.example.velora_ecommerce.dtos.*;
 import com.example.velora_ecommerce.entities.Address;
 import com.example.velora_ecommerce.entities.Cart;
 import com.example.velora_ecommerce.entities.Customer;
-import com.example.velora_ecommerce.entities.CustomerMapper;
+import com.example.velora_ecommerce.mappers.CustomerMapper;
 import com.example.velora_ecommerce.repositories.CartRepository;
 import com.example.velora_ecommerce.repositories.CustomerRepository;
 

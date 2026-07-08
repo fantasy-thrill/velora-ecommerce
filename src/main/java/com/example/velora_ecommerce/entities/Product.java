@@ -1,5 +1,7 @@
 package com.example.velora_ecommerce.entities;
 
+import com.example.velora_ecommerce.enums.Brand;
+import com.example.velora_ecommerce.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,9 +23,13 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "category_id")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Category category;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Brand brand;
 
     @Column(length = 1000)
     private String description;

@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductSearchDto {
+public class ProductFilterDto {
     private String query;
 
     private List<Brand> brands;
