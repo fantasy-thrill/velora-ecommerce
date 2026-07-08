@@ -1,0 +1,21 @@
+package com.example.velora_ecommerce.dtos;
+
+import com.example.velora_ecommerce.enums.Brand;
+import com.example.velora_ecommerce.enums.SortOption;
+import lombok.*;
+
+import java.util.List;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProductSearchDto {
+    private String query;
+
+    private List<Brand> brands;
+
+    private SortOption sortOption;
+
+    private int page = 0;
+}

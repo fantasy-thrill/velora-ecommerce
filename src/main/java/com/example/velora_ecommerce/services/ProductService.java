@@ -34,7 +34,7 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product updateProduct(Long id, Product updatedProduct) {
+    public void updateProduct(Long id, Product updatedProduct) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
@@ -44,14 +44,15 @@ public class ProductService {
         product.setStockQuantity(updatedProduct.getStockQuantity());
         product.setImageUrl(updatedProduct.getImageUrl());
 
-        return productRepository.save(product);
+        productRepository.save(product);
     }
 
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
 
-    public List<Product> searchProducts(String keyword) {
-        return productRepository.findByNameContainingIgnoreCase(keyword);
+    // TODO: Revise search method for supporting filters.
+    public List<Product> searchProducts(String query) {
+        return productRepository.findByNameContainingIgnoreCase(query);
     }
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,10 +43,18 @@
         <div class="dropdown">
             <button class="nav-button">Account</button>
 
-            <div class="dropdown-content">
-                <a th:href="@{/login}">Login</a>
+            <div class="dropdown-content" sec:authorize="isAnonymous()">
+                <a th:href="@{/auth/login}">Login</a>
 
-                <a th:href="@{/register}">Register</a>
+                <a th:href="@{/auth/register}">Register</a>
+            </div>
+
+            <div class="dropdown-content" sec:authorize="isAuthenticated()">
+                <a th:href="@{/orders}">My Orders</a>
+
+                <a th:href="@{/account}">My Account</a>
+
+                <a th:href="@{/logout}">Logout</a>
             </div>
         </div>
 

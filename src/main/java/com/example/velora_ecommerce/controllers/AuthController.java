@@ -3,14 +3,17 @@ package com.example.velora_ecommerce.controllers;
 import com.example.velora_ecommerce.dtos.CustomerRegistrationDto;
 import com.example.velora_ecommerce.services.CustomerService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
     @GetMapping("/login")
     public String loginPage() {
@@ -28,8 +31,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public String registerCustomer(
-            @Valid @ModelAttribute("registerUser")
-            CustomerRegistrationDto dto) {
+            @Valid @ModelAttribute("registerCustomer")
+            CustomerRegistrationDto dto,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) return "auth/register";
 
         customerService.registerCustomer(dto);
 

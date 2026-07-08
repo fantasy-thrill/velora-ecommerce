@@ -1,11 +1,10 @@
 package com.example.velora_ecommerce.services;
 
-import com.example.velora_ecommerce.dtos.ChangePasswordDto;
-import com.example.velora_ecommerce.dtos.CustomerRegistrationDto;
-import com.example.velora_ecommerce.dtos.CustomerUpdateDto;
+import com.example.velora_ecommerce.dtos.*;
 import com.example.velora_ecommerce.entities.Address;
 import com.example.velora_ecommerce.entities.Cart;
 import com.example.velora_ecommerce.entities.Customer;
+import com.example.velora_ecommerce.entities.CustomerMapper;
 import com.example.velora_ecommerce.repositories.CartRepository;
 import com.example.velora_ecommerce.repositories.CustomerRepository;
 
@@ -43,8 +42,21 @@ public class CustomerService {
         return customerRepository.findByEmail(email);
     }
 
-    
-    public Customer registerCustomer(CustomerRegistrationDto dto) {
+    public CustomerProfileDto getCustomerProfile(String email) {
+        Customer customer = customerRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
+        return CustomerMapper.toProfileDto(customer);
+    }
+
+    public CustomerUpdateDto getCustomerForUpdate(String email) {
+        Customer customer = customerRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
+        return CustomerMapper.toUpdateDto(customer);
+    }
+
+    public void registerCustomer(CustomerRegistrationDto dto) {
         Customer customer = new Customer();
         Cart cart = new Cart();
 
@@ -69,12 +81,12 @@ public class CustomerService {
         cart.setCustomer(customer);
         cartRepository.save(cart);
 
-        return customerRepository.save(customer);
+        customerRepository.save(customer);
     }
 
     
-    public Customer updateCustomer(Long id, CustomerUpdateDto updatedDto) {
-        Customer customer = customerRepository.findById(id)
+    public void updateCustomer(String email, CustomerUpdateDto updatedDto) {
+        Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
         customer.setEmail(updatedDto.getEmail());
@@ -82,25 +94,25 @@ public class CustomerService {
         customer.setLastName(updatedDto.getLastName());
 
         Address address = customer.getAddress();
-        Address dtoAddress = updatedDto.getAddress();
+        AddressDto addressDto = updatedDto.getAddress();
         
-        address.setStreet(dtoAddress.getStreet());
-        address.setCity(dtoAddress.getCity());
-        address.setState(dtoAddress.getState());
-        address.setZipCode(dtoAddress.getZipCode());
+        address.setStreet(addressDto.getStreet());
+        address.setCity(addressDto.getCity());
+        address.setState(addressDto.getState());
+        address.setZipCode(addressDto.getZipCode());
 
-        return customerRepository.save(customer);
+        customerRepository.save(customer);
     }
 
     
-    public Customer changePassword(Long id, ChangePasswordDto updateDto) {
-        Customer customer = customerRepository.findById(id)
+    public void changePassword(String email, ChangePasswordDto updateDto) {
+        Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
         String newPassword = updateDto.getPassword();
         customer.setPassword(passwordEncoder.encode(newPassword));
 
-        return customerRepository.save(customer);
+        customerRepository.save(customer);
     }
 
     
