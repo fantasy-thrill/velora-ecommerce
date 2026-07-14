@@ -12,17 +12,22 @@ import java.util.List;
 @Service
 public class PaymentCardService {
 
-    PaymentCardRepository paymentCardRepository;
+    private final PaymentCardRepository paymentCardRepository;
+    private final CustomerService customerService;
 
-    public PaymentCardService(PaymentCardRepository paymentCardRepository) {
+    public PaymentCardService(PaymentCardRepository paymentCardRepository, CustomerService customerService) {
         this.paymentCardRepository = paymentCardRepository;
+        this.customerService = customerService;
     }
 
     public List<PaymentCard> getPaymentCardsByCustomer(Customer customer) {
          return paymentCardRepository.findAllByCustomer(customer);
     }
 
-    public PaymentCard addPaymentCard(Customer customer, PaymentCardDto dto) {
+    public PaymentCard addPaymentCard(String customerEmail, PaymentCardDto dto) {
+        Customer customer = customerService.getCustomerByEmail(customerEmail)
+                    .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
         PaymentCard paymentCard = new PaymentCard();
 
         paymentCard.setCardType(dto.getCardType());

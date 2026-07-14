@@ -1,34 +1,35 @@
 package com.example.velora_ecommerce.services;
 
+import com.example.velora_ecommerce.dtos.CartItemDto;
+import com.example.velora_ecommerce.dtos.CartResponseDto;
 import com.example.velora_ecommerce.entities.*;
-import com.example.velora_ecommerce.enums.Category;
+import com.example.velora_ecommerce.mappers.CartItemMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class CartService {
+    private final CustomerService customerService;
 
-    public BigDecimal calculateCheckoutTotal(Cart cart) {
-        BigDecimal subtotal = cart.calculateSubtotal();
-        BigDecimal discountedTotal = subtotal.subtract(subtotal.multiply(cart.getDiscount()));
+    public CartService(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
-        if (cart.getGiftCard() != null) discountedTotal = discountedTotal.subtract(cart.getGiftCard().getBalance());
-        BigDecimal shippingCost = BigDecimal.ZERO;
+    public CartResponseDto getCart(String email) {
+        Customer customer = customerService.getCustomerByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
-        Set<Category> categories = new HashSet<>();
+        Cart customerCart = customer.getCart();
+        CartResponseDto cartDto = new CartResponseDto();
+        List<CartItemDto> dtoItems = customerCart.getItems().stream()
+                .map(CartItemMapper::toResponseDto)
+                .toList();
 
-        for (CartItem item : cart.getItems()) {
-            Category category = item.getProduct().getCategory();
-            categories.add(category);
-        }
+        cartDto.setItems(dtoItems);
+        cartDto.setSubtotal(customerCart.calculateSubtotal());
 
-        for (Category category : categories) {
-            shippingCost = shippingCost.add(category.getShippingCost());
-        }
-
-        return discountedTotal.add(shippingCost);
+        return cartDto;
     }
 }

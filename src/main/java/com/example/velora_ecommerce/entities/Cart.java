@@ -29,12 +29,6 @@ public class Cart {
     )
     private List<CartItem> items = new ArrayList<>();
 
-    @Column
-    private BigDecimal discount = BigDecimal.ZERO;
-
-    @Column(nullable = true)
-    private GiftCard giftCard;
-
     public void addItem(CartItem item) {
         items.add(item);
         item.setCart(this);

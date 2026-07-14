@@ -7,6 +7,7 @@ import com.example.velora_ecommerce.repositories.GiftCardRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GiftCardService {
@@ -18,6 +19,10 @@ public class GiftCardService {
 
     public List<GiftCard> getGiftCardsForCustomer(Customer customer) {
         return giftCardRepository.findAllGiftCardsByCustomer(customer);
+    }
+
+    public Optional<GiftCard> getGiftCardByCode(String code) {
+        return giftCardRepository.findGiftCardByCode(code);
     }
 
     public GiftCard addGiftCard(Customer customer, GiftCardDto dto) {

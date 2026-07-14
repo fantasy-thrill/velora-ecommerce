@@ -1,6 +1,5 @@
 package com.example.velora_ecommerce.dtos;
 
-import com.example.velora_ecommerce.entities.Address;
 import com.example.velora_ecommerce.enums.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -10,16 +9,16 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class CheckoutDto {
-
     private Long paymentMethodId;
 
     @NotNull
     @Valid
-    private Address address;
+    private AddressDto address;
 
     @NotBlank(message = "Name is required")
     private String cardholderName;
 
+    @NotNull
     private CardType cardType;
 
     @NotNull
@@ -28,12 +27,17 @@ public class CheckoutDto {
     @NotBlank(message = "Card number is required")
     private String cardNumber;
 
+
     @NotBlank(message = "Expiration date is required")
     private String expirationDate;
 
     @NotBlank(message = "CVV is required")
     private String cvv;
 
+    private String giftCardCode;
+
+    private String couponCode;
+
     @NotNull
-    private ShippingSpeed shippingSpeed;
+    private ShippingSpeed shippingSpeed = ShippingSpeed.STANDARD;
 }

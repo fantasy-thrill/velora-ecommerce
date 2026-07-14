@@ -1,7 +1,6 @@
 package com.example.velora_ecommerce.services;
 
-import com.example.velora_ecommerce.dtos.CheckoutDto;
-import com.example.velora_ecommerce.dtos.PaymentCardDto;
+import com.example.velora_ecommerce.dtos.*;
 import com.example.velora_ecommerce.entities.*;
 import com.example.velora_ecommerce.enums.OrderStatus;
 import com.example.velora_ecommerce.repositories.OrderRepository;
@@ -18,29 +17,33 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final PaymentCardRepository paymentCardRepository;
     private final PaymentCardService paymentCardService;
-    private final CartService cartService;
+    private final CustomerService customerService;
 
     public OrderService(
             OrderRepository orderRepository,
-            PaymentCardRepository paymentCardRepository, PaymentCardService paymentCardService,
-            CartService cartService
+            PaymentCardRepository paymentCardRepository,
+            PaymentCardService paymentCardService,
+            CustomerService customerService
     ) {
         this.orderRepository = orderRepository;
         this.paymentCardRepository = paymentCardRepository;
         this.paymentCardService = paymentCardService;
-        this.cartService = cartService;
+        this.customerService = customerService;
     }
 
-    public Order placeOrder(Customer customer, CheckoutDto dto) {
+    public Order placeOrder(String customerEmail, CheckoutDto checkoutDto, CheckoutSummaryDto summaryDto) {
+        Customer customer = customerService.getCustomerByEmail(customerEmail)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
         Order order = new Order();
         Address address = new Address();
-        Address dtoAddress = dto.getAddress();
+        AddressDto dtoAddress = checkoutDto.getAddress();
         List<CartItem> cartItems = customer.getCart().getItems();
-        BigDecimal totalPrice = cartService.calculateCheckoutTotal(customer.getCart());
+        BigDecimal totalPrice = summaryDto.getTotal();
 
-        if (dto.getPaymentMethodId() != null) {
+        if (checkoutDto.getPaymentMethodId() != null) {
             PaymentCard paymentCard = paymentCardRepository
-                    .findById(dto.getPaymentMethodId())
+                    .findById(checkoutDto.getPaymentMethodId())
                     .orElseThrow(() -> new EntityNotFoundException("Credit or debit card not found"));
 
             if (!paymentCard.getCustomer().getId()
@@ -49,16 +52,16 @@ public class OrderService {
 
             order.setPaymentCard(paymentCard);
 
-        } else {
-            PaymentCardDto cardDto = new PaymentCardDto();
-
-            cardDto.setCardType(dto.getCardType());
-            cardDto.setCardProcessor(dto.getCardProcessor());
-            cardDto.setCardNumber(dto.getCardNumber());
-
-            PaymentCard paymentCard = paymentCardService.addPaymentCard(customer, cardDto);
-            order.setPaymentCard(paymentCard);
-        }
+        } // else {
+//            PaymentCardDto cardDto = new PaymentCardDto();
+//
+//            cardDto.setCardType(checkoutDto.getCardType());
+//            cardDto.setCardProcessor(checkoutDto.getCardProcessor());
+//            cardDto.setCardNumber(checkoutDto.getCardNumber());
+//
+//            PaymentCard paymentCard = paymentCardService.addPaymentCard(customer, cardDto);
+//            order.setPaymentCard(paymentCard);
+//        }
 
         address.setFirstName(customer.getFirstName());
         address.setLastName(customer.getLastName());
