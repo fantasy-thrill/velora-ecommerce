@@ -51,11 +51,11 @@ public class ProductService {
         return featuredProducts;
     }
 
-    public ProductResponseDto getProductById(Long id) {
+    public Product getProductById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
-        return ProductMapper.toResponseDto(product);
+        return product;
     }
 
     public Page<ProductResponseDto> getProductsByCategory(Category category) {
@@ -87,6 +87,7 @@ public class ProductService {
 
     public Page<ProductResponseDto> searchProducts(ProductFilterDto searchDto) {
         Sort springSort = Sort.unsorted();
+        Page<Product> products;
 
         if (searchDto.getSortOption() != null) {
             switch (searchDto.getSortOption()) {
@@ -97,8 +98,6 @@ public class ProductService {
         }
 
         Pageable pageable = PageRequest.of(searchDto.getPage(), 12, springSort);
-
-        Page<Product> products;
 
         if (searchDto.getBrands() == null || searchDto.getBrands().isEmpty()) {
             products = productRepository.findByNameContainingIgnoreCase(searchDto.getQuery(), pageable);

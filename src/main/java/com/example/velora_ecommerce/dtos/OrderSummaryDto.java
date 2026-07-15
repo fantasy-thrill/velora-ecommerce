@@ -1,6 +1,5 @@
 package com.example.velora_ecommerce.dtos;
 
-import com.example.velora_ecommerce.entities.*;
 import com.example.velora_ecommerce.enums.OrderStatus;
 import lombok.*;
 
@@ -9,13 +8,19 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class OrderSummaryDto {
     private Long orderId;
 
-    private List<OrderItem> orderItems; // To be revised
+    private List<OrderItemDto> orderItems;
+
+    private AddressDto shippingAddress;
 
     private BigDecimal totalPrice;
+
+    private CheckoutSummaryDto summary;
 
     private LocalDateTime orderDate;
 

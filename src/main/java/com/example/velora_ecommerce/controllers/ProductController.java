@@ -2,13 +2,18 @@ package com.example.velora_ecommerce.controllers;
 
 import com.example.velora_ecommerce.dtos.ProductResponseDto;
 import com.example.velora_ecommerce.dtos.ProductFilterDto;
+import com.example.velora_ecommerce.entities.Product;
 import com.example.velora_ecommerce.enums.*;
+import com.example.velora_ecommerce.mappers.ProductMapper;
+import com.example.velora_ecommerce.services.CartService;
 import com.example.velora_ecommerce.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -17,6 +22,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+
+    private final CartService cartService;
 
     @GetMapping("/search")
     public String searchProducts(
@@ -35,13 +42,7 @@ public class ProductController {
     }
 
     @GetMapping("/category/{category}")
-    public String productsByCategory(
-            @PathVariable Category category,
-            @RequestParam(required = false) List<Brand> brands,
-            @RequestParam(required = false) SortOption sort,
-            @RequestParam(defaultValue = "0") int page,
-            Model model) {
-
+    public String productsByCategory(@PathVariable Category category, Model model) {
         Page<ProductResponseDto> results = productService.getProductsByCategory(category);
 
         model.addAttribute("results", results);
@@ -51,12 +52,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public String allProducts(
-            @RequestParam(required = false) List<Brand> brands,
-            @RequestParam(required = false) SortOption sort,
-            @RequestParam(defaultValue = "0") int page,
-            Model model) {
-
+    public String allProducts(@RequestParam(defaultValue = "0") int page, Model model) {
         Page<ProductResponseDto> results = productService.getAllProducts(page, 12);
         model.addAttribute("results", results);
 
@@ -65,9 +61,25 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public String productDetails(@PathVariable Long id, Model model) {
-        ProductResponseDto product = productService.getProductById(id);
+        ProductResponseDto product = ProductMapper.toResponseDto(productService.getProductById(id));
         model.addAttribute("product", product);
 
         return "products/details";
+    }
+
+    @PostMapping("/{id}/add-to-cart")
+    public String addToCart(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "1") int quantity,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes
+    ) {
+        String email = authentication.getName();
+        Product product = productService.getProductById(id);
+        cartService.addItemToCart(email, product, quantity);
+
+        redirectAttributes.addFlashAttribute("cartSuccess", "Item added to your cart");
+
+        return "redirect:/products/" + id;
     }
 }

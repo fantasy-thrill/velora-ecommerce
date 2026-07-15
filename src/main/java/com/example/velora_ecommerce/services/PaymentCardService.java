@@ -20,8 +20,11 @@ public class PaymentCardService {
         this.customerService = customerService;
     }
 
-    public List<PaymentCard> getPaymentCardsByCustomer(Customer customer) {
-         return paymentCardRepository.findAllByCustomer(customer);
+    public List<PaymentCard> getPaymentCardsByCustomer(String email) {
+        Customer customer = customerService.getCustomerByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
+        return paymentCardRepository.findAllByCustomer(customer);
     }
 
     public PaymentCard addPaymentCard(String customerEmail, PaymentCardDto dto) {
@@ -41,22 +44,44 @@ public class PaymentCardService {
         return paymentCardRepository.save(paymentCard);
     }
 
-    public PaymentCard updatePaymentCard(Long id, PaymentCardDto dto) {
-        PaymentCard paymentCard = paymentCardRepository
-                .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Credit or debit card not found"));
+    public void updatePaymentCard(String email, Long id, PaymentCardDto dto) {
+        Customer customer = customerService.getCustomerByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
-        paymentCard.setCardProcessor(dto.getCardProcessor());
-        paymentCard.setCardType(dto.getCardType());
-        paymentCard.setLastFourDigits(dto.getCardNumber()
+        List<PaymentCard> customerPaymentCards = customer.getPaymentCards();
+
+        PaymentCard cardToUpdate = customerPaymentCards.stream()
+                .filter(card -> card.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Credit or debit card not found for customer"));
+
+        if (!cardToUpdate.getCustomer().getId().equals(customer.getId()))
+            throw new IllegalStateException("Credit or debit card does not belong to customer");
+
+        cardToUpdate.setCardProcessor(dto.getCardProcessor());
+        cardToUpdate.setCardType(dto.getCardType());
+        cardToUpdate.setLastFourDigits(dto.getCardNumber()
                 .substring(dto.getCardNumber().length() - 4)
         );
-        paymentCard.setExpirationDate(dto.getExpirationDate());
+        cardToUpdate.setExpirationDate(dto.getExpirationDate());
 
-        return paymentCardRepository.save(paymentCard);
+        paymentCardRepository.save(cardToUpdate);
     }
 
-    public void deletePaymentCard(Long id) {
+    public void deletePaymentCard(String email, Long id) {
+        Customer customer = customerService.getCustomerByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
+        List<PaymentCard> customerPaymentCards = customer.getPaymentCards();
+
+        PaymentCard cardToDelete = customerPaymentCards.stream()
+                .filter(card -> card.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Credit or debit card not found for customer"));
+
+        if (!cardToDelete.getCustomer().getId().equals(customer.getId()))
+            throw new IllegalStateException("Credit or debit card does not belong to customer");
+
         paymentCardRepository.deleteById(id);
     }
 }

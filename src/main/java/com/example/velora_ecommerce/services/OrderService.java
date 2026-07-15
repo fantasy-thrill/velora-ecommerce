@@ -3,7 +3,7 @@ package com.example.velora_ecommerce.services;
 import com.example.velora_ecommerce.dtos.*;
 import com.example.velora_ecommerce.entities.*;
 import com.example.velora_ecommerce.enums.OrderStatus;
-import com.example.velora_ecommerce.repositories.OrderRepository;
+import com.example.velora_ecommerce.mappers.OrderMapper;
 import com.example.velora_ecommerce.repositories.PaymentCardRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -14,13 +14,13 @@ import java.util.List;
 
 @Service
 public class OrderService {
-    private final OrderRepository orderRepository;
+    private final com.example.velora_ecommerce.repositories.OrderRepository orderRepository;
     private final PaymentCardRepository paymentCardRepository;
     private final PaymentCardService paymentCardService;
     private final CustomerService customerService;
 
     public OrderService(
-            OrderRepository orderRepository,
+            com.example.velora_ecommerce.repositories.OrderRepository orderRepository,
             PaymentCardRepository paymentCardRepository,
             PaymentCardService paymentCardService,
             CustomerService customerService
@@ -74,6 +74,7 @@ public class OrderService {
         order.setShippingAddress(address);
         order.setTotalPrice(totalPrice);
         order.setDate(LocalDateTime.now());
+        order.setSummary(summaryDto);
         order.setStatus(OrderStatus.PENDING);
 
         for (CartItem item : cartItems) {
@@ -90,6 +91,23 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    public OrderSummaryDto getOrderDetails(String customerEmail, Long id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+
+        if (!order.getCustomer().getEmail().equals(customerEmail))
+            throw new IllegalStateException("Order does not belong to customer");
+
+        return OrderMapper.toResponseDto(order);
+    }
+
+    public List<Order> getOrdersForCustomer(String email) {
+        Customer customer = customerService.getCustomerByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
+        return orderRepository.findByCustomer(customer);
+    }
+
     public List<Order> getOrdersByCustomerAndDateRange(
             Customer customer,
             LocalDateTime startDate,
@@ -102,10 +120,13 @@ public class OrderService {
         return orderRepository.findByCustomerAndStatus(customer, status);
     }
 
-    public void cancelOrder(Long id) {
+    public void cancelOrder(String customerEmail, Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
         LocalDateTime currentDateAndTime = LocalDateTime.now();
+
+        if (!order.getCustomer().getEmail().equals(customerEmail))
+            throw new IllegalStateException("Order does not belong to customer");
 
         if (currentDateAndTime.isAfter(order.getDate().plusHours(12))) {
             throw new IllegalStateException(

@@ -11,7 +11,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {
-
     @NotBlank
     @Column(nullable = false)
     private String firstName;

@@ -1,6 +1,7 @@
 package com.example.velora_ecommerce.controllers;
 
 import com.example.velora_ecommerce.dtos.*;
+import com.example.velora_ecommerce.entities.Order;
 import com.example.velora_ecommerce.entities.PaymentCard;
 import com.example.velora_ecommerce.services.*;
 import jakarta.validation.Valid;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.support.SessionStatus;
 @RequiredArgsConstructor
 @SessionAttributes("checkout")
 public class CheckoutController {
-//    private final CustomerService customerService;
-
     private final CheckoutService checkoutService;
 
     private final PaymentCardService paymentCardService;
@@ -31,12 +30,6 @@ public class CheckoutController {
 
         if (!model.containsAttribute("checkout")) {
             CheckoutDto checkout = new CheckoutDto();
-//            Customer customer = customerService.getCustomerByEmail(email)
-//                    .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
-//
-//            CustomerProfileDto customerDto = CustomerMapper.toProfileDto(customer);
-//            checkout.setAddress(customerDto.getAddress());
-//            checkout.setPaymentMethodId(customer.getPaymentCards().getFirst().getId());
 
             checkout.setPaymentMethodId(checkoutService.getCheckoutPage(email)
                     .getSelectedPaymentMethod()
@@ -110,9 +103,17 @@ public class CheckoutController {
             SessionStatus sessionStatus,
             @ModelAttribute("summary") CheckoutSummaryDto summaryDto
     ) {
-        orderService.placeOrder(authentication.getName(), checkoutDto, summaryDto);
+        Order order = orderService.placeOrder(authentication.getName(), checkoutDto, summaryDto);
         sessionStatus.setComplete();
 
-        return "redirect:/orders";
+        return "redirect:/checkout/confirmation" + order.getId();
+    }
+
+    @GetMapping("/confirmation/{orderId}")
+    public String orderConfirmation(@PathVariable Long orderId, Authentication authentication, Model model) {
+        String confirmation = checkoutService.displayConfirmation(authentication.getName(), orderId);
+        model.addAttribute("confirmation", confirmation);
+
+        return "checkout/confirmation";
     }
 }

@@ -9,9 +9,11 @@ public class PaymentCardMapper {
     public static PaymentCardResponseDto toResponseDto(PaymentCard card) {
         PaymentCardResponseDto cardDto = new PaymentCardResponseDto();
 
+        cardDto.setPaymentCardId(card.getId());
         cardDto.setCardProcessor(card.getCardProcessor());
         cardDto.setLastFourDigits(card.getLastFourDigits());
         cardDto.setExpirationDate(card.getExpirationDate());
+        cardDto.setDisplayString(card.displayString());
 
         return cardDto;
     }

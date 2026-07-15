@@ -17,4 +17,6 @@ public class PaymentCardResponseDto {
     private String lastFourDigits;
 
     private LocalDate expirationDate;
+
+    private String displayString;
 }

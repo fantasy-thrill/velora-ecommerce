@@ -1,5 +1,6 @@
 package com.example.velora_ecommerce.entities;
 
+import com.example.velora_ecommerce.dtos.CheckoutSummaryDto;
 import com.example.velora_ecommerce.enums.OrderStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -41,6 +42,9 @@ public class Order {
 
     @Column(nullable = false)
     private LocalDateTime date;
+
+    @NotNull
+    private CheckoutSummaryDto summary;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "payment_card_id", nullable = false)
