@@ -1,6 +1,5 @@
 package com.example.velora_ecommerce.entities;
 
-import com.example.velora_ecommerce.enums.CardProcessor;
 import com.example.velora_ecommerce.enums.CardType;
 import jakarta.persistence.*;
 import lombok.*;

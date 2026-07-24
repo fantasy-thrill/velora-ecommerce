@@ -58,8 +58,10 @@ public class ProductService {
         return product;
     }
 
-    public Page<ProductResponseDto> getProductsByCategory(Category category) {
-        Page<Product> products = productRepository.findByCategory(category);
+    public Page<ProductResponseDto> getProductsByCategory(Category category, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productRepository.findByCategory(category, pageable);
+
         return products.map(ProductMapper::toResponseDto);
     }
 

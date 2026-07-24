@@ -42,8 +42,12 @@ public class ProductController {
     }
 
     @GetMapping("/category/{category}")
-    public String productsByCategory(@PathVariable Category category, Model model) {
-        Page<ProductResponseDto> results = productService.getProductsByCategory(category);
+    public String productsByCategory(
+            @PathVariable Category category,
+            @RequestParam(defaultValue = "0") int page,
+            Model model
+    ) {
+        Page<ProductResponseDto> results = productService.getProductsByCategory(category, page, 12);
 
         model.addAttribute("results", results);
         model.addAttribute("category", category);

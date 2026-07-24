@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderService {
@@ -63,8 +64,8 @@ public class OrderService {
 //            order.setPaymentCard(paymentCard);
 //        }
 
-        address.setFirstName(customer.getFirstName());
-        address.setLastName(customer.getLastName());
+        address.setCustomerFirstName(customer.getFirstName());
+        address.setCustomerLastName(customer.getLastName());
         address.setStreet(dtoAddress.getStreet());
         address.setCity(dtoAddress.getCity());
         address.setState(dtoAddress.getState());
@@ -74,8 +75,15 @@ public class OrderService {
         order.setShippingAddress(address);
         order.setTotalPrice(totalPrice);
         order.setDate(LocalDateTime.now());
-        order.setSummary(summaryDto);
         order.setStatus(OrderStatus.PENDING);
+        order.setSummary(Map.ofEntries(
+                Map.entry("Subtotal", summaryDto.getSubtotal()),
+                Map.entry("Shipping", summaryDto.getShipping()),
+                Map.entry("Total", summaryDto.getTotal())
+        ));
+
+        if (summaryDto.getDiscount() != null) order.getSummary().put("Discount", summaryDto.getDiscount());
+        if (summaryDto.getGiftCardAmount() != null) order.getSummary().put("Gift card", summaryDto.getGiftCardAmount());
 
         for (CartItem item : cartItems) {
             OrderItem orderItem = new OrderItem();
@@ -113,7 +121,7 @@ public class OrderService {
             LocalDateTime startDate,
             LocalDateTime endDate
     ) {
-        return orderRepository.findByCustomerAndOrderDateBetween(customer, startDate, endDate);
+        return orderRepository.findByCustomerAndDateBetween(customer, startDate, endDate);
     }
 
     public List<Order> getOrdersByCustomerAndStatus(Customer customer, OrderStatus status) {

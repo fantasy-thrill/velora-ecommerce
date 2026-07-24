@@ -69,8 +69,8 @@ public class CustomerService {
         Address address = new Address();
         Address dtoAddress = dto.getAddress();
         
-        address.setFirstName(dto.getFirstName());
-        address.setLastName(dto.getLastName());
+        address.setCustomerFirstName(dto.getFirstName());
+        address.setCustomerLastName(dto.getLastName());
         address.setStreet(dtoAddress.getStreet());
         address.setCity(dtoAddress.getCity());
         address.setState(dtoAddress.getState());

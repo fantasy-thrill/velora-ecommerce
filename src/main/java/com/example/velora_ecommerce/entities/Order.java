@@ -9,7 +9,9 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "orders")
@@ -43,8 +45,14 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime date;
 
-    @NotNull
-    private CheckoutSummaryDto summary;
+    @ElementCollection
+    @CollectionTable(
+            name = "order_summary",
+            joinColumns = @JoinColumn(name = "order_id")
+    )
+    @MapKeyColumn(name = "charge_name")
+    @Column(name = "charge_value")
+    private Map<String, BigDecimal> summary = new HashMap<>();
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "payment_card_id", nullable = false)

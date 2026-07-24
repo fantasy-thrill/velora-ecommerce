@@ -1,12 +1,13 @@
 package com.example.velora_ecommerce.enums;
 
-import java.math.BigDecimal;
-
 public enum Category {
 
-    COMPUTERS("Computers"),
+    DESKTOPS("Desktop PCs"),
     LAPTOPS("Laptops"),
-    PHONES("Phones"),
+    MONITORS("Monitors"),
+    KEYBOARDS("Keyboards"),
+    MICE("Mice"),
+    TABLETS("Tablets"),
     GAMING("Gaming"),
     ACCESSORIES("Accessories");
 

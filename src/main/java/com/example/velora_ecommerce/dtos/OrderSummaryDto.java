@@ -6,6 +6,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -20,7 +21,7 @@ public class OrderSummaryDto {
 
     private BigDecimal totalPrice;
 
-    private CheckoutSummaryDto summary;
+    private Map<String, BigDecimal> summary;
 
     private LocalDateTime orderDate;
 

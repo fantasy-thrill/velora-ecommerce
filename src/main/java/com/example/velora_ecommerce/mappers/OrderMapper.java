@@ -1,8 +1,6 @@
 package com.example.velora_ecommerce.mappers;
 
-import com.example.velora_ecommerce.dtos.AddressDto;
-import com.example.velora_ecommerce.dtos.OrderItemDto;
-import com.example.velora_ecommerce.dtos.OrderSummaryDto;
+import com.example.velora_ecommerce.dtos.*;
 import com.example.velora_ecommerce.entities.Order;
 import com.example.velora_ecommerce.entities.OrderItem;
 import org.springframework.stereotype.Component;

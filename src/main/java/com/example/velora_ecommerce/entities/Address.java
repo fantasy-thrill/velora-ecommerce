@@ -13,11 +13,11 @@ import lombok.*;
 public class Address {
     @NotBlank
     @Column(nullable = false)
-    private String firstName;
+    private String customerFirstName;
 
     @NotBlank
     @Column(nullable = false)
-    private String lastName;
+    private String customerLastName;
 
     @NotBlank
     @Column(nullable = false)

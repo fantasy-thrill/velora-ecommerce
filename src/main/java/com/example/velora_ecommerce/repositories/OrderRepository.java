@@ -14,7 +14,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByCustomer(Customer customer);
 
-    List<Order> findByCustomerAndOrderDateBetween(Customer customer, LocalDateTime startDate, LocalDateTime endDate);
+    List<Order> findByCustomerAndDateBetween(Customer customer, LocalDateTime startDate, LocalDateTime endDate);
 
     List<Order> findByCustomerAndStatus(Customer customer, OrderStatus status);
 }
