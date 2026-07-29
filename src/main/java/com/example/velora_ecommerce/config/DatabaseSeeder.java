@@ -44,7 +44,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        if (productRepository.count() > 0) return;
+        if (productRepository.count() > 0) return;
 
         // Adding keyboards
         addProduct(
@@ -301,7 +301,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 "The Vertex Core S1 is an affordable desktop built for everyday computing. Whether you're browsing the web, working on documents, streaming media, or attending online classes, it delivers dependable performance in a clean, minimalist tower.",
                 new BigDecimal("749.99"),
                 10,
-                "/images/desktops/desktop pc 1.png",
+                "/images/desktop pcs/desktop pc 1.png",
                 Map.ofEntries(
                         Map.entry("CPU Model", "Intel Core i5-14400"),
                         Map.entry("CPU Cores", "10"),
@@ -343,7 +343,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 "Designed for professionals and multitaskers, the NovaByte ProStation T5 combines modern hardware with a sleek business-oriented design. Its fast processor and generous memory make it an excellent workstation for productivity, software development, and content creation.",
                 new BigDecimal("999.99"),
                 10,
-                "/images/desktops/desktop pc 2.png",
+                "/images/desktop pcs/desktop pc 2.png",
                 Map.ofEntries(
                         Map.entry("CPU Model", "Intel Core i7-14700"),
                         Map.entry("CPU Cores", "20"),
@@ -385,7 +385,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 "Built for enthusiasts, the IronCore Titan X9 is a premium gaming desktop featuring high-end components and striking RGB cooling. Whether you're gaming in 4K, streaming, or editing video, the Titan X9 delivers uncompromising performance.",
                 new BigDecimal("1999.99"),
                 10,
-                "/images/desktops/desktop pc 3.png",
+                "/images/desktop pcs/desktop pc 3.png",
                 Map.ofEntries(
                         Map.entry("CPU Model", "AMD Ryzen 9 9900X"),
                         Map.entry("CPU Cores", "12"),
@@ -427,7 +427,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 "The Nimbus Studio S7 offers powerful performance in a refined aluminum chassis. Created for creative professionals and office users alike, it combines quiet operation with excellent multitasking performance in an elegant package.",
                 new BigDecimal("1299.99"),
                 10,
-                "/images/desktops/desktop pc 4.png",
+                "/images/desktop pcs/desktop pc 4.png",
                 Map.ofEntries(
                         Map.entry("CPU Model", "Intel Core Ultra 7 265"),
                         Map.entry("CPU Cores", "20"),
@@ -469,7 +469,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 "The Vertex Compact C3 is a space-saving desktop that delivers reliable everyday performance without occupying much desk space. Its clean silver-and-black design fits naturally into both home and office environments.",
                 new BigDecimal("849.99"),
                 10,
-                "/images/desktops/desktop pc 5.png",
+                "/images/desktop pcs/desktop pc 5.png",
                 Map.ofEntries(
                         Map.entry("CPU Model", "Intel Core i5-14400"),
                         Map.entry("CPU Cores", "10"),
@@ -959,6 +959,265 @@ public class DatabaseSeeder implements CommandLineRunner {
                         Map.entry("Keyboard Support", "Detachable Keyboard Included"),
                         Map.entry("Ports", "2 Thunderbolt 4"),
                         Map.entry("Weight", "1.78 lb"),
+                        Map.entry("Color", "Black")
+                )
+        );
+
+        // Adding headphones & earbuds
+        addProduct(
+                "Resona Pulse H500",
+                Category.ACCESSORIES,
+                Brand.RESONA,
+                "The Resona Pulse H500 delivers premium wireless audio with deep bass, crystal-clear vocals, and all-day comfort. Its lightweight design and active noise cancellation make it an excellent choice for commuting, travel, and everyday listening.",
+                new BigDecimal("179.99"),
+                10,
+                "/images/headphones and earbuds/headphones 1.png",
+                Map.ofEntries(
+                        Map.entry("Type", "Over-Ear Wireless"),
+                        Map.entry("Connectivity", "Bluetooth 5.4"),
+                        Map.entry("Driver Size", "40 mm"),
+                        Map.entry("Frequency Response", "20 Hz – 20 kHz"),
+                        Map.entry("Noise Cancellation", "Active Noise Cancellation"),
+                        Map.entry("Microphone", "Dual Beamforming"),
+                        Map.entry("Battery Life", "Up to 40 hours"),
+                        Map.entry("Fast Charging", "Yes"),
+                        Map.entry("Charging Port", "USB-C"),
+                        Map.entry("Voice Assistant Support", "Yes"),
+                        Map.entry("Foldable", "Yes"),
+                        Map.entry("Weight", "9.4 oz"),
+                        Map.entry("Color", "Black / Silver")
+                )
+        );
+
+        addProduct(
+                "Auralis Luxe One",
+                Category.ACCESSORIES,
+                Brand.AURALIS,
+                "Crafted with luxurious materials and premium sound quality, the Auralis Luxe One combines elegant styling with immersive audio. Rich detail, exceptional comfort, and industry-leading noise cancellation make it perfect for discerning listeners.",
+                new BigDecimal("299.99"),
+                10,
+                "/images/headphones and earbuds/headphones 2.png",
+                Map.ofEntries(
+                        Map.entry("Type", "Over-Ear Wireless"),
+                        Map.entry("Connectivity", "Bluetooth 5.4"),
+                        Map.entry("Driver Size", "42 mm"),
+                        Map.entry("Frequency Response", "18 Hz – 22 kHz"),
+                        Map.entry("Noise Cancellation", "Adaptive ANC"),
+                        Map.entry("Microphone", "Triple Beamforming"),
+                        Map.entry("Battery Life", "Up to 45 hours"),
+                        Map.entry("Fast Charging", "Yes"),
+                        Map.entry("Charging Port", "USB-C"),
+                        Map.entry("Voice Assistant Support", "Yes"),
+                        Map.entry("Foldable", "Yes"),
+                        Map.entry("Weight", "9.0 oz"),
+                        Map.entry("Color", "White / Gold")
+                )
+        );
+
+        addProduct(
+                "Resona Wave H700",
+                Category.ACCESSORIES,
+                Brand.RESONA,
+                "The Resona Wave H700 blends vibrant styling with premium sound quality. Designed for music lovers and gamers alike, it offers immersive stereo sound, low-latency wireless connectivity, and exceptional comfort.",
+                new BigDecimal("229.99"),
+                10,
+                "/images/headphones and earbuds/headphones 3.png",
+                Map.ofEntries(
+                        Map.entry("Type", "Over-Ear Wireless"),
+                        Map.entry("Connectivity", "Bluetooth 5.4"),
+                        Map.entry("Driver Size", "45 mm"),
+                        Map.entry("Frequency Response", "20 Hz – 22 kHz"),
+                        Map.entry("Noise Cancellation", "Hybrid ANC"),
+                        Map.entry("Microphone", "Dual Beamforming"),
+                        Map.entry("Battery Life", "Up to 42 hours"),
+                        Map.entry("Fast Charging", "Yes"),
+                        Map.entry("Charging Port", "USB-C"),
+                        Map.entry("Voice Assistant Support", "Yes"),
+                        Map.entry("Foldable", "Yes"),
+                        Map.entry("Weight", "9.7 oz"),
+                        Map.entry("Color", "Blue / Turquoise")
+                )
+        );
+
+        addProduct(
+                "Resona AirBuds",
+                Category.ACCESSORIES,
+                Brand.RESONA,
+                "The Resona AirBuds provide rich, balanced sound in a compact truly wireless design. Their pocket-sized charging case and dependable battery life make them perfect for everyday listening.",
+                new BigDecimal("79.99"),
+                10,
+                "/images/headphones and earbuds/earbuds 1.png",
+                Map.ofEntries(
+                        Map.entry("Type", "True Wireless Earbuds"),
+                        Map.entry("Connectivity", "Bluetooth 5.4"),
+                        Map.entry("Driver Size", "10 mm"),
+                        Map.entry("Frequency Response", "20 Hz – 20 kHz"),
+                        Map.entry("Noise Cancellation", "Environmental Noise Cancellation"),
+                        Map.entry("Microphone", "Dual Microphones"),
+                        Map.entry("Battery Life", "8 hours (32 hours with case)"),
+                        Map.entry("Fast Charging", "Yes"),
+                        Map.entry("Charging Port", "USB-C"),
+                        Map.entry("Wireless Charging", "No"),
+                        Map.entry("Water Resistance", "IPX5"),
+                        Map.entry("Weight", "1.8 oz (with case)"),
+                        Map.entry("Color", "Black")
+                )
+        );
+
+        addProduct(
+                "Auralis AuraPods",
+                Category.ACCESSORIES,
+                Brand.AURALIS,
+                "Designed to complement the Auralis luxury lineup, the AuraPods feature premium sound, adaptive noise cancellation, and an elegant charging case. Their refined tuning and exceptional comfort provide a first-class listening experience.",
+                new BigDecimal("169.99"),
+                10,
+                "/images/headphones and earbuds/earbuds 2.png",
+                Map.ofEntries(
+                        Map.entry("Type", "True Wireless Earbuds"),
+                        Map.entry("Connectivity", "Bluetooth 5.4"),
+                        Map.entry("Driver Size", "11 mm"),
+                        Map.entry("Frequency Response", "18 Hz – 22 kHz"),
+                        Map.entry("Noise Cancellation", "Adaptive ANC"),
+                        Map.entry("Microphone", "Triple Microphones"),
+                        Map.entry("Battery Life", "9 hours (36 hours with case)"),
+                        Map.entry("Fast Charging", "Yes"),
+                        Map.entry("Charging Port", "USB-C"),
+                        Map.entry("Wireless Charging", "Yes"),
+                        Map.entry("Water Resistance", "IPX5"),
+                        Map.entry("Weight", "2.0 oz (with case)"),
+                        Map.entry("Color", "Red")
+                )
+        );
+
+        // Adding HDMI cables
+        addProduct(
+                "Resona Link HDMI 2.1",
+                Category.ACCESSORIES,
+                Brand.RESONA,
+                "The Resona Link HDMI 2.1 cable delivers reliable high-speed connectivity for gaming consoles, PCs, TVs, and monitors. Supporting ultra-high resolutions and refresh rates, it provides crisp video and immersive audio while maintaining excellent signal integrity.",
+                new BigDecimal("14.99"),
+                10,
+                "/images/hdmi cables/hdmi 1.png",
+                Map.ofEntries(
+                        Map.entry("Cable Type", "HDMI 2.1"),
+                        Map.entry("Cable Length", "6 ft"),
+                        Map.entry("Maximum Resolution", "8K @ 60 Hz, 4K @ 120 Hz"),
+                        Map.entry("Maximum Bandwidth", "48 Gbps"),
+                        Map.entry("Connector Type", "HDMI Type-A Male to HDMI Type-A Male"),
+                        Map.entry("Cable Jacket", "PVC"),
+                        Map.entry("Connector Plating", "Gold-Plated"),
+                        Map.entry("HDR Support", "Yes"),
+                        Map.entry("eARC Support", "Yes"),
+                        Map.entry("HDCP Support", "HDCP 2.3"),
+                        Map.entry("Variable Refresh Rate (VRR)", "Yes"),
+                        Map.entry("Auto Low Latency Mode (ALLM)", "Yes"),
+                        Map.entry("Color", "Black")
+                )
+        );
+
+        addProduct(
+                "GreenPeak UltraFlex HDMI 2.1",
+                Category.ACCESSORIES,
+                Brand.GREENPEAK,
+                "Built for premium home theater and gaming setups, the GreenPeak UltraFlex HDMI 2.1 cable features a durable braided exterior, gold-plated connectors, and support for the latest HDMI features to ensure maximum performance and longevity.",
+                new BigDecimal("24.99"),
+                10,
+                "/images/hdmi cables/hdmi 2.png",
+                Map.ofEntries(
+                        Map.entry("Cable Type", "HDMI 2.1"),
+                        Map.entry("Cable Length", "10 ft"),
+                        Map.entry("Maximum Resolution", "8K @ 60 Hz, 4K @ 120 Hz"),
+                        Map.entry("Maximum Bandwidth", "48 Gbps"),
+                        Map.entry("Connector Type", "HDMI Type-A Male to HDMI Type-A Male"),
+                        Map.entry("Cable Jacket", "Braided Nylon"),
+                        Map.entry("Connector Plating", "Gold-Plated"),
+                        Map.entry("HDR Support", "Yes"),
+                        Map.entry("eARC Support", "Yes"),
+                        Map.entry("HDCP Support", "HDCP 2.3"),
+                        Map.entry("Variable Refresh Rate (VRR)", "Yes"),
+                        Map.entry("Auto Low Latency Mode (ALLM)", "Yes"),
+                        Map.entry("Color", "Black")
+                )
+        );
+
+        // Adding speakers
+        addProduct(
+                "GalaGear AudioCore S200",
+                Category.ACCESSORIES,
+                Brand.GALAGEAR,
+                "The GalaGear AudioCore S200 desktop speakers combine elegant styling with rich stereo sound, making them ideal for music, movies, gaming, and everyday desktop use. Their clean, modern design fits seamlessly into both home and office workspaces.",
+                new BigDecimal("79.99"),
+                10,
+                "/images/speakers/speaker 1.png",
+                Map.ofEntries(
+                        Map.entry("Speaker Type", "2.0 Stereo Desktop Speakers"),
+                        Map.entry("Connectivity", "3.5 mm Audio, USB Power"),
+                        Map.entry("Total Output Power", "24 W RMS"),
+                        Map.entry("Frequency Response", "60 Hz – 20 kHz"),
+                        Map.entry("Driver Size", "4 in Woofer, 1 in Tweeter"),
+                        Map.entry("Subwoofer Included", "No"),
+                        Map.entry("Bluetooth", "No"),
+                        Map.entry("Volume Control", "Front Knob"),
+                        Map.entry("Headphone Jack", "Yes"),
+                        Map.entry("Microphone Input", "No"),
+                        Map.entry("RGB Lighting", "No"),
+                        Map.entry("Power Source", "AC Adapter"),
+                        Map.entry("Dimensions", "10.2 × 5.4 × 6.7 in (Each Speaker)"),
+                        Map.entry("Weight", "7.8 lb"),
+                        Map.entry("Color", "Black")
+                )
+        );
+
+        addProduct(
+                "Vertex Studio A300",
+                Category.ACCESSORIES,
+                Brand.VERTEX,
+                "The Vertex Studio A300 delivers powerful stereo audio with enhanced bass and crystal-clear highs. Its angular modern design and front-mounted controls make it an excellent choice for desktop entertainment, gaming, and productivity.",
+                new BigDecimal("109.99"),
+                10,
+                "/images/speakers/speaker 2.png",
+                Map.ofEntries(
+                        Map.entry("Speaker Type", "2.0 Stereo Desktop Speakers"),
+                        Map.entry("Connectivity", "3.5 mm Audio, USB Power"),
+                        Map.entry("Total Output Power", "40 W RMS"),
+                        Map.entry("Frequency Response", "50 Hz – 20 kHz"),
+                        Map.entry("Driver Size", "4.5 in Woofer, 1 in Tweeter"),
+                        Map.entry("Subwoofer Included", "No"),
+                        Map.entry("Bluetooth", "No"),
+                        Map.entry("Volume Control", "Front Knob"),
+                        Map.entry("Headphone Jack", "Yes"),
+                        Map.entry("Microphone Input", "Yes"),
+                        Map.entry("RGB Lighting", "White Accent LED"),
+                        Map.entry("Power Source", "AC Adapter"),
+                        Map.entry("Dimensions", "11.0 × 5.7 × 7.0 in (Each Speaker)"),
+                        Map.entry("Weight", "9.4 lb"),
+                        Map.entry("Color", "Black")
+                )
+        );
+
+        addProduct(
+                "Resona SoundBar S500",
+                Category.ACCESSORIES,
+                Brand.RESONA,
+                "The Resona SoundBar S500 delivers room-filling stereo sound in a slim profile that fits perfectly beneath a monitor or television. Tuned for clear dialogue and balanced audio, it's ideal for gaming, streaming, music, and movies.",
+                new BigDecimal("149.99"),
+                5,
+                "/images/speakers/speaker 3.png",
+                Map.ofEntries(
+                        Map.entry("Speaker Type", "Wired Sound Bar"),
+                        Map.entry("Connectivity", "USB, 3.5 mm Audio, Optical"),
+                        Map.entry("Total Output Power", "60 W RMS"),
+                        Map.entry("Frequency Response", "45 Hz – 20 kHz"),
+                        Map.entry("Driver Size", "Dual 2.5 in Full-Range Drivers"),
+                        Map.entry("Subwoofer Included", "No"),
+                        Map.entry("Bluetooth", "No"),
+                        Map.entry("Volume Control", "Front Dial"),
+                        Map.entry("Headphone Jack", "No"),
+                        Map.entry("Microphone Input", "No"),
+                        Map.entry("RGB Lighting", "No"),
+                        Map.entry("Power Source", "AC Adapter"),
+                        Map.entry("Dimensions", "25.5 × 3.2 × 3.6 in"),
+                        Map.entry("Weight", "5.6 lb"),
                         Map.entry("Color", "Black")
                 )
         );

@@ -114,16 +114,12 @@ img {
 
 .dropdown-content {
     display: none;
-
     position: absolute;
-    top: 100%;
+    top: 160%;
     left: 0;
-
     min-width: 180px;
-
     background-color: white;
     border: 1px solid #dddddd;
-
     z-index: 1000;
 }
 
@@ -240,13 +236,14 @@ img {
     text-align: center;
 }
 
-.product-card img {
-    width: 100%;
+.product-img-container {
     height: 250px;
+}
 
-    object-fit: cover;
-
-    border: 1px solid #cccccc;
+.product-card img {
+    display: block;
+    margin: 0 auto;
+    max-height: 250px;
 }
 
 .product-card h3 {
@@ -255,7 +252,6 @@ img {
 }
 
 .product-card p {
-    font-weight: bold;
     font-size: 1.1rem;
 }
 

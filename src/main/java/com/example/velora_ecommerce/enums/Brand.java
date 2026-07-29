@@ -7,7 +7,9 @@ public enum Brand {
     ARCTIK("Arctik"),
     GALAGEAR("GalaGear"),
     GREENPEAK("GreenPeak"),
-    NOVABYTE("Novabyte");
+    NOVABYTE("Novabyte"),
+    RESONA("Resona"),
+    AURALIS("Auralis");
 
     private final String displayName;
 

@@ -20,7 +20,15 @@ public class SecurityConfig {
 
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/products/**", "/register", "/login")
+                        .requestMatchers(
+                                "/",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/products/**",
+                                "/register",
+                                "/login"
+                        )
                         .permitAll()
 
                         .anyRequest()

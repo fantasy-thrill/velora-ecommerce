@@ -64,7 +64,7 @@
             <div class="dropdown-content">
                 <a th:each="category : ${categories}"
                    th:href="@{/products/category/{name}(name=${category.name})}"
-                   th:text="${category.name}">
+                   th:text="${category.getDisplayName()}">
                     Category Name
                 </a>
             </div>
@@ -119,7 +119,9 @@
 
     <div class="product-grid">
         <div class="product-card" th:each="product : ${featuredProducts}">
-            <img th:src="${product.imageUrl}" alt="Product Image">
+            <div class="product-img-container">
+                <img th:src="${product.imageUrl}" alt="Product Image">
+            </div>
 
             <h3 th:text="${product.name}">Product Name</h3>
 
