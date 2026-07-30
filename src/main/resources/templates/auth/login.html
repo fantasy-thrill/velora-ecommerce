@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Velora</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+
+<body>
+
+<div class="page-container">
+
+    <main class="login-container">
+        <a th:href="@{/}" class="logo">
+            <img th:src="@{/images/velora_logo.png}" alt="Velora Logo">
+        </a>
+
+        <!-- Heading -->
+        <h1>Login to your account</h1>
+
+        <!-- Login Card -->
+        <div class="login-card">
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">E-mail/username</label>
+                    <input id="username" name="username" type="text" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" required>
+                </div>
+
+                <button type="submit" class="login-button">Login</button>
+            </form>
+
+            <div class="login-links">
+                <p>
+                    Click <a th:href="@{/forgot-password}">here</a> if you forgot your password.
+                </p>
+
+                <p>
+                    Don't have an account? <a th:href="@{./register}">Register</a>
+                </p>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>© 2026 Velora Electronics. This is not a real company.</p>
+
+        <div class="footer-links">
+            <a th:href="@{/about}">About Velora</a>
+            <a th:href="@{/contact}">Contact Us</a>
+            <a th:href="@{/privacy}">Privacy Policy</a>
+            <a th:href="@{/terms}">Terms and Conditions</a>
+        </div>
+    </footer>
+
+</div>
+
+</body>
+
+</html>

@@ -1,5 +1,6 @@
 package com.example.velora_ecommerce.dtos;
 
+import com.example.velora_ecommerce.enums.State;
 import lombok.*;
 
 @Getter
@@ -11,7 +12,7 @@ public class AddressDto {
 
     private String city;
 
-    private String state;
+    private State state;
 
     private String zipCode;
 }

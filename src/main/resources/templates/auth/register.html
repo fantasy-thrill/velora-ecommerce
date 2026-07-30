@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | Velora</title>
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+</head>
+
+<body>
+
+<div class="page-container">
+    <main class="register-container">
+        <a th:href="@{/}" class="logo">
+            <img th:src="@{/images/velora_logo.png}" alt="Velora Logo">
+        </a>
+
+        <h1>Create your account</h1>
+
+        <div class="register-card">
+            <form th:action="@{/auth/register}" th:object="${registerCustomer}" method="post">
+                <div class="form-row">
+                    <label for="firstName">First name:</label>
+                    <input id="firstName" type="text" th:field="*{firstName}" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="lastName">Last name:</label>
+                    <input id="lastName" type="text" th:field="*{lastName}" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="email">E-mail address:</label>
+                    <input id="email" type="email" th:field="*{email}" required>
+
+                    <div class="validation-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </div>
+
+                <div class="form-row">
+                    <label for="streetAddress">Street address:</label>
+                    <input id="streetAddress" type="text" th:field="*{address.street}" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="city">City:</label>
+                    <input id="city" type="text" th:field="*{address.city}" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="state">State:</label>
+                    <select id="state" th:field="*{address.state}" required>
+                        <option value="">Select</option>
+                        <option
+                                th:each="state : ${states}"
+                                th:value="${state}"
+                                th:text="${state} + ' - ' + ${state.fullName}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label for="zipCode">ZIP Code:</label>
+                    <input id="zipCode" type="text" th:field="*{address.zipCode}" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="phoneNumber">Phone number:</label>
+                    <input id="phoneNumber" type="tel" th:field="*{phoneNumber}" required>
+
+                    <div class="validation-error"
+                         th:if="${#fields.hasErrors('phoneNumber')}"
+                         th:errors="*{phoneNumber}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="password">Password:</label>
+                    <input id="password" type="password" th:field="*{password}" required>
+
+                    <div class="password-hint">
+                        Password must contain:
+                        <br>
+                        • At least 8 characters
+                        <br>
+                        • One uppercase letter
+                        <br>
+                        • One lowercase letter
+                        <br>
+                        • One number
+                        <br>
+                        • One special character
+                    </div>
+
+                    <div class="validation-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                </div>
+
+                <div class="form-row">
+                    <label for="confirmPassword">Confirm password:</label>
+                    <input id="confirmPassword" type="password" th:field="*{confirmPassword}" required>
+
+                    <div class="validation-error"
+                         th:if="${#fields.hasErrors('confirmPassword')}"
+                         th:errors="*{confirmPassword}">
+                    </div>
+                </div>
+
+                <div class="button-row">
+                    <a th:href="@{/auth/login}" class="cancel-button">Cancel</a>
+                    <button type="submit" class="register-button">Register</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+
+</body>
+
+</html>

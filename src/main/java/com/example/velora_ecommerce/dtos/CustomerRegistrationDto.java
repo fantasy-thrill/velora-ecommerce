@@ -12,7 +12,6 @@ import com.example.velora_ecommerce.validation.PasswordsMatch;
 @NoArgsConstructor
 @PasswordsMatch
 public class CustomerRegistrationDto {
-
     @NotBlank(message = "First name is required.")
     private String firstName;
 
@@ -25,7 +24,7 @@ public class CustomerRegistrationDto {
 
     @NotNull
     @Valid
-    private Address address;
+    private Address address = new Address();
 
     @NotBlank(message = "Phone number is required.")
     private String phoneNumber;

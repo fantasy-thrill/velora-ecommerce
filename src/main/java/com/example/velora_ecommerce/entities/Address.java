@@ -1,5 +1,6 @@
 package com.example.velora_ecommerce.entities;
 
+import com.example.velora_ecommerce.enums.State;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -27,9 +28,9 @@ public class Address {
     @Column(nullable = false)
     private String city;
 
-    @NotBlank
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String state;
+    private State state;
 
     @NotBlank(message = "ZIP code is required.")
     @Pattern(

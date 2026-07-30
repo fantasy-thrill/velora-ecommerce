@@ -1,6 +1,7 @@
 package com.example.velora_ecommerce.controllers;
 
 import com.example.velora_ecommerce.dtos.CustomerRegistrationDto;
+import com.example.velora_ecommerce.enums.State;
 import com.example.velora_ecommerce.services.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,8 @@ public class AuthController {
 
     @GetMapping("/register")
     public String registerPage(Model model) {
-        model.addAttribute(
-                "registerCustomer",
-                new CustomerRegistrationDto());
+        model.addAttribute("registerCustomer", new CustomerRegistrationDto());
+        model.addAttribute("states", State.values());
 
         return "auth/register";
     }

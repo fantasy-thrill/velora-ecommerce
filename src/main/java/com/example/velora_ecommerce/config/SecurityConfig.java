@@ -26,8 +26,8 @@ public class SecurityConfig {
                                 "/js/**",
                                 "/images/**",
                                 "/products/**",
-                                "/register",
-                                "/login"
+                                "/auth/register",
+                                "/auth/login"
                         )
                         .permitAll()
 
@@ -35,7 +35,7 @@ public class SecurityConfig {
                         .authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
+                        .loginPage("/auth/login")
                         .defaultSuccessUrl("/")
                         .permitAll()
                 )
