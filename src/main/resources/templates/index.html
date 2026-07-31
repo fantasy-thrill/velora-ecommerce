@@ -54,7 +54,9 @@
 
                 <a th:href="@{/account}">My Account</a>
 
-                <a th:href="@{/logout}">Logout</a>
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit" class="logout-button">Logout</button>
+                </form>
             </div>
         </div>
 
@@ -96,21 +98,10 @@
 
 <!-- Product category tiles -->
 <section class="category-section">
-    <a class="category-card" th:href="@{/products/category/desktops}">
-        Browse Desktop PCs
-    </a>
-
-    <a class="category-card" th:href="@{/products/category/laptops}">
-        Browse Laptops
-    </a>
-
-    <a class="category-card" th:href="@{/products/category/tablets}">
-        Browse Tablets
-    </a>
-
-    <a class="category-card" th:href="@{/products/category/accessories}">
-        Browse Accessories
-    </a>
+    <a class="category-card" th:href="@{/products/category/desktops}">Browse Desktop PCs</a>
+    <a class="category-card" th:href="@{/products/category/laptops}">Browse Laptops</a>
+    <a class="category-card" th:href="@{/products/category/tablets}">Browse Tablets</a>
+    <a class="category-card" th:href="@{/products/category/accessories}">Browse Accessories</a>
 </section>
 
 <!-- Featured products -->

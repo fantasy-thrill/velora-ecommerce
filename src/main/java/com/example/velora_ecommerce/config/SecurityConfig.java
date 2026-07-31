@@ -17,7 +17,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
@@ -36,7 +35,9 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/auth/login")
-                        .defaultSuccessUrl("/")
+                        .loginProcessingUrl("/login")
+                        .usernameParameter("email")
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
                 .logout(logout -> logout.logoutSuccessUrl("/"))

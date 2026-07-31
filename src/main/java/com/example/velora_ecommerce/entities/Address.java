@@ -12,12 +12,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {
-    @NotBlank
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String customerFirstName;
 
-    @NotBlank
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String customerLastName;
 
     @NotBlank

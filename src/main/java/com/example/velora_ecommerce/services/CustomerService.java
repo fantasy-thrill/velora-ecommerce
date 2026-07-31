@@ -1,25 +1,24 @@
 package com.example.velora_ecommerce.services;
 
 import com.example.velora_ecommerce.dtos.*;
-import com.example.velora_ecommerce.entities.Address;
-import com.example.velora_ecommerce.entities.Cart;
-import com.example.velora_ecommerce.entities.Customer;
+import com.example.velora_ecommerce.entities.*;
 import com.example.velora_ecommerce.mappers.CustomerMapper;
 import com.example.velora_ecommerce.repositories.CartRepository;
 import com.example.velora_ecommerce.repositories.CustomerRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final CartRepository cartRepository;
 
     public CustomerService(
@@ -56,9 +55,18 @@ public class CustomerService {
         return CustomerMapper.toUpdateDto(customer);
     }
 
+    public boolean accountWithEmailExists(String email) {
+        return customerRepository.existsByEmail(email);
+    }
+
+    @Transactional
     public void registerCustomer(CustomerRegistrationDto dto) {
         Customer customer = new Customer();
         Cart cart = new Cart();
+
+        if (customerRepository.existsByEmail(dto.getEmail())) {
+            throw new IllegalArgumentException("An account already exists with that e-mail address");
+        }
 
         customer.setEmail(dto.getEmail());
         customer.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -77,14 +85,13 @@ public class CustomerService {
         address.setZipCode(dtoAddress.getZipCode());
 
         customer.setAddress(address);
+        customer.setCart(cart);
 
         cart.setCustomer(customer);
-        cartRepository.save(cart);
-
         customerRepository.save(customer);
+        cartRepository.save(cart);
     }
 
-    
     public void updateCustomer(String email, CustomerUpdateDto updatedDto) {
         Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
@@ -104,14 +111,18 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
-    
+
     public void changePassword(String email, ChangePasswordDto updateDto) {
         Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
         String newPassword = updateDto.getPassword();
-        customer.setPassword(passwordEncoder.encode(newPassword));
 
+        if (!newPassword.equals(updateDto.getConfirmPassword())) {
+            throw new IllegalArgumentException("Passwords do not match.");
+        }
+
+        customer.setPassword(passwordEncoder.encode(newPassword));
         customerRepository.save(customer);
     }
 
