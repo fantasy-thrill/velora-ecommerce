@@ -56,7 +56,7 @@ public class AuthController {
     @PostMapping("/verify-email")
     @ResponseBody
     public VerifyEmailResponse verifyEmail(
-            @Valid @ModelAttribute("forgotPasswordEmail") ForgotPasswordEmailDto emailDto,
+            @Valid @RequestBody ForgotPasswordEmailDto emailDto,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {

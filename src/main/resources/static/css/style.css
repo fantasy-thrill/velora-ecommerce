@@ -1,7 +1,4 @@
-/* =========================
-   GLOBAL STYLES
-========================= */
-
+/*  GLOBAL STYLES */
 * {
     margin: 0;
     padding: 0;
@@ -25,10 +22,7 @@ img {
     display: block;
 }
 
-/* =========================
-   HEADER
-========================= */
-
+/*  HEADER */
 .header {
     border-bottom: 1px solid #dddddd;
 }
@@ -79,10 +73,7 @@ img {
     font-size: 2rem;
 }
 
-/* =========================
-   NAVIGATION
-========================= */
-
+/*  NAVIGATION */
 .navbar {
     display: flex;
     justify-content: center;
@@ -104,10 +95,7 @@ img {
     cursor: pointer;
 }
 
-/* =========================
-   DROPDOWNS
-========================= */
-
+/*  DROPDOWNS */
 .dropdown {
     position: relative;
 }
@@ -161,17 +149,14 @@ img {
 }
 
 .logout-button:hover {
-    background-color: #f5f5f5; /* Match your dropdown link hover */
+    background-color: #f5f5f5; /*  Match your dropdown link hover */
 }
 
 /*.dropdown:hover .dropdown-content {*/
-/*    display: block;*/
+/*  display: block;*/
 /*}*/
 
-/* =========================
-   HERO SECTION
-========================= */
-
+/*  HERO SECTION */
 .hero-section {
     width: 100%;
 }
@@ -182,10 +167,7 @@ img {
     object-fit: cover;
 }
 
-/* =========================
-   WHY CHOOSE VELORA
-========================= */
-
+/*  WHY CHOOSE VELORA */
 .about-section {
     max-width: 1200px;
     margin: 60px auto;
@@ -202,10 +184,7 @@ img {
     font-size: 1rem;
 }
 
-/* =========================
-   CATEGORY TILES
-========================= */
-
+/*  CATEGORY TILES */
 .category-section {
     max-width: 1400px;
     margin: 60px auto;
@@ -240,10 +219,7 @@ img {
     transform: scale(1.05);
 }
 
-/* =========================
-   FEATURED PRODUCTS
-========================= */
-
+/*  FEATURED PRODUCTS */
 .featured-products {
     max-width: 1400px;
     margin: 60px auto;
@@ -289,10 +265,7 @@ img {
     font-size: 1.1rem;
 }
 
-/* =========================
-   NEWSLETTER
-========================= */
-
+/*  NEWSLETTER */
 .newsletter-section {
     max-width: 1400px;
     margin: 80px auto;
@@ -343,10 +316,7 @@ img {
     width: 350px;
 }
 
-/* =========================
-   PARTNERS
-========================= */
-
+/*  PARTNERS */
 .partners-section {
     padding: 70px 0;
     text-align: center;
@@ -393,10 +363,7 @@ img {
     }
 }
 
-/* =========================
-   FOOTER
-========================= */
-
+/*  FOOTER */
 footer {
     margin-top: 80px;
 
@@ -419,10 +386,7 @@ footer {
     text-decoration: underline;
 }
 
-/* =========================
-   RESPONSIVE DESIGN
-========================= */
-
+/*  RESPONSIVE DESIGN */
 @media (max-width: 992px) {
 
     .category-section,

@@ -20,8 +20,13 @@
         <!-- Heading -->
         <h1>Login to your account</h1>
 
-        <!-- Login Card -->
+        <!-- Login card -->
         <div class="login-card">
+            <!-- Login error -->
+            <div class="login-error" th:if="${param.error}">
+                Invalid email address or password.
+            </div>
+
             <form th:action="@{/login}" method="post">
                 <div class="form-group">
                     <label for="email">E-mail</label>
@@ -37,13 +42,9 @@
             </form>
 
             <div class="login-links">
-                <p>
-                    Click <a th:href="@{/forgot-password}">here</a> if you forgot your password.
-                </p>
+                <p>Click <a th:href="@{./forgot-password}">here</a> if you forgot your password.</p>
 
-                <p>
-                    Don't have an account? <a th:href="@{./register}">Register</a>
-                </p>
+                <p>Don't have an account? <a th:href="@{./register}">Register</a></p>
             </div>
         </div>
     </main>

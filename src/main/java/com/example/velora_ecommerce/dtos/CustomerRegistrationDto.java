@@ -2,6 +2,7 @@ package com.example.velora_ecommerce.dtos;
 
 import com.example.velora_ecommerce.config.SecurityConfig;
 import com.example.velora_ecommerce.entities.Address;
+import com.example.velora_ecommerce.validation.PasswordConfirmation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -11,7 +12,7 @@ import com.example.velora_ecommerce.validation.PasswordsMatch;
 @Setter
 @NoArgsConstructor
 @PasswordsMatch
-public class CustomerRegistrationDto {
+public class CustomerRegistrationDto implements PasswordConfirmation {
     @NotBlank(message = "First name is required.")
     private String firstName;
 

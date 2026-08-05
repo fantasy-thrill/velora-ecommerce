@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | Velora</title>
+    <link rel="stylesheet" th:href="@{/css/products.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+<div class="page-container">
+    <!--  HEADER  -->
+    <header class="header">
+        <div class="header-top">
+            <div class="logo-container">
+                <a th:href="@{/}">
+                    <img th:src="@{/images/velora_logo.png}" alt="Velora Logo">
+                </a>
+            </div>
+
+            <div class="search-container">
+                <form th:action="@{/products/search}" method="get">
+                    <input type="text" name="query" placeholder="Search products...">
+
+                    <button type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="cart-container">
+                <a th:href="@{/cart}">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="dropdown">
+                <button class="nav-button">Account</button>
+
+                <div class="dropdown-content" sec:authorize="isAnonymous()">
+                    <a th:href="@{../auth/login}">Login</a>
+
+                    <a th:href="@{../auth/register}">Register</a>
+                </div>
+
+                <div class="dropdown-content" sec:authorize="isAuthenticated()">
+                    <a th:href="@{../orders}">My Orders</a>
+
+                    <a th:href="@{../account}">My Account</a>
+
+                    <form th:action="@{/logout}" method="post" class="logout-form">
+                        <button type="submit" class="logout-button">Logout</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button class="nav-button">Shop</button>
+
+                <div class="dropdown-content">
+                    <a th:href="@{./all}">All products</a>
+                    <a th:each="category : ${categories}"
+                       th:href="@{/products/category/{name}(name=${category.name})}"
+                       th:text="${category.getDisplayName()}">
+                        Category Name
+                    </a>
+                </div>
+            </div>
+
+            <a th:href="@{../deals}">Deals</a>
+
+            <a th:href="@{../about}">About</a>
+
+            <a th:href="@{../support}">Support</a>
+        </nav>
+    </header>
+
+    <!--  MAIN CONTENT  -->
+    <main class="products-page">
+        <!--  Search-result heading  -->
+        <h1 th:if="${filterDto.query != null and !filterDto.query.isBlank()}">
+            Search results for: "<span th:text="${filterDto.query}"></span>"
+        </h1>
+        <!--  All-products heading  -->
+        <h1 th:unless="${filterDto.query != null and !filterDto.query.isBlank()}">
+            All Products
+        </h1>
+
+        <!--  SEARCH CONTENT  -->
+        <div class="products-layout">
+
+            <!--  FILTER SIDEBAR  -->
+            <aside class="filter-sidebar">
+                <form id="filter-form" th:action="@{/products/all}" method="get">
+                    <!--  Preserve search query  -->
+                    <input
+                            th:if="${filterDto.query != null}"
+                            type="hidden"
+                            name="query"
+                            th:value="${filterDto.query}">
+
+                    <!--  BRAND FILTER  -->
+                    <fieldset class="filter-group">
+                        <legend>Filter by brand</legend>
+                        <label class="checkbox-option" th:each="brand : ${brands}">
+                            <input
+                                    type="checkbox"
+                                    name="brands"
+                                    th:value="${brand}"
+                                    th:checked="${filterDto.brands != null and filterDto.brands.contains(brand)}"
+                                    onchange="this.form.submit()">
+                            <span th:text="${brand.displayName}">Brand</span>
+                        </label>
+                    </fieldset>
+
+                    <!--  SORT  -->
+                    <fieldset class="filter-group">
+                        <legend>Sort by</legend>
+                        <label class="checkbox-option">
+                            <input
+                                    type="radio"
+                                    name="sortOption"
+                                    value="PRICE_LOW_TO_HIGH"
+                                    th:checked="${filterDto.sortOption == T(com.example.velora_ecommerce.enums.SortOption).PRICE_LOW_TO_HIGH}"
+                                    onchange="this.form.submit()">
+                            <span>Price (low to high)</span>
+                        </label>
+
+                        <label class="checkbox-option">
+                            <input
+                                    type="radio"
+                                    name="sortOption"
+                                    value="PRICE_HIGH_TO_LOW"
+                                    th:checked="${filterDto.sortOption == T(com.example.velora_ecommerce.enums.SortOption).PRICE_HIGH_TO_LOW}"
+                                    onchange="this.form.submit()">
+                            <span>Price (high to low)</span>
+                        </label>
+                    </fieldset>
+
+                    <!--  Optional clear filters button  -->
+                    <a
+                            th:if="${filterDto.query != null}"
+                            th:href="@{/products/search(query=${filterDto.query})}"
+                            class="clear-filters">
+                        Clear filters
+                    </a>
+                    <a
+                            th:unless="${filterDto.query != null}"
+                            th:href="@{/products/all}"
+                            class="clear-filters">
+                        Clear filters
+                    </a>
+                </form>
+            </aside>
+
+            <!--  PRODUCT RESULTS  -->
+            <section class="product-results">
+
+                <!--  No Results  -->
+                <div class="no-results" th:if="${results.size == 0}">
+                    <h2>No products found</h2>
+                    <p>Try changing your search or filters.</p>
+                </div>
+
+                <!--  Product Grid  -->
+                <div class="product-grid" th:unless="${results.size == 0}">
+                    <article class="product-card" th:each="product : ${results.content}">
+                        <a class="product-image-link" th:href="@{/products/{id}(id=${product.id})}">
+                            <img class="product-image" th:src="@{${product.imageUrl}}" th:alt="${product.name}">
+                        </a>
+
+                        <div class="product-information">
+                            <a
+                                    class="product-name"
+                                    th:href="@{/products/{id}(id=${product.id})}"
+                                    th:text="${product.name}">
+                                Product Name
+                            </a>
+
+                            <p class="product-price" th:text="${#numbers.formatCurrency(product.price)}">
+                                $00.00
+                            </p>
+                        </div>
+                    </article>
+                </div>
+
+                <!--  PAGINATION  -->
+                <nav class="pagination" th:if="${results.totalPages > 1}" aria-label="Product pages">
+                    <!--  Previous  -->
+                    <a
+                            th:if="${results.hasPrevious()}"
+                            th:href="@{/products/all(
+                                query=${filterDto.query},
+                                brands=${filterDto.brands},
+                                sort=${filterDto.sortOption},
+                                page=${results.number - 1}
+                            )}"
+                            class="page-arrow"
+                            aria-label="Previous page">
+                        &#9664;
+                    </a>
+
+                    <!--  Disabled Previous  -->
+                    <span th:unless="${results.hasPrevious()}" class="page-arrow disabled">
+                        &#9664;
+                    </span>
+
+                    <!--  Page Information  -->
+                    <span class="page-number">
+                        Page
+                        <span th:text="${results.number + 1}">1</span>
+                        of
+                        <span th:text="${results.totalPages}">4</span>
+                    </span>
+
+                    <!--  Next  -->
+                    <a
+                            th:if="${results.hasNext()}"
+                            th:href="@{/products/all(
+                                query=${filterDto.query},
+                                brands=${filterDto.brands},
+                                sort=${filterDto.sortOption},
+                                page=${results.number + 1}
+                            )}"
+                            class="page-arrow"
+                            aria-label="Next page">
+                        &#9654;
+                    </a>
+
+                    <!--  Disabled Next  -->
+                    <span th:unless="${results.hasNext()}" class="page-arrow disabled">
+                        &#9654;
+                    </span>
+                </nav>
+            </section>
+        </div>
+    </main>
+</div>
+</body>
+</html>

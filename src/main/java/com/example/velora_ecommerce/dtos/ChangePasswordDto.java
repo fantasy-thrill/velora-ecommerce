@@ -1,6 +1,7 @@
 package com.example.velora_ecommerce.dtos;
 
 import com.example.velora_ecommerce.config.SecurityConfig;
+import com.example.velora_ecommerce.validation.PasswordConfirmation;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import com.example.velora_ecommerce.validation.PasswordsMatch;
@@ -9,7 +10,7 @@ import com.example.velora_ecommerce.validation.PasswordsMatch;
 @Setter
 @NoArgsConstructor
 @PasswordsMatch
-public class ChangePasswordDto {
+public class ChangePasswordDto implements PasswordConfirmation {
     @NotBlank(message = "Password is required.")
     @Size(min = 8,
             message = "Password must be at least 8 characters long.")

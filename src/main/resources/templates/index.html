@@ -7,8 +7,7 @@
     <title>Velora Electronics</title>
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
@@ -23,7 +22,7 @@
 
         <div class="search-container">
             <form th:action="@{/products/search}" method="get">
-                <input type="text" name="keyword" placeholder="Search products...">
+                <input type="text" name="query" placeholder="Search products...">
 
                 <button type="submit">
                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -64,6 +63,7 @@
             <button class="nav-button">Shop</button>
 
             <div class="dropdown-content">
+                <a th:href="@{/products/all}">All products</a>
                 <a th:each="category : ${categories}"
                    th:href="@{/products/category/{name}(name=${category.name})}"
                    th:text="${category.getDisplayName()}">

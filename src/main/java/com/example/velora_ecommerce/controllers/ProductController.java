@@ -28,39 +28,36 @@ public class ProductController {
     @GetMapping("/search")
     public String searchProducts(
             @RequestParam String query,
+            @RequestParam(required = false) Category category,
             @RequestParam(required = false) List<Brand> brands,
             @RequestParam(required = false) SortOption sort,
             @RequestParam(defaultValue = "0") int page,
-            Model model) {
-
-        ProductFilterDto searchDto = new ProductFilterDto(query, brands, sort, page);
+            Model model
+    ) {
+        ProductFilterDto searchDto = new ProductFilterDto(query, category, brands, sort, page);
         Page<ProductResponseDto> results = productService.searchProducts(searchDto);
-        model.addAttribute("searchQuery", query);
-        model.addAttribute("results", results);
+
+        addListingAttributes(model, searchDto, results);
+        System.out.println(results.getTotalPages());
+        System.out.println(results);
 
         return "products/search";
     }
 
-    @GetMapping("/category/{category}")
-    public String productsByCategory(
-            @PathVariable Category category,
+    @GetMapping("/all")
+    public String allProducts(
+            @RequestParam(required = false) Category category,
+            @RequestParam(required = false) List<Brand> brands,
+            @RequestParam(required = false) SortOption sortOption,
             @RequestParam(defaultValue = "0") int page,
             Model model
     ) {
-        Page<ProductResponseDto> results = productService.getProductsByCategory(category, page, 12);
+        ProductFilterDto filterDto = new ProductFilterDto(null, category, brands, sortOption, page);
+        Page<ProductResponseDto> results = productService.getAllProducts(filterDto);
 
-        model.addAttribute("results", results);
-        model.addAttribute("category", category);
+        addListingAttributes(model, filterDto, results);
 
-        return "products/category";
-    }
-
-    @GetMapping
-    public String allProducts(@RequestParam(defaultValue = "0") int page, Model model) {
-        Page<ProductResponseDto> results = productService.getAllProducts(page, 12);
-        model.addAttribute("results", results);
-
-        return "products/index";
+        return "products/search";
     }
 
     @GetMapping("/{id}")
@@ -85,5 +82,12 @@ public class ProductController {
         redirectAttributes.addFlashAttribute("cartSuccess", "Item added to your cart");
 
         return "redirect:/products/" + id;
+    }
+
+    private void addListingAttributes(Model model, ProductFilterDto filterDto, Page<ProductResponseDto> results) {
+        model.addAttribute("filterDto", filterDto);
+        model.addAttribute("results", results);
+        model.addAttribute("categories", Category.values());
+        model.addAttribute("brands", Brand.values());
     }
 }

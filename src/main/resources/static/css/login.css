@@ -1,7 +1,4 @@
-/* =========================
-   RESET
-========================= */
-
+  /* RESET */  
 * {
     margin: 0;
     padding: 0;
@@ -19,20 +16,14 @@ a {
     color: inherit;
 }
 
-/* =========================
-   PAGE
-========================= */
-
+  /* PAGE */
 .page-container {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-/* =========================
-   MAIN
-========================= */
-
+  /* MAIN */
 .login-container {
     flex: 1;
     display: flex;
@@ -41,28 +32,19 @@ a {
     padding: 40px 20px;
 }
 
-/* =========================
-   LOGO
-========================= */
-
+  /* LOGO */
 .logo img {
     width: 180px;
     margin-bottom: 70px;
 }
 
-/* =========================
-   TITLE
-========================= */
-
+  /* TITLE */
 h1 {
     font-size: 2.6rem;
     margin-bottom: 40px;
 }
 
-/* =========================
-   CARD
-========================= */
-
+  /* CARD */
 .login-card {
     width: 430px;
     border: 1px solid #d6d6d6;
@@ -70,10 +52,21 @@ h1 {
     padding: 35px;
 }
 
-/* =========================
-   FORM
-========================= */
+.login-error {
+    color: #d62828;
+    background-color: #fff0f0;
 
+    border: 1px solid #d62828;
+    border-radius: 5px;
+
+    padding: 10px 12px;
+    margin-bottom: 20px;
+
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+  /* FORM */
 .form-group {
     display: flex;
     flex-direction: column;
@@ -99,10 +92,7 @@ h1 {
     box-shadow: 0 0 0 3px rgba(37,99,235,.15);
 }
 
-/* =========================
-   BUTTON
-========================= */
-
+  /* BUTTON */
 .login-button {
     display: block;
     margin: 20px auto 35px;
@@ -123,10 +113,7 @@ h1 {
     transform: translateY(-2px);
 }
 
-/* =========================
-   LINKS
-========================= */
-
+  /* LINKS */
 .login-links {
     text-align: center;
     line-height: 1.8;
@@ -142,10 +129,7 @@ h1 {
     text-decoration: underline;
 }
 
-/* =========================
-   FOOTER
-========================= */
-
+  /* FOOTER */
 footer {
     background: #4b4b4b;
     color: white;
@@ -164,12 +148,8 @@ footer {
     text-decoration: underline;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
+  /* RESPONSIVE */
 @media (max-width: 600px) {
-
     .login-card {
         width: 100%;
     }
@@ -189,5 +169,4 @@ footer {
         flex-wrap: wrap;
         justify-content: center;
     }
-
 }

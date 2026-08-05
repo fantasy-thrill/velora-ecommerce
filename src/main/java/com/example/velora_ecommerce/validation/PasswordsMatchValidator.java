@@ -4,19 +4,12 @@ import com.example.velora_ecommerce.dtos.CustomerRegistrationDto;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class PasswordsMatchValidator
-        implements ConstraintValidator<PasswordsMatch, CustomerRegistrationDto> {
-
+public class PasswordsMatchValidator implements ConstraintValidator<PasswordsMatch, PasswordConfirmation> {
     @Override
-    public boolean isValid(
-            CustomerRegistrationDto dto,
-            ConstraintValidatorContext context) {
+    public boolean isValid(PasswordConfirmation dto, ConstraintValidatorContext context) {
+        if (dto == null) return true;
+        if (dto.getPassword() == null || dto.getConfirmPassword() == null) return false;
 
-        if (dto == null) {
-            return true;
-        }
-
-        return dto.getPassword()
-                .equals(dto.getConfirmPassword());
+        return dto.getPassword().equals(dto.getConfirmPassword());
     }
 }

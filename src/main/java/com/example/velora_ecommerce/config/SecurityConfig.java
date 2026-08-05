@@ -25,8 +25,7 @@ public class SecurityConfig {
                                 "/js/**",
                                 "/images/**",
                                 "/products/**",
-                                "/auth/register",
-                                "/auth/login"
+                                "/auth/**"
                         )
                         .permitAll()
 

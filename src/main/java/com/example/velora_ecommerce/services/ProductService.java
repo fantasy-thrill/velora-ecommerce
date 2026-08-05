@@ -3,7 +3,9 @@ package com.example.velora_ecommerce.services;
 import com.example.velora_ecommerce.dtos.ProductResponseDto;
 import com.example.velora_ecommerce.dtos.ProductFilterDto;
 import com.example.velora_ecommerce.entities.Product;
+import com.example.velora_ecommerce.enums.Brand;
 import com.example.velora_ecommerce.enums.Category;
+import com.example.velora_ecommerce.enums.SortOption;
 import com.example.velora_ecommerce.mappers.ProductMapper;
 import com.example.velora_ecommerce.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,9 +28,31 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Page<ProductResponseDto> getAllProducts(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Product> products = productRepository.findAll(pageable);
+    public Page<ProductResponseDto> getAllProducts(ProductFilterDto filterDto) {
+        Sort sort = getSort(filterDto.getSortOption());
+
+        Pageable pageable = PageRequest.of(filterDto.getPage(), 12, sort);
+
+        Category category = filterDto.getCategory();
+        List<Brand> brands = filterDto.getBrands();
+
+        boolean hasCategory = category != null;
+        boolean hasBrands = brands != null && !brands.isEmpty();
+
+        Page<Product> products;
+
+        if (hasCategory && hasBrands) {
+            products = productRepository.findByCategoryAndBrandIn(category, brands, pageable);
+
+        } else if (hasCategory) {
+            products = productRepository.findByCategory(category, pageable);
+
+        } else if (hasBrands) {
+            products = productRepository.findByBrandIn(brands, pageable);
+
+        } else {
+            products = productRepository.findAll(pageable);
+        }
 
         return products.map(ProductMapper::toResponseDto);
     }
@@ -113,5 +137,14 @@ public class ProductService {
         }
 
         return products.map(ProductMapper::toResponseDto);
+    }
+
+    private Sort getSort(SortOption sortOption) {
+        if (sortOption == null) return Sort.unsorted();
+
+        return switch (sortOption) {
+            case PRICE_LOW_TO_HIGH -> Sort.by("price").ascending();
+            case PRICE_HIGH_TO_LOW -> Sort.by("price").descending();
+        };
     }
 }
