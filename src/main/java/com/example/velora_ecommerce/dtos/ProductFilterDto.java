@@ -5,6 +5,7 @@ import com.example.velora_ecommerce.enums.Category;
 import com.example.velora_ecommerce.enums.SortOption;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -16,7 +17,7 @@ public class ProductFilterDto {
 
     private Category category;
 
-    private List<Brand> brands;
+    private List<Brand> brands = new ArrayList<>();
 
     private SortOption sortOption;
 

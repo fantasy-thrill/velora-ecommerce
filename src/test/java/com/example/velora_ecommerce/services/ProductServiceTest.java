@@ -1,6 +1,7 @@
 package com.example.velora_ecommerce.services;
 
 import com.example.velora_ecommerce.dtos.ProductFilterDto;
+import com.example.velora_ecommerce.enums.Brand;
 import com.example.velora_ecommerce.enums.Category;
 import com.example.velora_ecommerce.repositories.ProductRepository;
 import org.junit.jupiter.api.Test;
@@ -120,39 +121,6 @@ public class ProductServiceTest {
     }
 
     @Test
-    void shouldFetchProductsByCategory() {
-        // Arrange
-        Product laptop1 = new Product();
-        laptop1.setName("Laptop One");
-        laptop1.setCategory(Category.LAPTOPS);
-
-        Product laptop2 = new Product();
-        laptop2.setName("Laptop Two");
-        laptop2.setCategory(Category.LAPTOPS);
-
-        Product desktop1 = new Product();
-        desktop1.setName("Desktop One");
-        desktop1.setCategory(Category.DESKTOPS);
-
-        Product desktop2 = new Product();
-        desktop2.setName("Desktop Two");
-        desktop2.setCategory(Category.DESKTOPS);
-
-        List<Product> computers = List.of(laptop1, laptop2);
-        Pageable pageable = PageRequest.of(0, 12);
-
-        when(productRepository.findByCategory(Category.LAPTOPS, pageable))
-                .thenReturn(new PageImpl<>(computers));
-
-        // Act
-        Page<ProductResponseDto> result = productService.getProductsByCategory(Category.LAPTOPS, 0, 12);
-
-        // Assert
-        assertEquals(2, result.getContent().size());
-        verify(productRepository).findByCategory(Category.LAPTOPS, pageable);
-    }
-
-    @Test
     void shouldSearchProductsWithoutBrands() {
         // Arrange
         Product product1 = new Product();
@@ -191,5 +159,60 @@ public class ProductServiceTest {
                         anyList(),
                         any(Pageable.class)
                 );
+    }
+
+    @Test
+    void shouldSearchProductsBasedOnBrandAndCategoryIfPresent() {
+        Product product1 = new Product();
+        product1.setId(1L);
+        product1.setName("Laptop");
+        product1.setBrand(Brand.VERTEX);
+        product1.setPrice(new BigDecimal("999.99"));
+
+        Product product2 = new Product();
+        product2.setId(2L);
+        product2.setName("Keyboard");
+        product2.setBrand(Brand.VERTEX);
+        product2.setPrice(new BigDecimal("79.99"));
+
+        Product product3 = new Product();
+        product3.setId(3L);
+        product3.setName("Gaming Mouse");
+        product3.setBrand(Brand.IRONCORE);
+        product3.setPrice(new BigDecimal("49.99"));
+
+        Product product4 = new Product();
+        product4.setId(4L);
+        product4.setName("27-inch Monitor");
+        product4.setBrand(Brand.NIMBUS);
+        product4.setPrice(new BigDecimal("299.99"));
+
+        Product product5 = new Product();
+        product5.setId(5L);
+        product5.setName("Desktop Computer");
+        product5.setBrand(Brand.VERTEX);
+        product5.setPrice(new BigDecimal("1299.99"));
+
+        Product product6 = new Product();
+        product6.setId(6L);
+        product6.setName("Wireless Headset");
+        product6.setBrand(Brand.RESONA);
+        product6.setPrice(new BigDecimal("119.99"));
+
+        Product product7 = new Product();
+        product7.setId(7L);
+        product7.setName("Webcam");
+        product7.setBrand(Brand.GALAGEAR);
+        product7.setPrice(new BigDecimal("69.99"));
+
+        List<Product> productList = List.of(
+                product1,
+                product2,
+                product3,
+                product4,
+                product5,
+                product6,
+                product7
+        );
     }
 }

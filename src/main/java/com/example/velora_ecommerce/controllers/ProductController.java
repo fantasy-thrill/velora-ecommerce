@@ -30,16 +30,15 @@ public class ProductController {
             @RequestParam String query,
             @RequestParam(required = false) Category category,
             @RequestParam(required = false) List<Brand> brands,
-            @RequestParam(required = false) SortOption sort,
+            @RequestParam(required = false) SortOption sortOption,
             @RequestParam(defaultValue = "0") int page,
             Model model
     ) {
-        ProductFilterDto searchDto = new ProductFilterDto(query, category, brands, sort, page);
+        ProductFilterDto searchDto = new ProductFilterDto(query, category, brands, sortOption, page);
         Page<ProductResponseDto> results = productService.searchProducts(searchDto);
 
         addListingAttributes(model, searchDto, results);
-        System.out.println(results.getTotalPages());
-        System.out.println(results);
+        model.addAttribute("formAction", "/products/search");
 
         return "products/search";
     }
@@ -56,6 +55,7 @@ public class ProductController {
         Page<ProductResponseDto> results = productService.getAllProducts(filterDto);
 
         addListingAttributes(model, filterDto, results);
+        model.addAttribute("formAction", "/products/all");
 
         return "products/search";
     }

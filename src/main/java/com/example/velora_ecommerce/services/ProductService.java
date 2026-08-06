@@ -13,8 +13,10 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -42,10 +44,10 @@ public class ProductService {
         Page<Product> products;
 
         if (hasCategory && hasBrands) {
-            products = productRepository.findByCategoryAndBrandIn(category, brands, pageable);
+            products = productRepository.findByCategoryInAndBrandIn(List.of(category), brands, pageable);
 
         } else if (hasCategory) {
-            products = productRepository.findByCategory(category, pageable);
+            products = productRepository.findByCategoryIn(List.of(category), pageable);
 
         } else if (hasBrands) {
             products = productRepository.findByBrandIn(brands, pageable);
@@ -82,12 +84,12 @@ public class ProductService {
         return product;
     }
 
-    public Page<ProductResponseDto> getProductsByCategory(Category category, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Product> products = productRepository.findByCategory(category, pageable);
-
-        return products.map(ProductMapper::toResponseDto);
-    }
+//    public Page<ProductResponseDto> getProductsByCategory(Category category, int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<Product> products = productRepository.findByCategory(category, pageable);
+//
+//        return products.map(ProductMapper::toResponseDto);
+//    }
 
     // TODO: Write more logic for this method once administrator features are implemented.
     public Product createProduct(Product product) {
@@ -112,29 +114,37 @@ public class ProductService {
     }
 
     public Page<ProductResponseDto> searchProducts(ProductFilterDto searchDto) {
-        Sort springSort = Sort.unsorted();
+        Sort springSort = getSort(searchDto.getSortOption());
         Page<Product> products;
+        if (searchDto.getBrands() == null) searchDto.setBrands(new ArrayList<>());
 
-        if (searchDto.getSortOption() != null) {
-            switch (searchDto.getSortOption()) {
-                case PRICE_LOW_TO_HIGH -> springSort = Sort.by("price").ascending();
-
-                case PRICE_HIGH_TO_LOW -> springSort = Sort.by("price").descending();
-            }
-        }
+        List<Category> matchingCategories = Category.findBySearchQuery(searchDto.getQuery());
+        Optional<Brand> matchingBrand = Brand.findBySearchQuery(searchDto.getQuery());
 
         Pageable pageable = PageRequest.of(searchDto.getPage(), 12, springSort);
 
-        if (searchDto.getBrands() == null || searchDto.getBrands().isEmpty()) {
-            products = productRepository.findByNameContainingIgnoreCase(searchDto.getQuery(), pageable);
+        boolean hasCategory = !matchingCategories.isEmpty();
+        boolean hasBrands = !searchDto.getBrands().isEmpty() || matchingBrand.isPresent();
 
-        } else {
-            products = productRepository.findByNameContainingIgnoreCaseAndBrandIn(
-                    searchDto.getQuery(),
-                    searchDto.getBrands(),
+        if (hasCategory && hasBrands) {
+            List<Brand> brandsCopy = new ArrayList<>(searchDto.getBrands());
+            if (matchingBrand.isPresent()) brandsCopy.add(matchingBrand.get());
+
+            products = productRepository.findByCategoryInAndBrandIn(
+                    matchingCategories,
+                    brandsCopy,
                     pageable
             );
         }
+
+        else if (hasCategory)
+            products = productRepository.findByCategoryIn(matchingCategories, pageable);
+
+        else if (hasBrands)
+            products = productRepository.findByBrandIn(searchDto.getBrands(), pageable);
+
+        else
+            products = productRepository.findByNameContainingIgnoreCase(searchDto.getQuery(), pageable);
 
         return products.map(ProductMapper::toResponseDto);
     }

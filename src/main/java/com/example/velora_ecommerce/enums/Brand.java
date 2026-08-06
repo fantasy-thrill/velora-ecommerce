@@ -1,5 +1,12 @@
 package com.example.velora_ecommerce.enums;
 
+import lombok.*;
+
+import java.util.Arrays;
+import java.util.Optional;
+
+@Getter
+@RequiredArgsConstructor
 public enum Brand {
     VERTEX("Vertex"),
     NIMBUS("Nimbus"),
@@ -13,11 +20,11 @@ public enum Brand {
 
     private final String displayName;
 
-    Brand(String displayName) {
-        this.displayName = displayName;
-    }
+    public static Optional<Brand> findBySearchQuery(String query) {
+        String normalizedQuery = query.trim().toLowerCase();
 
-    public String getDisplayName() {
-        return displayName;
+        return Arrays.stream(Brand.values())
+                .filter(brand -> normalizedQuery.contains(brand.getDisplayName().toLowerCase()))
+                .findFirst();
     }
 }
