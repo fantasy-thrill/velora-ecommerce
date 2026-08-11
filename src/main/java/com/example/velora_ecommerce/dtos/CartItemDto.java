@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartItemDto {
+    private Long lineItemId;
+
     private Long productId;
 
     private String productName;
@@ -17,7 +19,9 @@ public class CartItemDto {
 
     private BigDecimal unitPrice;
 
-    private int quantity;
+    private int cartQuantity;
+
+    private int stockQuantity;
 
     private BigDecimal lineTotal;
 }

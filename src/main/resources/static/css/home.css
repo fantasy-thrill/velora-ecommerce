@@ -1,4 +1,4 @@
-/*  HERO SECTION */
+/*  HERO SECTION  */
 .hero-section {
     width: 100%;
 }
@@ -9,7 +9,7 @@
     object-fit: cover;
 }
 
-/*  WHY CHOOSE VELORA */
+/*  WHY CHOOSE VELORA  */
 .about-section {
     max-width: 1200px;
     margin: 60px auto;
@@ -25,7 +25,7 @@
     font-size: 1rem;
 }
 
-/*  CATEGORY TILES */
+/*  CATEGORY TILES  */
 .category-section {
     max-width: 1400px;
     margin: 60px auto;
@@ -52,7 +52,7 @@
     transform: scale(1.05);
 }
 
-/*  FEATURED PRODUCTS */
+/*  FEATURED PRODUCTS  */
 .featured-products {
     max-width: 1400px;
     margin: 60px auto;
@@ -95,7 +95,7 @@
     font-size: 1.1rem;
 }
 
-/*  NEWSLETTER */
+/*  NEWSLETTER  */
 .newsletter-section {
     max-width: 1400px;
     margin: 80px auto;
@@ -145,7 +145,7 @@
     width: 350px;
 }
 
-/*  PARTNERS */
+/*  PARTNERS  */
 .partners-section {
     padding: 70px 0;
     text-align: center;
@@ -192,7 +192,7 @@
     }
 }
 
-/*  FOOTER */
+/*  FOOTER  */
 footer {
     margin-top: 80px;
     background-color: #222222;
@@ -212,7 +212,7 @@ footer {
     text-decoration: underline;
 }
 
-/*  RESPONSIVE DESIGN */
+/*  RESPONSIVE DESIGN  */
 @media (max-width: 992px) {
 
     .category-section,

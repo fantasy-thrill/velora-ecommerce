@@ -84,11 +84,13 @@
 .in-stock {
     margin: 0;
     font-size: 1.7rem;
+    color: #198754;
 }
 
 .out-of-stock {
     margin: 0;
     font-size: 1.7rem;
+    color: #d62828;
 }
 
 .shipping-estimate {
@@ -173,6 +175,14 @@
 .specifications-table {
     width: 100%;
     border-collapse: collapse;
+    border: none;
+}
+
+.specifications-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.specifications-table tr:nth-child(odd) {
     background-color: #fff;
 }
 
@@ -180,7 +190,7 @@
 .specifications-table td {
     width: 50%;
     padding: 10px;
-    border: 1px solid #555;
+    border: none;
     text-align: left;
     font-size: 1rem;
 }

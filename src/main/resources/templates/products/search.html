@@ -31,8 +31,9 @@
             </div>
 
             <div class="cart-container">
-                <a th:href="@{/cart}">
+                <a th:href="@{/cart}" class="cart-link">
                     <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-count" th:if="${cartItemCount > 0}" th:text="${cartItemCount}">0</span>
                 </a>
             </div>
         </div>
@@ -63,7 +64,7 @@
                 <div class="dropdown-content">
                     <a th:href="@{./all}">All products</a>
                     <a th:each="category : ${categories}"
-                       th:href="@{/products/category/{name}(name=${category.name})}"
+                       th:href="@{/products/all(category=${category.name})}"
                        th:text="${category.getDisplayName()}">
                         Category Name
                     </a>

@@ -6,7 +6,9 @@ import com.example.velora_ecommerce.entities.*;
 import com.example.velora_ecommerce.mappers.CartItemMapper;
 import com.example.velora_ecommerce.repositories.CartRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,8 +24,7 @@ public class CartService {
     }
 
     public CartResponseDto getCart(String email) {
-        Customer customer = customerService.getCustomerByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+        Customer customer = getCustomer(email);
 
         Cart customerCart = customer.getCart();
         CartResponseDto cartDto = new CartResponseDto();
@@ -37,9 +38,21 @@ public class CartService {
         return cartDto;
     }
 
+    public int getCartItemCount(String email) {
+        Customer customer = getCustomer(email);
+        Cart cart = customer.getCart();
+
+        if (cart == null) return 0;
+
+        return cart.getItems()
+                .stream()
+                .mapToInt(CartItem::getQuantity)
+                .sum();
+    }
+
+    @Transactional
     public void addItemToCart(String email, Product product, int quantity) {
-        Customer customer = customerService.getCustomerByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+        Customer customer = getCustomer(email);
 
         Cart customerCart = customer.getCart();
         CartItem item = new CartItem();
@@ -49,11 +62,11 @@ public class CartService {
         item.setQuantity(quantity);
 
         customerCart.addItem(item);
+        System.out.println("Service: Item added to cart");
     }
 
     public void removeItemFromCart(String email, Long cartItemId) {
-        Customer customer = customerService.getCustomerByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+        Customer customer = getCustomer(email);
 
         Cart customerCart = customer.getCart();
         CartItem itemToRemove = customerCart.getItems().stream()
@@ -65,9 +78,7 @@ public class CartService {
     }
 
     public void updateCartItemQuantity(String customerEmail, Long cartItemId, int quantity) {
-        Cart customerCart = customerService.getCustomerByEmail(customerEmail)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found"))
-                .getCart();
+        Cart customerCart = getCustomer(customerEmail).getCart();
 
         CartItem itemToUpdate = customerCart.getItems().stream()
                 .filter(item -> item.getId().equals(cartItemId))
@@ -81,5 +92,10 @@ public class CartService {
 
         itemToUpdate.setQuantity(quantity);
         cartRepository.save(customerCart);
+    }
+
+    private Customer getCustomer(String email) {
+        return customerService.getCustomerByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
     }
 }

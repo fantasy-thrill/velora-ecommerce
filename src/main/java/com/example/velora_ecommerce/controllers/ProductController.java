@@ -62,8 +62,13 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public String productDetails(@PathVariable Long id, Model model) {
-        ProductResponseDto product = ProductMapper.toResponseDto(productService.getProductById(id));
+        Product productEntity = productService.getProductById(id);
+        ProductResponseDto product = ProductMapper.toResponseDto(productEntity);
+        List<ProductResponseDto> similarProducts = productService.getSimilarProducts(productEntity);
+
         model.addAttribute("product", product);
+        model.addAttribute("similarProducts", similarProducts);
+        model.addAttribute("categories", Category.values());
 
         return "products/details";
     }
@@ -81,6 +86,7 @@ public class ProductController {
 
         redirectAttributes.addFlashAttribute("cartSuccess", "Item added to your cart");
 
+        System.out.println("Controller: Item added to cart");
         return "redirect:/products/" + id;
     }
 

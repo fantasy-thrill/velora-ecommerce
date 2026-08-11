@@ -32,8 +32,9 @@
         </div>
 
         <div class="cart-container">
-            <a th:href="@{/cart}">
+            <a th:href="@{/cart}" class="cart-link">
                 <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-count" th:if="${cartItemCount > 0}" th:text="${cartItemCount}">0</span>
             </a>
         </div>
     </div>
@@ -64,7 +65,7 @@
             <div class="dropdown-content">
                 <a th:href="@{/products/all}">All products</a>
                 <a th:each="category : ${categories}"
-                   th:href="@{/products/category/{name}(name=${category.name})}"
+                   th:href="@{/products/all(category=${category.name})}"
                    th:text="${category.getDisplayName()}">
                     Category Name
                 </a>
@@ -95,10 +96,26 @@
 
 <!-- Product category tiles -->
 <section class="category-section">
-    <a class="category-card" th:href="@{/products/category/desktops}">Browse Desktop PCs</a>
-    <a class="category-card" th:href="@{/products/category/laptops}">Browse Laptops</a>
-    <a class="category-card" th:href="@{/products/category/tablets}">Browse Tablets</a>
-    <a class="category-card" th:href="@{/products/category/accessories}">Browse Accessories</a>
+    <a
+            class="category-card"
+            th:href="@{/products/all(category=${T(com.example.velora_ecommerce.enums.Category).DESKTOPS})}">
+        Browse Desktop PCs
+    </a>
+    <a
+            class="category-card"
+            th:href="@{/products/all(category=${T(com.example.velora_ecommerce.enums.Category).LAPTOPS})}">
+        Browse Laptops
+    </a>
+    <a
+            class="category-card"
+            th:href="@{/products/all(category=${T(com.example.velora_ecommerce.enums.Category).TABLETS})}">
+        Browse Tablets
+    </a>
+    <a
+            class="category-card"
+            th:href="@{/products/all(category=${T(com.example.velora_ecommerce.enums.Category).ACCESSORIES})}">
+        Browse Accessories
+    </a>
 </section>
 
 <!-- Featured products -->
@@ -107,13 +124,14 @@
 
     <div class="product-grid">
         <div class="product-card" th:each="product : ${featuredProducts}">
-            <div class="product-img-container">
-                <img th:src="${product.imageUrl}" alt="Product Image">
-            </div>
+            <a th:href="@{/products/{id}(id=${product.id})}">
+                <div class="product-img-container">
+                    <img th:src="${product.imageUrl}" alt="Product Image">
+                </div>
 
-            <h3 th:text="${product.name}">Product Name</h3>
-
-            <p th:text="'$' + ${product.price}">$0.00</p>
+                <h3 th:text="${product.name}">Product Name</h3>
+                <p th:text="'$' + ${product.price}">$0.00</p>
+            </a>
         </div>
     </div>
 </section>
@@ -180,11 +198,8 @@
 
     <div class="footer-links">
         <a th:href="@{/about}">About Velora</a>
-
         <a th:href="@{/contact}">Contact Us</a>
-
         <a th:href="@{/privacy}">Privacy Policy</a>
-
         <a th:href="@{/terms}">Terms and Conditions</a>
     </div>
 </footer>

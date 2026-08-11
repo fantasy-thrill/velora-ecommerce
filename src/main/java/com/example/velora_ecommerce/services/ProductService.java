@@ -149,6 +149,16 @@ public class ProductService {
         return products.map(ProductMapper::toResponseDto);
     }
 
+    public List<ProductResponseDto> getSimilarProducts(Product product) {
+        List<Product> products = productRepository.findByCategoryAndIdNot(product.getCategory(), product.getId());
+        Collections.shuffle(products);
+
+        return products.stream()
+                .limit(4)
+                .map(ProductMapper::toResponseDto)
+                .toList();
+    }
+
     private Sort getSort(SortOption sortOption) {
         if (sortOption == null) return Sort.unsorted();
 

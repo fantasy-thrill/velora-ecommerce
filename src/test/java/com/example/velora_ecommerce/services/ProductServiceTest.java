@@ -2,7 +2,6 @@ package com.example.velora_ecommerce.services;
 
 import com.example.velora_ecommerce.dtos.ProductFilterDto;
 import com.example.velora_ecommerce.enums.Brand;
-import com.example.velora_ecommerce.enums.Category;
 import com.example.velora_ecommerce.repositories.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

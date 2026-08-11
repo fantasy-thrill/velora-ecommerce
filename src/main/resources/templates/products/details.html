@@ -28,8 +28,9 @@
         </div>
 
         <div class="cart-container">
-            <a th:href="@{/cart}">
+            <a th:href="@{/cart}" class="cart-link">
                 <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-count" th:if="${cartItemCount > 0}" th:text="${cartItemCount}">0</span>
             </a>
         </div>
     </div>
@@ -60,7 +61,7 @@
             <div class="dropdown-content">
                 <a th:href="@{/products/all}">All products</a>
                 <a th:each="category : ${categories}"
-                   th:href="@{/products/category/{name}(name=${category.name})}"
+                   th:href="@{/products/all(category=${category.name})}"
                    th:text="${category.getDisplayName()}">
                     Category Name
                 </a>
@@ -76,38 +77,61 @@
     <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a th:href="@{/}">Home</a>
         <span>&gt;</span>
-        <a th:href="@{/products/all(category=${product.category})}" th:text="${product.category.displayName}">Category</a>
+        <a
+                th:href="@{/products/all(category=${product.category})}"
+                th:text="${product.category.displayName}">
+            Category
+        </a>
         <span>&gt;</span>
         <span th:text="${product.name}">Product name</span>
     </nav>
+
     <section class="product-overview">
         <div class="product-image-container">
             <img class="product-image" th:src="@{${product.imageUrl}}" th:alt="${product.name}">
         </div>
+
         <div class="product-purchase-information">
             <h1 class="product-name" th:text="${product.name}">Product name</h1>
             <p class="product-price" th:text="${#numbers.formatCurrency(product.price)}">$00.00</p>
+
             <div class="stock-information">
                 <p class="in-stock" th:if="${product.stockQuantity > 0}">In stock</p>
                 <p class="out-of-stock" th:unless="${product.stockQuantity > 0}">Out of stock</p>
                 <p class="shipping-estimate" th:if="${product.stockQuantity > 0}">Arrives in 2 - 4 business days</p>
             </div>
-            <form class="add-to-cart-form" th:action="@{/cart/add}" method="post">
+
+            <form class="add-to-cart-form" th:action="@{/products/{id}/add-to-cart(id=${product.id})}" method="post">
                 <input type="hidden" name="productId" th:value="${product.id}">
                 <div class="quantity-container">
                     <label for="quantity">Quantity:</label>
-                    <input id="quantity" type="number" name="quantity" value="1" min="1" th:max="${product.stockQuantity}" th:disabled="${product.stockQuantity <= 0}">
+                    <input
+                            id="quantity"
+                            type="number"
+                            name="quantity"
+                            value="1"
+                            min="1"
+                            th:max="${product.stockQuantity}"
+                            th:disabled="${product.stockQuantity <= 0}">
                 </div>
-                <button class="add-to-cart-button" type="submit" th:disabled="${product.stockQuantity <= 0}">Add to cart</button>
+                <button
+                        class="add-to-cart-button"
+                        type="submit"
+                        th:disabled="${product.stockQuantity <= 0}">
+                    Add to cart
+                </button>
             </form>
         </div>
     </section>
+
     <section class="product-description-section">
         <h2>Item description</h2>
         <p th:text="${product.description}">Product description</p>
     </section>
+
     <section class="specifications-section" th:if="${product.specifications != null and !product.specifications.isEmpty()}">
         <h2>Specifications</h2>
+
         <table class="specifications-table">
             <tbody>
             <tr th:each="specification : ${product.specifications}">
@@ -117,18 +141,38 @@
             </tbody>
         </table>
     </section>
+
     <section class="similar-items-section" th:if="${similarProducts != null and !similarProducts.isEmpty()}">
         <h2>Similar items</h2>
+
         <div class="similar-products">
             <article class="similar-product-card" th:each="similarProduct : ${similarProducts}">
                 <a class="similar-product-image-link" th:href="@{/products/{id}(id=${similarProduct.id})}">
-                    <img class="similar-product-image" th:src="@{${similarProduct.imageUrl}}" th:alt="${similarProduct.name}">
+                    <img
+                            class="similar-product-image"
+                            th:src="@{${similarProduct.imageUrl}}"
+                            th:alt="${similarProduct.name}">
                 </a>
-                <a class="similar-product-name" th:href="@{/products/{id}(id=${similarProduct.id})}" th:text="${similarProduct.name}">Product name</a>
+                <a
+                        class="similar-product-name"
+                        th:href="@{/products/{id}(id=${similarProduct.id})}"
+                        th:text="${similarProduct.name}">
+                    Product name
+                </a>
                 <p class="similar-product-price" th:text="${#numbers.formatCurrency(similarProduct.price)}">$00.00</p>
             </article>
         </div>
     </section>
 </main>
+<footer>
+    <p>© 2026 Velora Electronics. This is not a real company.</p>
+
+    <div class="footer-links">
+        <a th:href="@{/about}">About Velora</a>
+        <a th:href="@{/contact}">Contact Us</a>
+        <a th:href="@{/privacy}">Privacy Policy</a>
+        <a th:href="@{/terms}">Terms and Conditions</a>
+    </div>
+</footer>
 </body>
 </html>
