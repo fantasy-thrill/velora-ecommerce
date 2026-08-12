@@ -74,6 +74,7 @@
     </nav>
 </header>
 <main class="product-page">
+    <div th:if="${cartSuccess}" class="flash-message" th:text="${cartSuccess}"></div>
     <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a th:href="@{/}">Home</a>
         <span>&gt;</span>

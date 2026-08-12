@@ -1,5 +1,6 @@
 package com.example.velora_ecommerce.config;
 
+import com.example.velora_ecommerce.enums.Category;
 import com.example.velora_ecommerce.services.CartService;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
@@ -22,5 +23,10 @@ public class GlobalModelAttributes {
 
             model.addAttribute("cartItemCount", cartItemCount);
         }
+    }
+
+    @ModelAttribute("categories")
+    public Category[] addCategories() {
+        return Category.values();
     }
 }

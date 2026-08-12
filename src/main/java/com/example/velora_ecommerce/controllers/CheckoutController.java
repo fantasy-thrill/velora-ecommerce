@@ -3,6 +3,8 @@ package com.example.velora_ecommerce.controllers;
 import com.example.velora_ecommerce.dtos.*;
 import com.example.velora_ecommerce.entities.Order;
 import com.example.velora_ecommerce.entities.PaymentCard;
+import com.example.velora_ecommerce.enums.CardProcessor;
+import com.example.velora_ecommerce.enums.CardType;
 import com.example.velora_ecommerce.services.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,20 +29,22 @@ public class CheckoutController {
     @GetMapping
     public String displayCheckoutPage(Authentication authentication, Model model) {
         String email = authentication.getName();
+        CheckoutPageDto checkoutPage = checkoutService.getCheckoutPage(email);
 
         if (!model.containsAttribute("checkout")) {
             CheckoutDto checkout = new CheckoutDto();
 
-            checkout.setPaymentMethodId(checkoutService.getCheckoutPage(email)
-                    .getSelectedPaymentMethod()
-                    .getPaymentCardId()
-            );
+            checkout.setAddress(checkoutPage.getAddress());
+            checkout.setPaymentMethodId(checkoutPage.getSelectedPaymentMethod().getPaymentCardId());
+            checkout.setShippingSpeed(checkoutPage.getShippingSpeed());
 
             model.addAttribute("checkout", checkout);
         }
 
-        model.addAttribute("checkoutPage", checkoutService.getCheckoutPage(email));
+        model.addAttribute("checkoutPage", checkoutPage);
         model.addAttribute("newPaymentMethod", new PaymentCardDto());
+        model.addAttribute("cardTypes", CardType.values());
+        model.addAttribute("cardProcessors", CardProcessor.values());
         model.addAttribute("newAddress", new AddressDto());
         model.addAttribute("giftCard", new GiftCardDto());
 
@@ -55,7 +59,6 @@ public class CheckoutController {
 
     @PostMapping("/address/new")
     public String addAddress(
-            Authentication authentication,
             @Valid @ModelAttribute("newAddress") AddressDto addressDto,
             BindingResult bindingResult,
             @ModelAttribute("checkout") CheckoutDto checkoutDto
@@ -65,7 +68,6 @@ public class CheckoutController {
         }
 
         checkoutDto.setAddress(addressDto);
-
         return "redirect:/checkout";
     }
 

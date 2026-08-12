@@ -130,7 +130,7 @@
                 </div>
 
                 <h3 th:text="${product.name}">Product Name</h3>
-                <p th:text="'$' + ${product.price}">$0.00</p>
+                <p th:text="${#numbers.formatCurrency(product.price)}">$0.00</p>
             </a>
         </div>
     </div>

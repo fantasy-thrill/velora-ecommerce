@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Velora</title>
+    <link rel="stylesheet" th:href="@{/css/checkout.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+<header>
+    <!-- Copy your existing checkout header here -->
+</header>
+<main class="checkout-page">
+    <h1>Checkout</h1>
+
+    <form id="checkout-form" th:action="@{/checkout/place-order}" th:object="${checkout}" method="post">
+        <!-- DELIVERY ADDRESS -->
+        <section class="checkout-section">
+            <div id="address-selection" th:if="${checkout.address == null}">
+                <h2>Delivery address</h2>
+
+                <label class="address-option">
+                    <input type="radio" name="savedAddress" value="saved" checked>
+                    <span class="address-details">
+                        <strong th:text="${checkoutPage.address.firstName + ' ' + checkoutPage.address.lastName}">
+                            John Smith
+                        </strong>
+                        <span th:text="${checkoutPage.address.street}">
+                            123 Anywhere St.
+                        </span>
+                        <span th:text="${checkoutPage.address.city + ', ' + checkoutPage.address.state}">
+                            Boston, MA
+                        </span>
+                        <span th:text="${checkoutPage.address.zipCode}">
+                            02108
+                        </span>
+                    </span>
+                </label>
+
+                <input type="hidden" id="saved-address-first-name" th:value="${checkoutPage.address.firstName}">
+                <input type="hidden" id="saved-address-last-name" th:value="${checkoutPage.address.lastName}">
+                <input type="hidden" id="saved-address-street" th:value="${checkoutPage.address.street}">
+                <input type="hidden" id="saved-address-city" th:value="${checkoutPage.address.city}">
+                <input type="hidden" id="saved-address-state" th:value="${checkoutPage.address.state}">
+                <input type="hidden" id="saved-address-zip" th:value="${checkoutPage.address.zipCode}">
+
+                <div class="checkout-actions">
+                    <button type="button" id="different-address-button" class="secondary-button">
+                        Use a different address
+                    </button>
+                    <button type="button" id="confirm-address-button" class="primary-button">
+                        Deliver to this address
+                    </button>
+                </div>
+            </div>
+
+            <div id="address-confirmed" th:unless="${checkout.address == null}" class="confirmed-checkout-section">
+                <div>
+                    <h2>Delivering to</h2>
+                    <p class="confirmed-address">
+                        <span th:text="${checkout.address.firstName + ' ' + checkout.address.lastName}">
+                            John Smith
+                        </span><br>
+                        <span th:text="${checkout.address.street}">
+                            123 Anywhere St.
+                        </span><br>
+                        <span th:text="${checkout.address.city + ', ' + checkout.address.state + ' ' + checkout.address.zipCode}">
+                            Boston, MA 02108
+                        </span>
+                    </p>
+                </div>
+                <button type="button" id="change-address-button" class="change-button">Change</button>
+            </div>
+        </section>
+
+        <!-- PAYMENT METHOD -->
+        <section class="checkout-section">
+            <div id="payment-selection">
+                <h2>Payment method</h2>
+
+                <div class="payment-options">
+                    <label class="payment-option" th:each="paymentCard : ${checkoutPage.paymentCards}">
+                        <input
+                                type="radio"
+                                th:field="*{paymentMethodId}"
+                                th:value="${paymentCard.paymentCardId}"
+                                th:checked="${checkoutPage.selectedPaymentMethod != null and paymentCard.paymentCardId == checkoutPage.selectedPaymentMethod.paymentCardId}">
+                        <span th:text="${paymentCard.cardType + ' ending in ' + paymentCard.lastFourDigits}">
+                            Visa ending in 1234
+                        </span>
+                    </label>
+                </div>
+
+                <button type="button" id="new-payment-button" class="add-payment-button">
+                    <i class="fa-solid fa-plus"></i>
+                    Add new payment method
+                </button>
+
+                <div class="checkout-actions">
+                    <button type="button" id="confirm-payment-button" class="primary-button">
+                        Use this payment method
+                    </button>
+                </div>
+            </div>
+
+            <div id="payment-confirmed" class="confirmed-checkout-section hidden">
+                <div>
+                    <h2>Paying with</h2>
+                    <p id="confirmed-payment-text">
+                        Mastercard ending in 5678
+                    </p>
+                </div>
+                <button type="button" id="change-payment-button" class="change-button">
+                    Change
+                </button>
+            </div>
+        </section>
+
+        <!-- SHIPPING -->
+        <section class="checkout-section">
+            <div id="shipping-selection">
+                <h2>Shipping and handling</h2>
+
+                <fieldset class="shipping-options">
+                    <legend>Shipping speed</legend>
+
+                    <label class="shipping-option">
+                        <input type="radio" th:field="*{shippingSpeed}" value="STANDARD">
+                        <span>Standard (3 - 5 days)</span>
+                    </label>
+
+                    <label class="shipping-option">
+                        <input type="radio" th:field="*{shippingSpeed}" value="EXPRESS">
+                        <span>Express (1 - 2 days)</span>
+                    </label>
+                </fieldset>
+
+                <div class="checkout-actions">
+                    <button type="button" id="confirm-shipping-button" class="primary-button">
+                        Choose this shipping method
+                    </button>
+                </div>
+            </div>
+
+            <div id="shipping-confirmed" class="confirmed-checkout-section hidden">
+                <div>
+                    <h2>Estimated delivery by</h2>
+                    <p id="estimated-delivery">
+                        July 6 - 8 (standard)
+                    </p>
+                </div>
+                <button type="button" id="change-shipping-button" class="change-button">
+                    Change
+                </button>
+            </div>
+        </section>
+
+        <!-- PRODUCTS -->
+        <section class="checkout-items">
+            <article class="checkout-item" th:each="item : ${checkoutPage.items}">
+                <a th:href="@{/products/{id}(id=${item.productId})}" class="checkout-item-image-link">
+                    <img class="checkout-item-image" th:src="@{${item.productImageUrl}}" th:alt="${item.productName}">
+                </a>
+
+                <div class="checkout-item-information">
+                    <a
+                            class="checkout-item-name"
+                            th:href="@{/products/{id}(id=${item.productId})}"
+                            th:text="${item.productName}">
+                        Product name
+                    </a>
+                    <strong th:text="${#numbers.formatCurrency(item.price)}">$00.00</strong>
+                    <span>
+                        Quantity:
+                        <span th:text="${item.quantity}">1</span>
+                    </span>
+                </div>
+            </article>
+        </section>
+
+        <!-- ORDER SUMMARY -->
+        <section class="order-summary">
+            <div class="summary-row">
+                <span>Subtotal:</span>
+                <strong th:text="${#numbers.formatCurrency(summary.subtotal)}">$00.00</strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Shipping:</span>
+                <strong th:text="${#numbers.formatCurrency(summary.shipping)}">$0.00</strong>
+            </div>
+
+            <div class="summary-row" th:if="${summary.discount != null and summary.discount.compareTo(T(java.math.BigDecimal).ZERO) > 0}">
+                <span>Discount:</span>
+                <strong th:text="${#numbers.formatCurrency(summary.discount)}">$0.00</strong>
+            </div>
+
+            <div class="summary-row" th:if="${summary.giftCardAmount != null and summary.giftCardAmount.compareTo(T(java.math.BigDecimal).ZERO) > 0}">
+                <span>Gift card:</span>
+                <strong th:text="${#numbers.formatCurrency(summary.giftCardAmount)}">$0.00</strong>
+            </div>
+
+            <div class="summary-row grand-total">
+                <span>Order total:</span>
+                <strong th:text="${#numbers.formatCurrency(summary.total)}">$00.00</strong>
+            </div>
+
+            <button type="submit" class="place-order-button">
+                Place order
+            </button>
+        </section>
+    </form>
+</main>
+
+<!-- NEW ADDRESS MODAL -->
+<div id="address-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+
+    <div class="modal-content">
+        <button type="button" id="close-address-modal" class="modal-close">
+            &times;
+        </button>
+
+        <h2>Enter the delivery address</h2>
+
+        <form th:action="@{/checkout/address/new}" th:object="${newAddress}" method="post">
+
+            <div class="form-group">
+                <label for="address-first-name">First name:</label>
+                <input
+                        id="address-first-name"
+                        type="text"
+                        th:field="*{firstName}">
+            </div>
+
+            <div class="form-group">
+                <label for="address-last-name">Last name:</label>
+                <input
+                        id="address-last-name"
+                        type="text"
+                        th:field="*{lastName}">
+            </div>
+
+            <div class="form-group">
+                <label for="street">Street address:</label>
+                <input
+                        id="street"
+                        type="text"
+                        th:field="*{street}">
+            </div>
+
+            <div class="form-group">
+                <label for="city">City:</label>
+                <input
+                        id="city"
+                        type="text"
+                        th:field="*{city}">
+            </div>
+
+            <div class="form-group">
+                <label for="state">State:</label>
+                <select id="state" th:field="*{state}">
+                    <option value="">Select</option>
+                    <option
+                            th:each="state : ${states}"
+                            th:value="${state}"
+                            th:text="${state}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="zip-code">ZIP code:</label>
+                <input
+                        id="zip-code"
+                        type="text"
+                        th:field="*{zipCode}">
+            </div>
+
+            <button type="submit" class="primary-button">
+                Submit
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- NEW PAYMENT MODAL -->
+<div id="payment-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+
+    <div class="modal-content">
+        <button type="button" id="close-payment-modal" class="modal-close">
+            &times;
+        </button>
+
+        <h2>Enter card information</h2>
+
+        <form th:action="@{/checkout/payment/new}" th:object="${newPaymentMethod}" method="post">
+
+            <div class="form-group">
+                <label for="cardholder-name">Name on card:</label>
+                <input
+                        id="cardholder-name"
+                        type="text"
+                        th:field="*{cardholderName}">
+            </div>
+
+            <div class="form-group">
+                <label for="card-type">Card type:</label>
+                <select id="card-type" th:field="*{cardType}">
+                    <option value="">Select</option>
+                    <option
+                            th:each="cardType : ${cardTypes}"
+                            th:value="${cardType}"
+                            th:text="${cardType}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="card-processor">Card processor:</label>
+                <select id="card-processor" th:field="*{cardProcessor}">
+                    <option value="">Select</option>
+                    <option
+                            th:each="processor : ${cardProcessors}"
+                            th:value="${processor}"
+                            th:text="${processor}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="card-number">Card number:</label>
+                <input
+                        id="card-number"
+                        type="text"
+                        th:field="*{cardNumber}">
+            </div>
+
+            <div class="form-group">
+                <label for="cvv">CVV:</label>
+                <input
+                        id="cvv"
+                        type="text"
+                        th:field="*{cvv}">
+            </div>
+
+            <div class="form-group">
+                <label for="expiration-date">Expiration date:</label>
+                <input
+                        id="expiration-date"
+                        type="text"
+                        th:field="*{expirationDate}"
+                        placeholder="MM/YY">
+            </div>
+
+            <button type="submit" class="primary-button">Submit</button>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{/js/checkout.js}"></script>
+</body>
+</html>

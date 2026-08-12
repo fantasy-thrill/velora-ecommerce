@@ -74,6 +74,7 @@
     </nav>
 </header>
 <main class="cart-page">
+    <div th:if="${cartMessage}" class="flash-message" th:text="${cartMessage}"></div>
     <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a th:href="@{/}">Home</a>
         <span>&gt;</span>
@@ -83,9 +84,12 @@
     <div class="cart-content" th:if="${cart != null and !cart.items.isEmpty()}">
         <section class="cart-items">
             <article class="cart-item" th:each="item : ${cart.items}">
-                <a class="cart-item-image-link" th:href="@{/products/{id}(id=${item.productId})}">
-                    <img class="cart-item-image" th:src="@{${item.imageUrl}}" th:alt="${item.productName}">
-                </a>
+                <div class="cart-item-image-container">
+                    <a class="cart-item-image-link" th:href="@{/products/{id}(id=${item.productId})}">
+                        <img class="cart-item-image" th:src="@{${item.imageUrl}}" th:alt="${item.productName}">
+                    </a>
+                </div>
+
                 <div class="cart-item-information">
                     <a class="cart-item-name" th:href="@{/products/{id}(id=${item.productId})}" th:text="${item.productName}">Product name</a>
 
@@ -93,7 +97,10 @@
                     <p class="stock-status out-of-stock" th:unless="${item.stockQuantity > 0}">Out of stock</p>
                     <p class="shipping-information" th:if="${item.stockQuantity > 0}">Ships in 2 business days</p>
 
-                    <form class="quantity-form" th:action="@{/cart/update}" method="post">
+                    <form
+                            class="quantity-form"
+                            th:action="@{cart/update-quantity/{cartItemId}(cartItemId=${item.lineItemId})}"
+                            method="post">
                         <input type="hidden" name="cartItemId" th:value="${item.lineItemId}">
                         <label th:for="${'quantity-' + item.lineItemId}">Quantity:</label>
                         <input
@@ -106,7 +113,10 @@
                                 onchange="this.form.submit()">
                     </form>
 
-                    <form class="remove-item-form" th:action="@{/cart/remove}" method="post">
+                    <form
+                            class="remove-item-form"
+                            th:action="@{cart/remove-item/{cartItemId}(cartItemId=${item.lineItemId})}"
+                            method="post">
                         <input type="hidden" name="cartItemId" th:value="${item.lineItemId}">
                         <button type="submit" class="remove-item-button">
                             <i class="fa-solid fa-trash"></i>
@@ -122,14 +132,28 @@
                 <span>Subtotal:</span>
                 <strong th:text="${#numbers.formatCurrency(cart.subtotal)}">$00.00</strong>
             </p>
-            <a class="checkout-button" th:href="@{/checkout}">Proceed to checkout</a>
+            <div class="button-container">
+                <a class="continue-shopping-button-f" th:href="@{/products/all}">Continue shopping</a>
+                <a class="checkout-button" th:href="@{/checkout}">Proceed to checkout</a>
+            </div>
         </aside>
     </div>
     <section class="empty-cart" th:if="${cart == null or cart.items.isEmpty()}">
         <h2>Your cart is empty</h2>
         <p>There are currently no items in your shopping cart.</p>
-        <a class="continue-shopping-button" th:href="@{/products/all}">Continue shopping</a>
+        <a class="continue-shopping-button-e" th:href="@{/products/all}">Continue shopping</a>
     </section>
 </main>
+<!-- Footer -->
+<footer>
+    <p>© 2026 Velora Electronics. This is not a real company.</p>
+
+    <div class="footer-links">
+        <a th:href="@{/about}">About Velora</a>
+        <a th:href="@{/contact}">Contact Us</a>
+        <a th:href="@{/privacy}">Privacy Policy</a>
+        <a th:href="@{/terms}">Terms and Conditions</a>
+    </div>
+</footer>
 </body>
 </html>

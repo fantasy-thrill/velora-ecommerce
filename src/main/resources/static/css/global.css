@@ -166,6 +166,36 @@ img {
     background-color: #f5f5f5; /*  Match your dropdown link hover */
 }
 
+/*  FLASH MESSAGES  */
+.flash-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 9999;
+    padding: 16px 28px;
+    transform: translate(-50%, -50%);
+    border-radius: 6px;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    animation: flash-message-fade 3s ease forwards;
+}
+
+@keyframes flash-message-fade {
+    0% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
 /*  FOOTER  */
 footer {
     margin-top: 80px;

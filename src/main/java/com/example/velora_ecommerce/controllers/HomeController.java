@@ -15,8 +15,6 @@ public class HomeController {
     @GetMapping("/")
     public String homePage(Model model) {
         model.addAttribute("featuredProducts", productService.getFeaturedProducts());
-        model.addAttribute("categories", Category.values());
-
         return "index";
     }
 }

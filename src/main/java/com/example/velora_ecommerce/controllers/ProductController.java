@@ -68,7 +68,6 @@ public class ProductController {
 
         model.addAttribute("product", product);
         model.addAttribute("similarProducts", similarProducts);
-        model.addAttribute("categories", Category.values());
 
         return "products/details";
     }
@@ -93,7 +92,6 @@ public class ProductController {
     private void addListingAttributes(Model model, ProductFilterDto filterDto, Page<ProductResponseDto> results) {
         model.addAttribute("filterDto", filterDto);
         model.addAttribute("results", results);
-        model.addAttribute("categories", Category.values());
         model.addAttribute("brands", Brand.values());
     }
 }

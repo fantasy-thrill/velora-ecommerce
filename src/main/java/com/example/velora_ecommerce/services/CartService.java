@@ -65,6 +65,7 @@ public class CartService {
         System.out.println("Service: Item added to cart");
     }
 
+    @Transactional
     public void removeItemFromCart(String email, Long cartItemId) {
         Customer customer = getCustomer(email);
 
