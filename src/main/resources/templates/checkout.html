@@ -1,49 +1,48 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <title>Checkout | Velora</title>
     <link rel="stylesheet" th:href="@{/css/checkout.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body>
-<header>
-    <!-- Copy your existing checkout header here -->
-</header>
 <main class="checkout-page">
+    <a th:href="@{/}" class="logo">
+        <img th:src="@{/images/velora_logo.png}" alt="Velora Logo">
+    </a>
+
     <h1>Checkout</h1>
 
     <form id="checkout-form" th:action="@{/checkout/place-order}" th:object="${checkout}" method="post">
         <!-- DELIVERY ADDRESS -->
         <section class="checkout-section">
-            <div id="address-selection" th:if="${checkout.address == null}">
+            <div id="address-selection">
                 <h2>Delivery address</h2>
 
                 <label class="address-option">
-                    <input type="radio" name="savedAddress" value="saved" checked>
+                    <input type="radio" name="savedAddress" value="saved">
                     <span class="address-details">
-                        <strong th:text="${checkoutPage.address.firstName + ' ' + checkoutPage.address.lastName}">
+                        <strong th:text="${address.customerFullName}">
                             John Smith
                         </strong>
-                        <span th:text="${checkoutPage.address.street}">
+                        <span th:text="${address.street}">
                             123 Anywhere St.
                         </span>
-                        <span th:text="${checkoutPage.address.city + ', ' + checkoutPage.address.state}">
-                            Boston, MA
-                        </span>
-                        <span th:text="${checkoutPage.address.zipCode}">
-                            02108
+                        <span th:text="${address.city + ', ' + address.state + ' ' + address.zipCode}">
+                            Boston, MA 02108
                         </span>
                     </span>
                 </label>
 
-                <input type="hidden" id="saved-address-first-name" th:value="${checkoutPage.address.firstName}">
-                <input type="hidden" id="saved-address-last-name" th:value="${checkoutPage.address.lastName}">
-                <input type="hidden" id="saved-address-street" th:value="${checkoutPage.address.street}">
-                <input type="hidden" id="saved-address-city" th:value="${checkoutPage.address.city}">
-                <input type="hidden" id="saved-address-state" th:value="${checkoutPage.address.state}">
-                <input type="hidden" id="saved-address-zip" th:value="${checkoutPage.address.zipCode}">
+                <input type="hidden" id="saved-address-full-name" th:value="${address.customerFullName}">
+                <input type="hidden" id="saved-address-street" th:value="${address.street}">
+                <input type="hidden" id="saved-address-city" th:value="${address.city}">
+                <input type="hidden" id="saved-address-state" th:value="${address.state}">
+                <input type="hidden" id="saved-address-zip" th:value="${address.zipCode}">
 
                 <div class="checkout-actions">
                     <button type="button" id="different-address-button" class="secondary-button">
@@ -55,19 +54,13 @@
                 </div>
             </div>
 
-            <div id="address-confirmed" th:unless="${checkout.address == null}" class="confirmed-checkout-section">
+            <div id="address-confirmed" class="confirmed-checkout-section hidden">
                 <div>
                     <h2>Delivering to</h2>
                     <p class="confirmed-address">
-                        <span th:text="${checkout.address.firstName + ' ' + checkout.address.lastName}">
-                            John Smith
-                        </span><br>
-                        <span th:text="${checkout.address.street}">
-                            123 Anywhere St.
-                        </span><br>
-                        <span th:text="${checkout.address.city + ', ' + checkout.address.state + ' ' + checkout.address.zipCode}">
-                            Boston, MA 02108
-                        </span>
+                        <span id="confirmed-address-name">John Smith</span><br>
+                        <span id="confirmed-address-street">123 Anywhere St.</span><br>
+                        <span id="confirmed-address-city">Boston, MA 02108</span>
                     </p>
                 </div>
                 <button type="button" id="change-address-button" class="change-button">Change</button>
@@ -80,14 +73,15 @@
                 <h2>Payment method</h2>
 
                 <div class="payment-options">
-                    <label class="payment-option" th:each="paymentCard : ${checkoutPage.paymentCards}">
+                    <label class="payment-option" th:each="paymentCard : ${paymentCards}">
                         <input
                                 type="radio"
                                 th:field="*{paymentMethodId}"
-                                th:value="${paymentCard.paymentCardId}"
-                                th:checked="${checkoutPage.selectedPaymentMethod != null and paymentCard.paymentCardId == checkoutPage.selectedPaymentMethod.paymentCardId}">
-                        <span th:text="${paymentCard.cardType + ' ending in ' + paymentCard.lastFourDigits}">
-                            Visa ending in 1234
+                                th:value="${paymentCard.paymentCardId}">
+                        <span>
+                            <strong th:text="${paymentCard.cardProcessor.displayString}">Visa</strong>
+                            ending in
+                            <strong th:text="${paymentCard.lastFourDigits}">1234</strong>
                         </span>
                     </label>
                 </div>
@@ -107,9 +101,7 @@
             <div id="payment-confirmed" class="confirmed-checkout-section hidden">
                 <div>
                     <h2>Paying with</h2>
-                    <p id="confirmed-payment-text">
-                        Mastercard ending in 5678
-                    </p>
+                    <p id="confirmed-payment-text">Mastercard ending in 5678</p>
                 </div>
                 <button type="button" id="change-payment-button" class="change-button">
                     Change
@@ -158,9 +150,9 @@
 
         <!-- PRODUCTS -->
         <section class="checkout-items">
-            <article class="checkout-item" th:each="item : ${checkoutPage.items}">
+            <article class="checkout-item" th:each="item : ${items}">
                 <a th:href="@{/products/{id}(id=${item.productId})}" class="checkout-item-image-link">
-                    <img class="checkout-item-image" th:src="@{${item.productImageUrl}}" th:alt="${item.productName}">
+                    <img class="checkout-item-image" th:src="@{${item.imageUrl}}" th:alt="${item.productName}">
                 </a>
 
                 <div class="checkout-item-information">
@@ -170,10 +162,10 @@
                             th:text="${item.productName}">
                         Product name
                     </a>
-                    <strong th:text="${#numbers.formatCurrency(item.price)}">$00.00</strong>
+                    <strong th:text="${#numbers.formatCurrency(item.lineTotal)}">$00.00</strong>
                     <span>
                         Quantity:
-                        <span th:text="${item.quantity}">1</span>
+                        <span th:text="${item.cartQuantity}">1</span>
                     </span>
                 </div>
             </article>
@@ -183,12 +175,12 @@
         <section class="order-summary">
             <div class="summary-row">
                 <span>Subtotal:</span>
-                <strong th:text="${#numbers.formatCurrency(summary.subtotal)}">$00.00</strong>
+                <strong th:text="${#numbers.formatCurrency(summary.subtotal)}" id="subtotal">$00.00</strong>
             </div>
 
             <div class="summary-row">
                 <span>Shipping:</span>
-                <strong th:text="${#numbers.formatCurrency(summary.shipping)}">$0.00</strong>
+                <strong th:text="${#numbers.formatCurrency(summary.shipping)}" id="shipping">$0.00</strong>
             </div>
 
             <div class="summary-row" th:if="${summary.discount != null and summary.discount.compareTo(T(java.math.BigDecimal).ZERO) > 0}">
@@ -203,10 +195,10 @@
 
             <div class="summary-row grand-total">
                 <span>Order total:</span>
-                <strong th:text="${#numbers.formatCurrency(summary.total)}">$00.00</strong>
+                <strong th:text="${#numbers.formatCurrency(summary.total)}" id="total">$00.00</strong>
             </div>
 
-            <button type="submit" class="place-order-button">
+            <button type="submit" id="place-order-button" disabled>
                 Place order
             </button>
         </section>
@@ -218,69 +210,41 @@
     <div class="modal-overlay"></div>
 
     <div class="modal-content">
-        <button type="button" id="close-address-modal" class="modal-close">
-            &times;
-        </button>
+        <button type="button" id="close-address-modal" class="modal-close">&times;</button>
 
         <h2>Enter the delivery address</h2>
 
         <form th:action="@{/checkout/address/new}" th:object="${newAddress}" method="post">
-
             <div class="form-group">
-                <label for="address-first-name">First name:</label>
-                <input
-                        id="address-first-name"
-                        type="text"
-                        th:field="*{firstName}">
-            </div>
-
-            <div class="form-group">
-                <label for="address-last-name">Last name:</label>
-                <input
-                        id="address-last-name"
-                        type="text"
-                        th:field="*{lastName}">
+                <label for="address-full-name">Full name:</label>
+                <input id="address-full-name" type="text" th:field="*{customerFullName}">
             </div>
 
             <div class="form-group">
                 <label for="street">Street address:</label>
-                <input
-                        id="street"
-                        type="text"
-                        th:field="*{street}">
+                <input id="street" type="text" th:field="*{street}">
             </div>
 
             <div class="form-group">
                 <label for="city">City:</label>
-                <input
-                        id="city"
-                        type="text"
-                        th:field="*{city}">
+                <input id="city" type="text" th:field="*{city}">
             </div>
 
             <div class="form-group">
                 <label for="state">State:</label>
                 <select id="state" th:field="*{state}">
                     <option value="">Select</option>
-                    <option
-                            th:each="state : ${states}"
-                            th:value="${state}"
-                            th:text="${state}">
+                    <option th:each="state : ${states}" th:value="${state}" th:text="${state + ' - ' + state.fullName}">
                     </option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="zip-code">ZIP code:</label>
-                <input
-                        id="zip-code"
-                        type="text"
-                        th:field="*{zipCode}">
+                <input id="zip-code" type="text" th:field="*{zipCode}">
             </div>
 
-            <button type="submit" class="primary-button">
-                Submit
-            </button>
+            <button type="submit" class="primary-button">Submit</button>
         </form>
     </div>
 </div>
@@ -290,20 +254,14 @@
     <div class="modal-overlay"></div>
 
     <div class="modal-content">
-        <button type="button" id="close-payment-modal" class="modal-close">
-            &times;
-        </button>
+        <button type="button" id="close-payment-modal" class="modal-close">&times;</button>
 
         <h2>Enter card information</h2>
 
         <form th:action="@{/checkout/payment/new}" th:object="${newPaymentMethod}" method="post">
-
             <div class="form-group">
                 <label for="cardholder-name">Name on card:</label>
-                <input
-                        id="cardholder-name"
-                        type="text"
-                        th:field="*{cardholderName}">
+                <input id="cardholder-name" type="text" th:field="*{cardholderName}">
             </div>
 
             <div class="form-group">
@@ -313,8 +271,7 @@
                     <option
                             th:each="cardType : ${cardTypes}"
                             th:value="${cardType}"
-                            th:text="${cardType}">
-                    </option>
+                            th:text="${cardType.displayString}"></option>
                 </select>
             </div>
 
@@ -325,34 +282,57 @@
                     <option
                             th:each="processor : ${cardProcessors}"
                             th:value="${processor}"
-                            th:text="${processor}">
-                    </option>
+                            th:text="${processor.displayString}"></option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="card-number">Card number:</label>
-                <input
-                        id="card-number"
-                        type="text"
-                        th:field="*{cardNumber}">
+                <input id="card-number" type="text" th:field="*{cardNumber}">
             </div>
 
             <div class="form-group">
                 <label for="cvv">CVV:</label>
-                <input
-                        id="cvv"
-                        type="text"
-                        th:field="*{cvv}">
+                <input id="cvv" type="text" th:field="*{cvv}">
             </div>
 
             <div class="form-group">
-                <label for="expiration-date">Expiration date:</label>
-                <input
-                        id="expiration-date"
-                        type="text"
-                        th:field="*{expirationDate}"
-                        placeholder="MM/YY">
+                <label for="expiration-month">Expiration date:</label>
+                <div class="expiration-date">
+                    <select id="expiration-month" name="expirationMonth">
+                        <option value="" selected disabled>MM</option>
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                    </select>
+
+                    <span>/</span>
+
+                    <select id="expiration-year" name="expirationYear">
+                        <option value="" selected disabled>YYYY</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                        <option value="2031">2031</option>
+                        <option value="2032">2032</option>
+                        <option value="2033">2033</option>
+                        <option value="2034">2034</option>
+                        <option value="2035">2035</option>
+                    </select>
+                </div>
+
+                <input type="hidden" id="expiration-date" th:field="*{expirationDate}">
             </div>
 
             <button type="submit" class="primary-button">Submit</button>

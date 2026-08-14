@@ -23,7 +23,8 @@ public class PaymentCardDto {
     @NotBlank(message = "Card number is required")
     private String cardNumber;
 
-    @NotBlank(message = "Expiration date is required")
+//    @NotBlank(message = "Expiration date is required")
+    @NotNull
     private LocalDate expirationDate;
 
     @NotBlank(message = "CVV is required")

@@ -49,8 +49,8 @@ public class CartController {
         return "redirect:/cart";
     }
 
-    @GetMapping("/checkout")
-    public String proceedToCheckout() {
-        return "redirect:/checkout";
-    }
+//    @GetMapping("/checkout")
+//    public String proceedToCheckout() {
+//        return "redirect:/checkout";
+//    }
 }

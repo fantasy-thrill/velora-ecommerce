@@ -18,6 +18,7 @@ public class CustomerMapper {
         customerProfileDto.setEmail(customer.getEmail());
         customerProfileDto.setPhoneNumber(customer.getPhoneNumber());
 
+        addressDto.setCustomerFullName(customer.getFirstName() + " " + customer.getLastName());
         addressDto.setStreet(customerAddress.getStreet());
         addressDto.setCity(customerAddress.getCity());
         addressDto.setState(customerAddress.getState());
@@ -39,6 +40,10 @@ public class CustomerMapper {
         updateDto.setEmail(customer.getEmail());
         updateDto.setPhoneNumber(customer.getPhoneNumber());
 
+        addressDto.setCustomerFullName(
+                customerAddress.getCustomerFirstName() + " " +
+                customerAddress.getCustomerLastName()
+        );
         addressDto.setStreet(customerAddress.getStreet());
         addressDto.setCity(customerAddress.getCity());
         addressDto.setState(customerAddress.getState());

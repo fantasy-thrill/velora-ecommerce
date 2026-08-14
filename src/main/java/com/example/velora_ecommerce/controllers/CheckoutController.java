@@ -3,11 +3,12 @@ package com.example.velora_ecommerce.controllers;
 import com.example.velora_ecommerce.dtos.*;
 import com.example.velora_ecommerce.entities.Order;
 import com.example.velora_ecommerce.entities.PaymentCard;
-import com.example.velora_ecommerce.enums.CardProcessor;
-import com.example.velora_ecommerce.enums.CardType;
+import com.example.velora_ecommerce.enums.*;
+import com.example.velora_ecommerce.mappers.PaymentCardMapper;
 import com.example.velora_ecommerce.services.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.support.SessionStatus;
 @Controller
 @RequestMapping("/checkout")
 @RequiredArgsConstructor
-@SessionAttributes("checkout")
+@SessionAttributes({"checkout", "summary"})
 public class CheckoutController {
     private final CheckoutService checkoutService;
 
@@ -33,20 +34,20 @@ public class CheckoutController {
 
         if (!model.containsAttribute("checkout")) {
             CheckoutDto checkout = new CheckoutDto();
-
-            checkout.setAddress(checkoutPage.getAddress());
-            checkout.setPaymentMethodId(checkoutPage.getSelectedPaymentMethod().getPaymentCardId());
-            checkout.setShippingSpeed(checkoutPage.getShippingSpeed());
-
             model.addAttribute("checkout", checkout);
+//            System.out.println("Current value of shipping speed: " + checkout.getShippingSpeed());
         }
 
-        model.addAttribute("checkoutPage", checkoutPage);
+        model.addAttribute("address", checkoutPage.getAddress());
+        model.addAttribute("states", State.values());
+        model.addAttribute("paymentCards", checkoutPage.getPaymentCards());
         model.addAttribute("newPaymentMethod", new PaymentCardDto());
         model.addAttribute("cardTypes", CardType.values());
         model.addAttribute("cardProcessors", CardProcessor.values());
         model.addAttribute("newAddress", new AddressDto());
+        model.addAttribute("shippingSpeed", ShippingSpeed.values());
         model.addAttribute("giftCard", new GiftCardDto());
+        model.addAttribute("items", checkoutPage.getItems());
 
         CheckoutSummaryDto summary = checkoutService.buildCheckoutSummary(
                 email,
@@ -57,40 +58,109 @@ public class CheckoutController {
         return "checkout";
     }
 
-    @PostMapping("/address/new")
-    public String addAddress(
-            @Valid @ModelAttribute("newAddress") AddressDto addressDto,
+    @GetMapping("/start")
+    public String startCheckout(SessionStatus sessionStatus) {
+        sessionStatus.setComplete();
+
+        return "redirect:/checkout";
+    }
+
+    @PostMapping("/select-address")
+    @ResponseBody
+    public ResponseEntity<Void> selectAddress(
+            @Valid @RequestBody AddressDto addressDto,
             BindingResult bindingResult,
             @ModelAttribute("checkout") CheckoutDto checkoutDto
     ) {
         if (bindingResult.hasErrors()) {
-            return "checkout";
+            return ResponseEntity.badRequest().build();
         }
 
         checkoutDto.setAddress(addressDto);
-        return "redirect:/checkout";
+        System.out.println("Address saved to checkout session.");
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/address/new")
+    @ResponseBody
+    public ResponseEntity<AddressDto> addAddress(
+            @Valid @RequestBody AddressDto addressDto,
+            BindingResult bindingResult,
+            @ModelAttribute("checkout") CheckoutDto checkoutDto
+    ) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        checkoutDto.setAddress(addressDto);
+        System.out.print(
+                "New address added:\n" +
+                checkoutDto.getAddress().getCustomerFullName() + "\n" +
+                checkoutDto.getAddress().getStreet() + "\n" +
+                checkoutDto.getAddress().getCity() + ", " +
+                checkoutDto.getAddress().getState() + " " +
+                checkoutDto.getAddress().getZipCode()
+        );
+
+        return ResponseEntity.ok(addressDto);
+    }
+
+    @PostMapping("/select-payment")
+    @ResponseBody
+    public ResponseEntity<Void> selectPaymentMethod(
+            @RequestParam Long paymentMethodId,
+            @ModelAttribute("checkout") CheckoutDto checkoutDto
+    ) {
+        checkoutDto.setPaymentMethodId(paymentMethodId);
+
+        System.out.println("Payment method added to checkout session.");
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/payment/new")
-    public String addPaymentMethod(
+    @ResponseBody
+    public ResponseEntity<PaymentCardResponseDto> addPaymentMethod(
             Authentication authentication,
             @Valid @ModelAttribute("newPaymentMethod") PaymentCardDto paymentDto,
             BindingResult bindingResult,
             @ModelAttribute("checkout") CheckoutDto checkoutDto
     ) {
         if (bindingResult.hasErrors()) {
-            return "checkout";
+            return ResponseEntity.badRequest().build();
         }
 
         PaymentCard card = paymentCardService.addPaymentCard(authentication.getName(), paymentDto);
-        checkoutDto.setPaymentMethodId(card.getId());
+        PaymentCardResponseDto newCardDto = PaymentCardMapper.toResponseDto(card);
 
-        return "redirect:/checkout";
+        checkoutDto.setPaymentMethodId(card.getId());
+        System.out.print(
+                "New payment card added: " +
+                card.getCardProcessor() +
+                " ending in " +
+                card.getLastFourDigits()
+        );
+
+        return ResponseEntity.ok(newCardDto);
     }
 
     @PostMapping("/shipping")
-    public String updateShipping(@ModelAttribute("checkout") CheckoutDto checkoutDto) {
-        return "redirect:/checkout";
+    @ResponseBody
+    public CheckoutSummaryDto selectShippingSpeed(
+            @RequestParam ShippingSpeed shippingSpeed,
+            @ModelAttribute("checkout") CheckoutDto checkoutDto,
+            @ModelAttribute("summary") CheckoutSummaryDto summaryDto,
+            Authentication authentication
+    ) {
+        checkoutDto.setShippingSpeed(shippingSpeed);
+
+        CheckoutSummaryDto updatedSummary = checkoutService.buildCheckoutSummary(authentication.getName(), checkoutDto);
+
+        summaryDto.setShipping(updatedSummary.getShipping());
+        summaryDto.setTotal(updatedSummary.getTotal());
+
+        System.out.print("Shipping speed updated: " + checkoutDto.getShippingSpeed() + " $" + summaryDto.getShipping());
+        return summaryDto;
     }
 
     @PostMapping("/gift-card")
@@ -116,6 +186,7 @@ public class CheckoutController {
         String confirmation = checkoutService.displayConfirmation(authentication.getName(), orderId);
         model.addAttribute("confirmation", confirmation);
 
-        return "checkout/confirmation";
+        // TODO: Create "order-confirmation.html" and change the view string below to "order-confirmation"
+        return "checkout";
     }
 }

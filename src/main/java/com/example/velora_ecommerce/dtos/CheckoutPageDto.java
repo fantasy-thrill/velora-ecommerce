@@ -10,15 +10,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CheckoutPageDto {
+    private String customerFullName;
+
     private List<CartItemDto> items;
 
     private AddressDto address;
 
     private List<PaymentCardResponseDto> paymentCards;
 
-    private PaymentCardResponseDto selectedPaymentMethod;
+//    private PaymentCardResponseDto selectedPaymentMethod;
 
-    private ShippingSpeed shippingSpeed = ShippingSpeed.STANDARD;
+    private ShippingSpeed shippingSpeed;
 
 //    private CheckoutSummaryDto summary;
 }

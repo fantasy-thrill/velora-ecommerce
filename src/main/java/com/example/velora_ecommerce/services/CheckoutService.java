@@ -27,9 +27,7 @@ public class CheckoutService {
     }
 
     public CheckoutPageDto getCheckoutPage(String customerEmail) {
-        Customer customer = customerService.getCustomerByEmail(customerEmail)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
-
+        Customer customer = getCustomer(customerEmail);
         CheckoutPageDto pageDto = new CheckoutPageDto();
         CustomerProfileDto customerProfileDto = CustomerMapper.toProfileDto(customer);
 
@@ -46,22 +44,22 @@ public class CheckoutService {
         pageDto.setItems(dtoItems);
         pageDto.setAddress(customerProfileDto.getAddress());
         pageDto.setPaymentCards(dtoCards);
-        pageDto.setSelectedPaymentMethod(dtoCards.getFirst());
 
         return pageDto;
     }
 
     public CheckoutSummaryDto buildCheckoutSummary(String customerEmail, CheckoutDto checkoutDto) {
-        Customer customer = customerService.getCustomerByEmail(customerEmail)
-                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
-
+        Customer customer = getCustomer(customerEmail);
         Cart customerCart = customer.getCart();
+        CheckoutSummaryDto summaryDto = new CheckoutSummaryDto();
 
         BigDecimal total = customerCart.calculateSubtotal();
-        BigDecimal shippingCost = checkoutDto.getShippingSpeed().getShippingCost();
-        total = total.add(shippingCost);
 
-        CheckoutSummaryDto summaryDto = new CheckoutSummaryDto();
+        if (checkoutDto.getShippingSpeed() != null) {
+            BigDecimal shippingCost = checkoutDto.getShippingSpeed().getShippingCost();
+            total = total.add(shippingCost);
+            summaryDto.setShipping(shippingCost);
+        }
 
         if (checkoutDto.getGiftCardCode() != null) {
             GiftCard giftCard = giftCardService.getGiftCardByCode(checkoutDto.getGiftCardCode())
@@ -72,7 +70,6 @@ public class CheckoutService {
         }
 
         summaryDto.setSubtotal(customerCart.calculateSubtotal());
-        summaryDto.setShipping(shippingCost);
         summaryDto.setTotal(total);
 
         return summaryDto;
@@ -86,5 +83,10 @@ public class CheckoutService {
             throw new IllegalStateException("Order does not belong to customer");
 
         return "Thank you for your order. Your order ID number is #" + order.getId();
+    }
+
+    private Customer getCustomer(String email) {
+        return customerService.getCustomerByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
     }
 }

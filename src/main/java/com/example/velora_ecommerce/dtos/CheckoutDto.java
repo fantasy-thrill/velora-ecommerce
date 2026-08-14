@@ -9,14 +9,17 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class CheckoutDto {
+    @NotNull(message = "Please select a payment method.")
     private Long paymentMethodId;
 
     @Valid
+    @NotNull(message = "Please select a delivery address.")
     private AddressDto address;
 
     private String giftCardCode;
 
     private String couponCode;
 
-    private ShippingSpeed shippingSpeed = ShippingSpeed.STANDARD;
+    @NotNull(message = "Please select a shipping speed.")
+    private ShippingSpeed shippingSpeed;
 }
