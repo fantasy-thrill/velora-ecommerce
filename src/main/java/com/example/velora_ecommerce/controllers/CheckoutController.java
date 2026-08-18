@@ -85,7 +85,7 @@ public class CheckoutController {
     @PostMapping("/address/new")
     @ResponseBody
     public ResponseEntity<AddressDto> addAddress(
-            @Valid @RequestBody AddressDto addressDto,
+            @Valid @ModelAttribute("newAddress") AddressDto addressDto,
             BindingResult bindingResult,
             @ModelAttribute("checkout") CheckoutDto checkoutDto
     ) {
@@ -159,7 +159,8 @@ public class CheckoutController {
         summaryDto.setShipping(updatedSummary.getShipping());
         summaryDto.setTotal(updatedSummary.getTotal());
 
-        System.out.print("Shipping speed updated: " + checkoutDto.getShippingSpeed() + " $" + summaryDto.getShipping());
+        System.out.println("Shipping speed updated: " + checkoutDto.getShippingSpeed() + " $" + summaryDto.getShipping());
+        System.out.println("New total: $" + summaryDto.getTotal());
         return summaryDto;
     }
 
@@ -178,15 +179,16 @@ public class CheckoutController {
         Order order = orderService.placeOrder(authentication.getName(), checkoutDto, summaryDto);
         sessionStatus.setComplete();
 
-        return "redirect:/checkout/confirmation" + order.getId();
+        return "redirect:/checkout/confirmation/" + order.getId();
     }
 
     @GetMapping("/confirmation/{orderId}")
     public String orderConfirmation(@PathVariable Long orderId, Authentication authentication, Model model) {
         String confirmation = checkoutService.displayConfirmation(authentication.getName(), orderId);
-        model.addAttribute("confirmation", confirmation);
 
-        // TODO: Create "order-confirmation.html" and change the view string below to "order-confirmation"
-        return "checkout";
+        model.addAttribute("confirmation", confirmation);
+        model.addAttribute("orderId", orderId);
+
+        return "order-confirmation";
     }
 }

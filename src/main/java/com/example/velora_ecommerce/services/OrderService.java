@@ -4,9 +4,11 @@ import com.example.velora_ecommerce.dtos.*;
 import com.example.velora_ecommerce.entities.*;
 import com.example.velora_ecommerce.enums.OrderStatus;
 import com.example.velora_ecommerce.mappers.OrderMapper;
+import com.example.velora_ecommerce.repositories.OrderRepository;
 import com.example.velora_ecommerce.repositories.PaymentCardRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,13 +17,13 @@ import java.util.Map;
 
 @Service
 public class OrderService {
-    private final com.example.velora_ecommerce.repositories.OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
     private final PaymentCardRepository paymentCardRepository;
     private final PaymentCardService paymentCardService;
     private final CustomerService customerService;
 
     public OrderService(
-            com.example.velora_ecommerce.repositories.OrderRepository orderRepository,
+            OrderRepository orderRepository,
             PaymentCardRepository paymentCardRepository,
             PaymentCardService paymentCardService,
             CustomerService customerService
@@ -32,6 +34,7 @@ public class OrderService {
         this.customerService = customerService;
     }
 
+    @Transactional
     public Order placeOrder(String customerEmail, CheckoutDto checkoutDto, CheckoutSummaryDto summaryDto) {
         Customer customer = customerService.getCustomerByEmail(customerEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
@@ -42,30 +45,21 @@ public class OrderService {
         List<CartItem> cartItems = customer.getCart().getItems();
         BigDecimal totalPrice = summaryDto.getTotal();
 
-        if (checkoutDto.getPaymentMethodId() != null) {
-            PaymentCard paymentCard = paymentCardRepository
-                    .findById(checkoutDto.getPaymentMethodId())
-                    .orElseThrow(() -> new EntityNotFoundException("Credit or debit card not found"));
+        if (checkoutDto.getPaymentMethodId() == null)
+            throw new NullPointerException("No valid payment method entered");
 
-            if (!paymentCard.getCustomer().getId()
-                    .equals(customer.getId()))
-                throw new IllegalStateException("Credit or debit card does not belong to customer");
+        PaymentCard paymentCard = paymentCardRepository
+                .findById(checkoutDto.getPaymentMethodId())
+                .orElseThrow(() -> new EntityNotFoundException("Credit or debit card not found"));
 
-            order.setPaymentCard(paymentCard);
+        if (!paymentCard.getCustomer().getId()
+                .equals(customer.getId()))
+            throw new IllegalStateException("Credit or debit card does not belong to customer");
 
-        } // else {
-//            PaymentCardDto cardDto = new PaymentCardDto();
-//
-//            cardDto.setCardType(checkoutDto.getCardType());
-//            cardDto.setCardProcessor(checkoutDto.getCardProcessor());
-//            cardDto.setCardNumber(checkoutDto.getCardNumber());
-//
-//            PaymentCard paymentCard = paymentCardService.addPaymentCard(customer, cardDto);
-//            order.setPaymentCard(paymentCard);
-//        }
+        order.setPaymentCard(paymentCard);
 
-        address.setCustomerFirstName(customer.getFirstName());
-        address.setCustomerLastName(customer.getLastName());
+        address.setCustomerFirstName(dtoAddress.getCustomerFullName().split(" ")[0]);
+        address.setCustomerLastName(dtoAddress.getCustomerFullName().split(" ")[1]);
         address.setStreet(dtoAddress.getStreet());
         address.setCity(dtoAddress.getCity());
         address.setState(dtoAddress.getState());
@@ -95,6 +89,8 @@ public class OrderService {
 
             order.getItems().add(orderItem);
         }
+
+        customer.getCart().getItems().clear();
 
         return orderRepository.save(order);
     }

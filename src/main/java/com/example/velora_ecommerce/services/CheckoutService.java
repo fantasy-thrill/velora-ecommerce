@@ -82,7 +82,7 @@ public class CheckoutService {
         if (!order.getCustomer().getEmail().equals(customerEmail))
             throw new IllegalStateException("Order does not belong to customer");
 
-        return "Thank you for your order. Your order ID number is #" + order.getId();
+        return "Thank you for your order. Your confirmation number is #" + order.getId();
     }
 
     private Customer getCustomer(String email) {

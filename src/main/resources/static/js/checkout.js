@@ -216,19 +216,32 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                const shippingText = selectedShipping
-                    .closest(".shipping-option")
-                    .querySelector("span")
-                    .textContent
-                    .trim();
+                // const shippingText = selectedShipping
+                //     .closest(".shipping-option")
+                //     .querySelector("span")
+                //     .textContent
+                //     .trim();
 
-                const estimatedDelivery = document.getElementById("estimated-delivery");
-                if (estimatedDelivery) estimatedDelivery.textContent = shippingText;
+                // const shippingSummary = await response.json();
 
                 shippingSelection.classList.add("hidden");
                 shippingConfirmed.classList.remove("hidden");
 
                 const summary = await response.json();
+                let earliestDay;
+                let latestDay;
+
+                if (summary["shipping"] === 9.99) {
+                    earliestDay = 1;
+                    latestDay = 2;
+                } else {
+                    earliestDay = 3;
+                    latestDay = 5;
+                }
+
+                const estimatedDelivery = document.getElementById("estimated-delivery");
+                if (estimatedDelivery)
+                    estimatedDelivery.textContent = `${formatDate(earliestDay)} - ${formatDate(latestDay)}`;
 
                 const subtotal = document.getElementById("subtotal")
                 const shipping = document.getElementById("shipping")
@@ -274,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const response = await fetch("/checkout/address/new", {
                     method: "POST",
                     headers: getCsrfHeaders(),
-                    body: JSON.stringify(newAddress)
+                    body: formData
                 });
 
                 if (!response.ok) {
@@ -376,4 +389,16 @@ function formatCurrency(amount) {
         style: "currency",
         currency: "USD"
     }).format(Number(amount));
+}
+
+function formatDate(dayAmount) {
+    const deliveryDate = new Date()
+    deliveryDate.setDate(deliveryDate.getDate() + dayAmount)
+
+    const dateString = deliveryDate.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric"
+    })
+
+    return dateString
 }

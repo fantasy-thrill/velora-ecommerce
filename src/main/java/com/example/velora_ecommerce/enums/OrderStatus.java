@@ -1,5 +1,10 @@
 package com.example.velora_ecommerce.enums;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum OrderStatus {
     PENDING("Pending"),
     PROCESSING("Processing"),
@@ -8,12 +13,4 @@ public enum OrderStatus {
     CANCELED("Canceled");
 
     private final String displayName;
-
-    OrderStatus(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
 }

@@ -1,0 +1,40 @@
+.order-confirmation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 500px;
+    text-align: center;
+    height: 62vh;
+}
+
+.order-confirmation h1 {
+    margin: 0 0 24px;
+    font-size: 36px;
+}
+
+.order-confirmation p {
+    margin: 0 0 28px;
+    font-size: 20px;
+}
+
+.order-confirmation p strong {
+    font-weight: 500;
+}
+
+.continue-shopping-button {
+    display: inline-block;
+    padding: 12px 28px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #000;
+    font-size: 16px;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.continue-shopping-button:hover {
+    background-color: #000;
+    color: #fff;
+}

@@ -198,7 +198,7 @@
                 <strong th:text="${#numbers.formatCurrency(summary.total)}" id="total">$00.00</strong>
             </div>
 
-            <button type="submit" id="place-order-button" disabled>
+            <button type="submit" id="place-order-button" class="primary-button" disabled>
                 Place order
             </button>
         </section>
@@ -314,8 +314,6 @@
                         <option value="11">11</option>
                         <option value="12">12</option>
                     </select>
-
-                    <span>/</span>
 
                     <select id="expiration-year" name="expirationYear">
                         <option value="" selected disabled>YYYY</option>

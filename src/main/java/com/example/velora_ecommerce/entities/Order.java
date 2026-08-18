@@ -58,8 +58,8 @@ public class Order {
     @JoinColumn(name = "payment_card_id", nullable = false)
     private PaymentCard paymentCard;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "gift_card_id", nullable = true)
+    @ManyToOne
+    @JoinColumn(name = "gift_card_id")
     private GiftCard giftCard;
 
     @Enumerated(EnumType.STRING)
