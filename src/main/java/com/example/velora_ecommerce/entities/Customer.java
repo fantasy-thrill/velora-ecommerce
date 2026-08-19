@@ -33,7 +33,6 @@ public class Customer {
 
     @Embedded
     @NotNull
-    @Valid
     private Address address;
 
     @Column(nullable = false)

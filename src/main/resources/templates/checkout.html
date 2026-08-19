@@ -217,22 +217,22 @@
         <form th:action="@{/checkout/address/new}" th:object="${newAddress}" method="post">
             <div class="form-group">
                 <label for="address-full-name">Full name:</label>
-                <input id="address-full-name" type="text" th:field="*{customerFullName}">
+                <input id="address-full-name" type="text" th:field="*{customerFullName}" required>
             </div>
 
             <div class="form-group">
                 <label for="street">Street address:</label>
-                <input id="street" type="text" th:field="*{street}">
+                <input id="street" type="text" th:field="*{street}" required>
             </div>
 
             <div class="form-group">
                 <label for="city">City:</label>
-                <input id="city" type="text" th:field="*{city}">
+                <input id="city" type="text" th:field="*{city}" required>
             </div>
 
             <div class="form-group">
                 <label for="state">State:</label>
-                <select id="state" th:field="*{state}">
+                <select id="state" th:field="*{state}" required>
                     <option value="">Select</option>
                     <option th:each="state : ${states}" th:value="${state}" th:text="${state + ' - ' + state.fullName}">
                     </option>
@@ -241,7 +241,7 @@
 
             <div class="form-group">
                 <label for="zip-code">ZIP code:</label>
-                <input id="zip-code" type="text" th:field="*{zipCode}">
+                <input id="zip-code" type="text" th:field="*{zipCode}" required>
             </div>
 
             <button type="submit" class="primary-button">Submit</button>
@@ -266,7 +266,7 @@
 
             <div class="form-group">
                 <label for="card-type">Card type:</label>
-                <select id="card-type" th:field="*{cardType}">
+                <select id="card-type" th:field="*{cardType}" required>
                     <option value="">Select</option>
                     <option
                             th:each="cardType : ${cardTypes}"
@@ -277,7 +277,7 @@
 
             <div class="form-group">
                 <label for="card-processor">Card processor:</label>
-                <select id="card-processor" th:field="*{cardProcessor}">
+                <select id="card-processor" th:field="*{cardProcessor}" required>
                     <option value="">Select</option>
                     <option
                             th:each="processor : ${cardProcessors}"
@@ -288,18 +288,18 @@
 
             <div class="form-group">
                 <label for="card-number">Card number:</label>
-                <input id="card-number" type="text" th:field="*{cardNumber}">
+                <input id="card-number" type="text" th:field="*{cardNumber}" required>
             </div>
 
             <div class="form-group">
                 <label for="cvv">CVV:</label>
-                <input id="cvv" type="text" th:field="*{cvv}">
+                <input id="cvv" type="text" th:field="*{cvv}" required>
             </div>
 
             <div class="form-group">
                 <label for="expiration-month">Expiration date:</label>
                 <div class="expiration-date">
-                    <select id="expiration-month" name="expirationMonth">
+                    <select id="expiration-month" name="expirationMonth" required>
                         <option value="" selected disabled>MM</option>
                         <option value="01">01</option>
                         <option value="02">02</option>
@@ -315,7 +315,7 @@
                         <option value="12">12</option>
                     </select>
 
-                    <select id="expiration-year" name="expirationYear">
+                    <select id="expiration-year" name="expirationYear" required>
                         <option value="" selected disabled>YYYY</option>
                         <option value="2026">2026</option>
                         <option value="2027">2027</option>

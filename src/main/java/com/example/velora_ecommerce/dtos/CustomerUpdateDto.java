@@ -8,7 +8,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class CustomerUpdateDto {
-
     @NotBlank(message = "First name is required.")
     private String firstName;
 
@@ -24,5 +23,6 @@ public class CustomerUpdateDto {
     private AddressDto address;
 
     @NotBlank(message = "Phone number is required.")
+    @Pattern(regexp = "^\\d{10}$")
     private String phoneNumber;
 }

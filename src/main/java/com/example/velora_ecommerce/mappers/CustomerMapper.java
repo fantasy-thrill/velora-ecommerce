@@ -16,7 +16,7 @@ public class CustomerMapper {
         customerProfileDto.setFirstName(customer.getFirstName());
         customerProfileDto.setLastName(customer.getLastName());
         customerProfileDto.setEmail(customer.getEmail());
-        customerProfileDto.setPhoneNumber(customer.getPhoneNumber());
+        customerProfileDto.setPhoneNumber(formatPhoneNumber(customer.getPhoneNumber()));
 
         addressDto.setCustomerFullName(customer.getFirstName() + " " + customer.getLastName());
         addressDto.setStreet(customerAddress.getStreet());
@@ -54,4 +54,11 @@ public class CustomerMapper {
         return updateDto;
     }
 
+    private static String formatPhoneNumber(String phoneNumber) {
+        String firstThree = phoneNumber.substring(0, 3);
+        String nextThree = phoneNumber.substring(3, 6);
+        String lastFour = phoneNumber.substring(6);
+
+        return "(" + firstThree + ") " + nextThree + "-" + lastFour;
+    }
 }

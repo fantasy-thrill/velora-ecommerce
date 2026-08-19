@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Profile | Velora</title>
+
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<!-- Header -->
+<header class="header">
+    <div class="header-top">
+        <div class="logo-container">
+            <a th:href="@{/}">
+                <img th:src="@{/images/velora_logo.png}" alt="Velora Logo">
+            </a>
+        </div>
+
+        <div class="search-container">
+            <form th:action="@{/products/search}" method="get">
+                <input type="text" name="query" placeholder="Search products...">
+
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+
+        <div class="cart-container">
+            <a th:href="@{/cart}" class="cart-link">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-count" th:if="${cartItemCount > 0}" th:text="${cartItemCount}">0</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="dropdown">
+            <button class="nav-button">Account</button>
+
+            <div class="dropdown-content" sec:authorize="isAnonymous()">
+                <a th:href="@{/auth/login}">Login</a>
+                <a th:href="@{/auth/register}">Register</a>
+            </div>
+
+            <div class="dropdown-content" sec:authorize="isAuthenticated()">
+                <a th:href="@{/orders}">My Orders</a>
+                <a th:href="@{/account}">My Account</a>
+
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit" class="logout-button">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button class="nav-button">Shop</button>
+
+            <div class="dropdown-content">
+                <a th:href="@{/products/all}">All products</a>
+                <a th:each="category : ${categories}"
+                   th:href="@{/products/all(category=${category.name})}"
+                   th:text="${category.getDisplayName()}">
+                    Category Name
+                </a>
+            </div>
+        </div>
+
+        <a th:href="@{/deals}">Deals</a>
+        <a th:href="@{/about}">About</a>
+        <a th:href="@{/support}">Support</a>
+    </nav>
+</header>
+<main class="profile-page">
+    <div th:if="${updateSuccess}" class="flash-message" th:text="${updateSuccess}"></div>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a th:href="@{/}">Home</a>
+        <span>&gt;</span>
+        <a th:href="@{/account}">Your account</a>
+        <span>&gt;</span>
+        <span>Profile and login information</span>
+    </div>
+
+    <!-- Page heading -->
+    <section class="profile-intro">
+        <h1>Your profile information</h1>
+    </section>
+
+    <!-- Profile information -->
+    <section class="profile-section">
+        <div class="profile-information-card">
+            <div class="profile-information">
+                <div class="profile-row">
+                    <span class="profile-label">First name:</span>
+                    <strong th:text="${customer.firstName}">John</strong>
+                </div>
+
+                <div class="profile-row">
+                    <span class="profile-label">Last name:</span>
+                    <strong th:text="${customer.lastName}">Smith</strong>
+                </div>
+
+                <div class="profile-row">
+                    <span class="profile-label">Address:</span>
+                    <strong>
+                        <span th:text="${customer.address.street}">123 Main St</span>
+                        <br>
+                        <span th:text="|${customer.address.city}, ${customer.address.state} ${customer.address.zipCode}|">
+                           Nashville, TN 73207
+                        </span>
+                    </strong>
+                </div>
+
+                <div class="profile-row">
+                    <span class="profile-label">E-mail address:</span>
+                    <strong th:text="${customer.email}">johnsmith123@example.com</strong>
+                </div>
+
+                <div class="profile-row">
+                    <span class="profile-label">Phone number:</span>
+                    <strong th:text="${customer.phoneNumber}">(800) 555-0123</strong>
+                </div>
+            </div>
+
+            <button type="button" id="edit-profile-button" class="profile-button">Edit information</button>
+        </div>
+
+        <!-- Password -->
+        <div class="password-card">
+            <div class="password-row">
+                <span class="profile-label">Password:</span>
+                <strong>**********</strong>
+            </div>
+
+            <button type="button" id="change-password-button" class="profile-button">Change password</button>
+        </div>
+    </section>
+</main>
+
+<!-- Edit profile modal -->
+<div id="edit-profile-modal" class="profile-modal-overlay">
+    <div class="profile-modal">
+        <h2>Edit your profile information</h2>
+
+        <form th:action="@{/account/update-profile}" th:object="${updateProfile}" method="post">
+            <div class="profile-form-row">
+                <label for="first-name">First name:</label>
+                <input type="text" id="first-name" th:field="*{firstName}" required>
+            </div>
+
+            <div class="profile-form-row">
+                <label for="last-name">Last name:</label>
+                <input type="text" id="last-name" th:field="*{lastName}" required>
+            </div>
+
+            <div class="profile-form-row">
+                <label for="address-street">Street:</label>
+                <input type="text" id="address-street" th:field="*{address.street}" required>
+            </div>
+
+            <div class="profile-form-row">
+                <label for="address-city">City:</label>
+                <input type="text" id="address-city" th:field="*{address.city}" required>
+            </div>
+
+            <div class="profile-form-row">
+                <label for="address-state">State:</label>
+                <select id="address-state" th:field="*{address.state}" required>
+                    <option value="">Select</option>
+                    <option
+                            th:each="state : ${states}"
+                            th:value="${state}"
+                            th:text="${state} + ' - ' + ${state.fullName}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="profile-form-row">
+                <label for="address-zip-code">ZIP Code:</label>
+                <input type="text" id="address-zip-code" th:field="*{address.zipCode}" required>
+            </div>
+
+            <div class="profile-form-row">
+                <label for="email">E-mail address:</label>
+                <input type="email" id="email" th:field="*{email}" required>
+            </div>
+
+            <div class="profile-form-row">
+                <label for="phone-number">Phone number:</label>
+                <input type="tel" id="phone-number" th:field="*{phoneNumber}">
+            </div>
+
+            <div class="profile-form-actions">
+                <button type="submit" class="profile-button">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Change password modal -->
+<div id="change-password-modal" class="profile-modal-overlay">
+    <div class="profile-modal password-modal">
+        <h2>Change your password</h2>
+
+        <form th:action="@{/account/change-password}" method="post">
+            <div class="profile-form-row">
+                <label for="current-password">Current password:</label>
+                <input type="password" id="current-password" name="currentPassword" required>
+            </div>
+
+            <div class="profile-form-row">
+                <label for="new-password">New password:</label>
+                <input type="password" id="new-password" name="newPassword" required>
+            </div>
+
+            <div class="profile-form-row">
+                <label for="confirm-password">Confirm new password:</label>
+                <input type="password" id="confirm-password" name="confirmPassword" required>
+            </div>
+
+            <div class="profile-form-actions">
+                <button type="submit" class="profile-button">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+<footer>
+    <p>© 2026 Velora Electronics. This is not a real company.</p>
+
+    <div class="footer-links">
+        <a th:href="@{/about}">About Velora</a>
+        <a th:href="@{/contact}">Contact Us</a>
+        <a th:href="@{/privacy}">Privacy Policy</a>
+        <a th:href="@{/terms}">Terms and Conditions</a>
+    </div>
+</footer>
+<script src="/js/profile.js"></script>
+</body>
+</html>

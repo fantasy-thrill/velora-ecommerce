@@ -1,5 +1,6 @@
 package com.example.velora_ecommerce.services;
 
+import com.example.velora_ecommerce.dtos.AddressDto;
 import com.example.velora_ecommerce.dtos.ChangePasswordDto;
 import com.example.velora_ecommerce.dtos.CustomerRegistrationDto;
 import com.example.velora_ecommerce.entities.*;
@@ -46,7 +47,7 @@ public class CustomerServiceTest {
         dto.setPassword("Password123!");
         dto.setConfirmPassword("Password123!");
 
-        Address address = new Address();
+        AddressDto address = new AddressDto();
         address.setStreet("123 Main St");
         address.setCity("Dallas");
         address.setState(State.TX);
@@ -78,7 +79,7 @@ public class CustomerServiceTest {
 
         dto.setPassword("Password123!");
         dto.setConfirmPassword("Password123!");
-        dto.setAddress(new Address());
+        dto.setAddress(new AddressDto());
 
         when(passwordEncoder.encode(any()))
                 .thenReturn("encodedPassword");
@@ -90,7 +91,7 @@ public class CustomerServiceTest {
     @Test
     void shouldSaveCustomerToRepository() {
         CustomerRegistrationDto dto = new CustomerRegistrationDto();
-        dto.setAddress(new Address());
+        dto.setAddress(new AddressDto());
 
         when(passwordEncoder.encode(any()))
                 .thenReturn("encodedPassword");
@@ -102,7 +103,7 @@ public class CustomerServiceTest {
     @Test
     void shouldCreateCartWhenRegisteringCustomer() {
         CustomerRegistrationDto dto = new CustomerRegistrationDto();
-        dto.setAddress(new Address());
+        dto.setAddress(new AddressDto());
 
         when(passwordEncoder.encode(any()))
                 .thenReturn("encodedPassword");
@@ -114,7 +115,7 @@ public class CustomerServiceTest {
     @Test
     void shouldAssociateCartWithCustomer() {
         CustomerRegistrationDto dto = new CustomerRegistrationDto();
-        dto.setAddress(new Address());
+        dto.setAddress(new AddressDto());
 
         when(passwordEncoder.encode(any()))
                 .thenReturn("encodedPassword");

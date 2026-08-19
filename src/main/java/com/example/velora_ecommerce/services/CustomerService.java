@@ -75,7 +75,7 @@ public class CustomerService {
         customer.setPhoneNumber(dto.getPhoneNumber());
 
         Address address = new Address();
-        Address dtoAddress = dto.getAddress();
+        AddressDto dtoAddress = dto.getAddress();
         
         address.setCustomerFirstName(dto.getFirstName());
         address.setCustomerLastName(dto.getLastName());
@@ -99,10 +99,13 @@ public class CustomerService {
         customer.setEmail(updatedDto.getEmail());
         customer.setFirstName(updatedDto.getFirstName());
         customer.setLastName(updatedDto.getLastName());
+        customer.setPhoneNumber(updatedDto.getPhoneNumber());
 
         Address address = customer.getAddress();
         AddressDto addressDto = updatedDto.getAddress();
-        
+
+        address.setCustomerFirstName(updatedDto.getFirstName());
+        address.setCustomerLastName(updatedDto.getLastName());
         address.setStreet(addressDto.getStreet());
         address.setCity(addressDto.getCity());
         address.setState(addressDto.getState());
@@ -130,4 +133,9 @@ public class CustomerService {
     public void deleteCustomer(Long id) {
         customerRepository.deleteById(id);
     }
+
+//    private Customer getCustomer(String email) {
+//        return this.getCustomerByEmail(email)
+//                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+//    }
 }

@@ -1,0 +1,259 @@
+/* ================================
+   Profile Page
+   ================================ */
+.profile-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 25px 20px 80px;
+}
+
+/* Breadcrumb */
+.profile-page .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+.profile-page .breadcrumb a {
+    color: #000;
+    text-decoration: none;
+}
+
+.profile-page .breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+/* Page heading */
+.profile-intro {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.profile-intro h1 {
+    margin: 0;
+    font-size: 36px;
+    font-weight: 700;
+}
+
+/* Profile cards */
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 55px;
+}
+
+.profile-information-card,
+.password-card {
+    width: 450px;
+    box-sizing: border-box;
+    border: 1px solid #222;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+/* Main profile card */
+.profile-information-card {
+    min-height: 250px;
+    padding: 30px 35px 25px;
+    justify-content: space-between;
+}
+
+.profile-information {
+    width: 100%;
+}
+
+/* Profile rows */
+.profile-row,
+.password-row {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+}
+
+.profile-row {
+    margin-bottom: 25px;
+}
+
+.profile-row:last-child {
+    margin-bottom: 0;
+}
+
+.profile-label {
+    display: inline-block;
+}
+
+/* Align labels and values */
+.profile-row .profile-label {
+    width: 145px;
+    text-align: right;
+    margin-right: 25px;
+}
+
+.profile-row strong {
+    flex: 1;
+    text-align: left;
+}
+
+/* Password card */
+.password-card {
+    min-height: 120px;
+    padding: 25px 35px;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.password-row {
+    justify-content: center;
+}
+
+.password-row .profile-label {
+    margin-right: 25px;
+}
+
+/* Buttons */
+.profile-button {
+    border: none;
+    border-radius: 3px;
+    background-color: #000;
+    color: #fff;
+    padding: 8px 18px;
+    font-size: 16px;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.profile-button:hover {
+    background-color: #333;
+}
+
+/* ================================
+   Profile Modals
+   ================================ */
+.profile-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.profile-modal {
+    width: 550px;
+    max-width: calc(100% - 40px);
+    box-sizing: border-box;
+    padding: 30px 40px;
+    background-color: #fff;
+    border-radius: 6px;
+}
+
+.profile-modal h2 {
+    margin: 0 0 35px;
+    text-align: center;
+    font-size: 25px;
+    font-weight: 400;
+}
+
+/* Modal form */
+.profile-form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.profile-form-row label {
+    width: 145px;
+    margin-right: 20px;
+    text-align: right;
+    font-size: 15px;
+}
+
+.profile-form-row input {
+    flex: 1;
+    height: 25px;
+    box-sizing: border-box;
+    border: 1px solid #777;
+    border-radius: 4px;
+    padding: 16px 8px;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+.profile-form-row input:focus {
+    outline: 1px solid #000;
+}
+
+#address-state {
+    font-size: 16px;
+    padding: 6px 4px;
+    border-radius: 5px;
+}
+
+/* Modal submit button */
+.profile-form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+/* Password modal */
+.password-modal {
+    width: 490px;
+}
+
+/* ================================
+   Responsive Design
+   ================================ */
+@media (max-width: 600px) {
+
+    .profile-page {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .profile-intro h1 {
+        font-size: 30px;
+    }
+
+    .profile-information-card,
+    .password-card {
+        width: 100%;
+        max-width: 390px;
+    }
+
+    .profile-row {
+        align-items: flex-start;
+    }
+
+    .profile-row .profile-label {
+        width: 120px;
+        margin-right: 15px;
+    }
+
+    .profile-modal {
+        padding: 25px 20px;
+    }
+
+    .profile-form-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 7px;
+    }
+
+    .profile-form-row label {
+        width: auto;
+        margin-right: 0;
+        text-align: left;
+    }
+
+    .profile-form-row input {
+        width: 100%;
+    }
+}

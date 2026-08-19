@@ -1,7 +1,6 @@
 package com.example.velora_ecommerce.dtos;
 
 import com.example.velora_ecommerce.config.SecurityConfig;
-import com.example.velora_ecommerce.entities.Address;
 import com.example.velora_ecommerce.validation.PasswordConfirmation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -25,14 +24,14 @@ public class CustomerRegistrationDto implements PasswordConfirmation {
 
     @NotNull
     @Valid
-    private Address address = new Address();
+    private AddressDto address = new AddressDto();
 
     @NotBlank(message = "Phone number is required.")
+    @Pattern(regexp = "^\\d{10}$")
     private String phoneNumber;
 
     @NotBlank(message = "Password is required.")
-    @Size(min = 8,
-            message = "Password must be at least 8 characters long.")
+    @Size(min = 8, message = "Password must be at least 8 characters long.")
     @Pattern(regexp = SecurityConfig.REG_EXP,
             message = "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.")
     private String password;

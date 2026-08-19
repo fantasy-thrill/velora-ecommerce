@@ -12,8 +12,7 @@ import com.example.velora_ecommerce.validation.PasswordsMatch;
 @PasswordsMatch
 public class ChangePasswordDto implements PasswordConfirmation {
     @NotBlank(message = "Password is required.")
-    @Size(min = 8,
-            message = "Password must be at least 8 characters long.")
+    @Size(min = 8, message = "Password must be at least 8 characters long.")
     @Pattern(regexp = SecurityConfig.REG_EXP,
             message = "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.")
     private String password;

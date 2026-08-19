@@ -1,0 +1,136 @@
+.account-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 25px 20px 60px;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+.breadcrumb a {
+    color: #000;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+/* Page heading */
+.account-intro {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.account-intro h1 {
+    margin: 0 0 25px;
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.account-intro p {
+    margin: 0;
+    font-size: 21px;
+}
+
+/* Account cards */
+.account-options {
+    display: grid;
+    grid-template-columns: repeat(2, 320px);
+    justify-content: center;
+    gap: 60px;
+}
+
+.account-card {
+    height: 280px;
+    padding: 30px;
+    box-sizing: border-box;
+    border: 1px solid #222;
+    border-radius: 8px;
+    color: #000;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.account-card:hover {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Card heading and icon */
+.account-card-content {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.account-card-icon {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.account-card h2 {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 400;
+    line-height: 1.15;
+}
+
+/* Card description */
+.account-card p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+/* Responsive layout */
+@media (max-width: 750px) {
+    .account-options {
+        grid-template-columns: minmax(280px, 320px);
+        gap: 30px;
+    }
+
+    .account-intro h1 {
+        font-size: 30px;
+    }
+
+    .account-intro p {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 450px) {
+    .account-page {
+        padding: 20px 15px 40px;
+    }
+
+    .account-card {
+        height: auto;
+        min-height: 260px;
+        padding: 25px;
+    }
+
+    .account-card-content {
+        gap: 20px;
+    }
+
+    .account-card-icon {
+        width: 80px;
+        height: 80px;
+    }
+
+    .account-card h2 {
+        font-size: 19px;
+    }
+}
