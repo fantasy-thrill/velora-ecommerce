@@ -23,13 +23,10 @@ public class OrderController {
     public String orderHistory(Authentication authentication, Model model) {
         String email = authentication.getName();
 
-        List<OrderSummaryDto> orders = orderService.getOrdersForCustomer(email).stream()
-                .map(OrderMapper::toResponseDto)
-                .toList();
-
+        List<OrderSummaryDto> orders = orderService.getOrdersForCustomer(email);
         model.addAttribute("orders", orders);
 
-        return "orders";
+        return "account/orders";
     }
 
     @GetMapping("/{id}")

@@ -19,18 +19,15 @@ import java.util.Map;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final PaymentCardRepository paymentCardRepository;
-    private final PaymentCardService paymentCardService;
     private final CustomerService customerService;
 
     public OrderService(
             OrderRepository orderRepository,
             PaymentCardRepository paymentCardRepository,
-            PaymentCardService paymentCardService,
             CustomerService customerService
     ) {
         this.orderRepository = orderRepository;
         this.paymentCardRepository = paymentCardRepository;
-        this.paymentCardService = paymentCardService;
         this.customerService = customerService;
     }
 
@@ -105,11 +102,13 @@ public class OrderService {
         return OrderMapper.toResponseDto(order);
     }
 
-    public List<Order> getOrdersForCustomer(String email) {
+    public List<OrderSummaryDto> getOrdersForCustomer(String email) {
         Customer customer = customerService.getCustomerByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
-        return orderRepository.findByCustomer(customer);
+        return orderRepository.findByCustomer(customer).stream()
+                .map(OrderMapper::toResponseDto)
+                .toList();
     }
 
     public List<Order> getOrdersByCustomerAndDateRange(

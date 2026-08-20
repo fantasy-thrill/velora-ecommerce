@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Orders | Velora</title>
+
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/order-list.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<!-- Header -->
+<header class="header">
+    <div class="header-top">
+        <div class="logo-container">
+            <a th:href="@{/}">
+                <img th:src="@{/images/velora_logo.png}" alt="Velora Logo">
+            </a>
+        </div>
+
+        <div class="search-container">
+            <form th:action="@{/products/search}" method="get">
+                <input type="text" name="query" placeholder="Search products...">
+
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+
+        <div class="cart-container">
+            <a th:href="@{/cart}" class="cart-link">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-count" th:if="${cartItemCount > 0}" th:text="${cartItemCount}">0</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="dropdown">
+            <button class="nav-button">Account</button>
+
+            <div class="dropdown-content" sec:authorize="isAnonymous()">
+                <a th:href="@{/auth/login}">Login</a>
+                <a th:href="@{/auth/register}">Register</a>
+            </div>
+
+            <div class="dropdown-content" sec:authorize="isAuthenticated()">
+                <a th:href="@{/orders}">My Orders</a>
+                <a th:href="@{/account}">My Account</a>
+
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit" class="logout-button">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button class="nav-button">Shop</button>
+
+            <div class="dropdown-content">
+                <a th:href="@{/products/all}">All products</a>
+                <a th:each="category : ${categories}"
+                   th:href="@{/products/all(category=${category.name})}"
+                   th:text="${category.getDisplayName()}">
+                    Category Name
+                </a>
+            </div>
+        </div>
+
+        <a th:href="@{/deals}">Deals</a>
+        <a th:href="@{/about}">About</a>
+        <a th:href="@{/support}">Support</a>
+    </nav>
+</header>
+<main class="orders-page">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a th:href="@{/}">Home</a>
+        <span>&gt;</span>
+        <a th:href="@{/account}">Your account</a>
+        <span>&gt;</span>
+        <span>Your orders</span>
+    </div>
+
+    <!-- Page heading -->
+    <section class="orders-intro">
+        <h1>Your orders</h1>
+    </section>
+
+    <!-- Orders -->
+    <section class="orders-list">
+
+        <div class="order-card" th:each="order : ${orders}">
+            <!-- Order header -->
+            <div class="order-header">
+
+                <!-- Order placed -->
+                <div class="order-header-item">
+                    <span class="order-header-label">Order placed</span>
+                    <span class="order-header-value" th:text="${#temporals.format(order.orderDate, 'MMMM d, yyyy')}">
+                        June 1, 2026
+                    </span>
+                </div>
+
+                <!-- Delivered -->
+                <div
+                        class="order-header-item"
+                        th:if="${order.status == T(com.example.velora_ecommerce.enums.OrderStatus).DELIVERED}">
+                    <span class="order-header-label">Delivered</span>
+                    <span class="order-header-value" th:text="${#temporals.format(order.deliveryDate, 'MMMM d, yyyy')}">
+                        June 4, 2026
+                    </span>
+                </div>
+
+                <!-- Order status -->
+                <div class="order-header-item">
+                    <span class="order-header-label">Status</span>
+                    <span class="order-header-value" th:text="${order.status.displayName}">
+                        Delivered
+                    </span>
+                </div>
+
+                <!-- Total -->
+                <div class="order-header-item">
+                    <span class="order-header-label">Total</span>
+                    <span class="order-header-value" th:text="${'$' + order.totalPrice}">
+                        $0.00
+                    </span>
+                </div>
+
+                <!-- Shipped to -->
+                <div
+                        class="order-header-item"
+                        th:if="${order.status == T(com.example.velora_ecommerce.enums.OrderStatus).SHIPPED
+                                    or order.status == T(com.example.velora_ecommerce.enums.OrderStatus).DELIVERED}">
+                    <span class="order-header-label">Shipped to</span>
+                    <span
+                            class="order-header-value"
+                            th:text="${order.shippingAddress.customerFullName}">
+                        John Smith
+                    </span>
+                </div>
+
+                <!-- Order ID -->
+                <div class="order-header-item order-id">
+                    <div>
+                        <span class="order-header-label">Order ID #</span>
+                        <span class="order-header-value" th:text="${order.orderId}">
+                            1234567890
+                        </span>
+                    </div>
+                    <a th:href="@{/orders/{id}(id=${order.orderId})}">View order details</a>
+                </div>
+
+            </div>
+
+            <!-- Products in order -->
+            <div class="order-items">
+                <div class="order-item" th:each="item : ${order.orderItems}">
+                    <!-- Product image -->
+                    <div class="order-item-image">
+                        <img th:src="@{${item.product.imageUrl}}" th:alt="${item.product.name}">
+                    </div>
+
+                    <!-- Product name -->
+                    <div class="order-item-name">
+                        <strong th:text="${item.product.name}">Extra lengthy product name</strong>
+                    </div>
+
+                    <!-- View product -->
+                    <div class="order-item-action">
+                        <a th:href="@{/products/{id}(id=${item.product.id})}" class="view-product-button">
+                            View product
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<!-- Footer -->
+<footer>
+    <p>© 2026 Velora Electronics. This is not a real company.</p>
+
+    <div class="footer-links">
+        <a th:href="@{/about}">About Velora</a>
+        <a th:href="@{/contact}">Contact Us</a>
+        <a th:href="@{/privacy}">Privacy Policy</a>
+        <a th:href="@{/terms}">Terms and Conditions</a>
+    </div>
+</footer>
+</body>
+</html>

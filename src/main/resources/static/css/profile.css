@@ -208,11 +208,14 @@
     width: 490px;
 }
 
+.profile-modal-overlay .modal-open {
+    display: flex;
+}
+
 /* ================================
    Responsive Design
    ================================ */
 @media (max-width: 600px) {
-
     .profile-page {
         padding-left: 15px;
         padding-right: 15px;

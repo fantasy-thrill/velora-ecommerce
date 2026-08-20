@@ -205,24 +205,30 @@
 </div>
 
 <!-- Change password modal -->
-<div id="change-password-modal" class="profile-modal-overlay">
+<div
+        id="change-password-modal"
+        class="profile-modal-overlay"
+        th:classappend="${openChangePasswordModal} ? 'modal-open' : ''">
+
     <div class="profile-modal password-modal">
         <h2>Change your password</h2>
 
-        <form th:action="@{/account/change-password}" method="post">
+        <form th:action="@{/account/change-password}" th:object="${changePassword}" method="post">
             <div class="profile-form-row">
                 <label for="current-password">Current password:</label>
-                <input type="password" id="current-password" name="currentPassword" required>
+                <input type="password" id="current-password" th:field="*{currentPassword}" required>
             </div>
+
+            <div th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}" class="field-error"></div>
 
             <div class="profile-form-row">
                 <label for="new-password">New password:</label>
-                <input type="password" id="new-password" name="newPassword" required>
+                <input type="password" id="new-password" th:field="*{password}" required>
             </div>
 
             <div class="profile-form-row">
                 <label for="confirm-password">Confirm new password:</label>
-                <input type="password" id="confirm-password" name="confirmPassword" required>
+                <input type="password" id="confirm-password" th:field="*{confirmPassword}" required>
             </div>
 
             <div class="profile-form-actions">

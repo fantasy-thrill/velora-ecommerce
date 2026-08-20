@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -97,21 +98,33 @@ public class AccountController {
             Model model
     ) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute(
-                    "customer",
-                    customerService.getCustomerProfile(authentication.getName())
-            );
-
-            model.addAttribute(
-                    "updateProfile",
-                    customerService.getCustomerForUpdate(authentication.getName())
-            );
+            model.addAttribute("customer", customerService.getCustomerProfile(authentication.getName()));
+            model.addAttribute("updateProfile", customerService.getCustomerForUpdate(authentication.getName()));
+            model.addAttribute("openChangePasswordModal", true);
 
             System.out.println("Submission has errors.");
+
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                System.out.println(error.getField() + ": " + error.getDefaultMessage());
+            }
+
             return "account/profile";
         }
 
-        customerService.changePassword(authentication.getName(), dto);
+        try {
+            customerService.changePassword(authentication.getName(), dto);
+
+        } catch (IllegalArgumentException error) {
+            bindingResult.rejectValue("currentPassword", "currentPassword.invalid", error.getMessage());
+            System.out.println("Could not update password: " + error.getMessage());
+
+            model.addAttribute("customer", customerService.getCustomerProfile(authentication.getName()));
+            model.addAttribute("updateProfile", customerService.getCustomerForUpdate(authentication.getName()));
+            model.addAttribute("openChangePasswordModal", true);
+
+            return "account/profile";
+        }
+
         System.out.println("Password changed.");
         redirectAttributes.addFlashAttribute("updateSuccess", "Password successfully changed!");
 

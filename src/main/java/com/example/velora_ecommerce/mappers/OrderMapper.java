@@ -26,6 +26,10 @@ public class OrderMapper {
             orderItems.add(itemDto);
         }
 
+        addressDto.setCustomerFullName(
+                order.getShippingAddress().getCustomerFirstName() + " " +
+                order.getShippingAddress().getCustomerLastName()
+        );
         addressDto.setStreet(order.getShippingAddress().getStreet());
         addressDto.setCity(order.getShippingAddress().getCity());
         addressDto.setState(order.getShippingAddress().getState());
@@ -37,7 +41,7 @@ public class OrderMapper {
         orderDto.setOrderDate(order.getDate());
         orderDto.setShippingAddress(addressDto);
         orderDto.setSummary(order.getSummary());
-        orderDto.setPaymentMethodDisplay(order.getPaymentCard().displayString());
+        orderDto.setPaymentMethod(order.getPaymentCard().displayString());
         orderDto.setStatus(order.getStatus());
 
         return orderDto;

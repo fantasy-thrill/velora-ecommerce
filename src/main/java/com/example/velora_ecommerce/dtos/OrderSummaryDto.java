@@ -25,7 +25,7 @@ public class OrderSummaryDto {
 
     private LocalDateTime orderDate;
 
-    private String paymentMethodDisplay;
+    private String paymentMethod;
 
     private OrderStatus status;
 }

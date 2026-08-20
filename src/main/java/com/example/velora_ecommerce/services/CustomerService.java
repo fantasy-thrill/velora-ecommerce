@@ -119,6 +119,12 @@ public class CustomerService {
         Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
+        if (
+                updateDto.getCurrentPassword() != null &&
+                !passwordEncoder.matches(updateDto.getCurrentPassword(), customer.getPassword())
+        )
+            throw new IllegalArgumentException("Entered password does not match the password on file.");
+
         String newPassword = updateDto.getPassword();
 
         if (!newPassword.equals(updateDto.getConfirmPassword())) {
@@ -128,7 +134,6 @@ public class CustomerService {
         customer.setPassword(passwordEncoder.encode(newPassword));
         customerRepository.save(customer);
     }
-
     
     public void deleteCustomer(Long id) {
         customerRepository.deleteById(id);

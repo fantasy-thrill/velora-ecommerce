@@ -1,6 +1,5 @@
 package com.example.velora_ecommerce.entities;
 
-import com.example.velora_ecommerce.dtos.CheckoutSummaryDto;
 import com.example.velora_ecommerce.enums.OrderStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -32,11 +31,7 @@ public class Order {
     @NotNull
     private Address shippingAddress;
 
-    @OneToMany(
-            mappedBy = "order",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
     @Column(nullable = false)
@@ -45,11 +40,11 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime date;
 
+    @Column
+    private LocalDateTime deliveryDate;
+
     @ElementCollection
-    @CollectionTable(
-            name = "order_summary",
-            joinColumns = @JoinColumn(name = "order_id")
-    )
+    @CollectionTable(name = "order_summary", joinColumns = @JoinColumn(name = "order_id"))
     @MapKeyColumn(name = "charge_name")
     @Column(name = "charge_value")
     private Map<String, BigDecimal> summary = new HashMap<>();
