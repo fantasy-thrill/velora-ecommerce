@@ -3,6 +3,7 @@ package com.example.velora_ecommerce.dtos;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,4 +17,6 @@ public class OrderItemDto {
     private int quantity;
 
     private BigDecimal purchasePrice;
+
+    private LocalDate deliveryDate;
 }

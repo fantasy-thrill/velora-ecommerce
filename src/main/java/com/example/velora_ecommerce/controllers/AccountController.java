@@ -1,11 +1,16 @@
 package com.example.velora_ecommerce.controllers;
 
 import com.example.velora_ecommerce.dtos.*;
+import com.example.velora_ecommerce.entities.PaymentCard;
+import com.example.velora_ecommerce.enums.CardProcessor;
+import com.example.velora_ecommerce.enums.CardType;
 import com.example.velora_ecommerce.enums.State;
 import com.example.velora_ecommerce.services.CustomerDetailsService;
 import com.example.velora_ecommerce.services.CustomerService;
+import com.example.velora_ecommerce.services.PaymentCardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +21,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/account")
@@ -90,7 +98,8 @@ public class AccountController {
     }
 
     @PostMapping("/change-password")
-    public String changePassword(
+    @ResponseBody
+    public ResponseEntity<ChangePasswordResponse> changePassword(
             Authentication authentication,
             @Valid @ModelAttribute("changePassword") ChangePasswordDto dto,
             BindingResult bindingResult,
@@ -100,15 +109,15 @@ public class AccountController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("customer", customerService.getCustomerProfile(authentication.getName()));
             model.addAttribute("updateProfile", customerService.getCustomerForUpdate(authentication.getName()));
-            model.addAttribute("openChangePasswordModal", true);
 
-            System.out.println("Submission has errors.");
+            List<String> errorMessages = new ArrayList<>();
 
             for (FieldError error : bindingResult.getFieldErrors()) {
                 System.out.println(error.getField() + ": " + error.getDefaultMessage());
+                errorMessages.add(error.getDefaultMessage());
             }
 
-            return "account/profile";
+            return ResponseEntity.badRequest().body(new ChangePasswordResponse(false, errorMessages));
         }
 
         try {
@@ -116,18 +125,22 @@ public class AccountController {
 
         } catch (IllegalArgumentException error) {
             bindingResult.rejectValue("currentPassword", "currentPassword.invalid", error.getMessage());
-            System.out.println("Could not update password: " + error.getMessage());
 
             model.addAttribute("customer", customerService.getCustomerProfile(authentication.getName()));
             model.addAttribute("updateProfile", customerService.getCustomerForUpdate(authentication.getName()));
-            model.addAttribute("openChangePasswordModal", true);
 
-            return "account/profile";
+            return ResponseEntity.badRequest().body(
+                    new ChangePasswordResponse(false, List.of(error.getMessage()))
+            );
         }
 
         System.out.println("Password changed.");
         redirectAttributes.addFlashAttribute("updateSuccess", "Password successfully changed!");
 
-        return "redirect:/account/profile";
+        return ResponseEntity.ok(
+                new ChangePasswordResponse(true, List.of("Password changed successfully!"))
+        );
     }
+
+    public record ChangePasswordResponse(boolean success, List<String> messages) {}
 }

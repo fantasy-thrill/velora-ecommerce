@@ -10,6 +10,8 @@ public class PaymentCardMapper {
         PaymentCardResponseDto cardDto = new PaymentCardResponseDto();
 
         cardDto.setPaymentCardId(card.getId());
+        cardDto.setCardholderName(card.getCardholderName());
+        cardDto.setCardType(card.getCardType());
         cardDto.setCardProcessor(card.getCardProcessor());
         cardDto.setLastFourDigits(card.getLastFourDigits());
         cardDto.setExpirationDate(card.getExpirationDate());

@@ -1,6 +1,7 @@
 package com.example.velora_ecommerce.dtos;
 
 import com.example.velora_ecommerce.enums.CardProcessor;
+import com.example.velora_ecommerce.enums.CardType;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -11,6 +12,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class PaymentCardResponseDto {
     private Long paymentCardId;
+
+    private String cardholderName;
+
+    private CardType cardType;
 
     private CardProcessor cardProcessor;
 

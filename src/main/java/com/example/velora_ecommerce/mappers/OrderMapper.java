@@ -22,6 +22,7 @@ public class OrderMapper {
             itemDto.setProduct(ProductMapper.toResponseDto(item.getProduct()));
             itemDto.setQuantity(item.getQuantity());
             itemDto.setPurchasePrice(item.getPurchasePrice());
+            if (item.getDeliveryDate() != null) itemDto.setDeliveryDate(item.getDeliveryDate());
 
             orderItems.add(itemDto);
         }
@@ -41,7 +42,7 @@ public class OrderMapper {
         orderDto.setOrderDate(order.getDate());
         orderDto.setShippingAddress(addressDto);
         orderDto.setSummary(order.getSummary());
-        orderDto.setPaymentMethod(order.getPaymentCard().displayString());
+        orderDto.setPaymentCard(PaymentCardMapper.toResponseDto(order.getPaymentCard()));
         orderDto.setStatus(order.getStatus());
 
         return orderDto;

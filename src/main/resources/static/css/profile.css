@@ -212,6 +212,49 @@
     display: flex;
 }
 
+.form-error {
+    display: none;
+    color: #d62828;
+    background-color: #fff0f0;
+    border: 1px solid #d62828;
+    border-radius: 5px;
+    padding: 10px 12px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    text-align: center;
+    white-space: pre-line;
+}
+
+.update-message {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 9999;
+    padding: 16px 28px;
+    transform: translate(-50%, -50%);
+    border-radius: 6px;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    animation: flash-message-fade 3s ease forwards;
+}
+
+@keyframes flash-message-fade {
+    0% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
 /* ================================
    Responsive Design
    ================================ */

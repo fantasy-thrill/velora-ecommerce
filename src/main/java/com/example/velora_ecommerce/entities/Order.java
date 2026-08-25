@@ -40,9 +40,6 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime date;
 
-    @Column
-    private LocalDateTime deliveryDate;
-
     @ElementCollection
     @CollectionTable(name = "order_summary", joinColumns = @JoinColumn(name = "order_id"))
     @MapKeyColumn(name = "charge_name")

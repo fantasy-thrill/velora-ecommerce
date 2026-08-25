@@ -17,6 +17,9 @@ public class PaymentCard extends PaymentMethod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String cardholderName;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CardProcessor cardProcessor;
@@ -28,6 +31,6 @@ public class PaymentCard extends PaymentMethod {
     private LocalDate expirationDate;
 
     public String displayString() {
-        return this.getCardProcessor() + " ending in " + this.getLastFourDigits();
+        return this.getCardProcessor().getDisplayString() + " ending in " + this.getLastFourDigits();
     }
 }

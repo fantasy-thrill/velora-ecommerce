@@ -3,9 +3,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 500px;
+    /*min-height: 500px;*/
     text-align: center;
-    height: 62vh;
+    min-height: 62vh;
 }
 
 .order-confirmation h1 {

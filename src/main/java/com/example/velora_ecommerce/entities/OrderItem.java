@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "order_items")
@@ -22,4 +23,7 @@ public class OrderItem extends LineItem {
 
     @Column(nullable = false)
     private BigDecimal purchasePrice;
+
+    @Column
+    private LocalDate deliveryDate;
 }

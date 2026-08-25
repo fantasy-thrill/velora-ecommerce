@@ -216,14 +216,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                // const shippingText = selectedShipping
-                //     .closest(".shipping-option")
-                //     .querySelector("span")
-                //     .textContent
-                //     .trim();
-
-                // const shippingSummary = await response.json();
-
                 shippingSelection.classList.add("hidden");
                 shippingConfirmed.classList.remove("hidden");
 

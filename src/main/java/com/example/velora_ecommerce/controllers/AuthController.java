@@ -86,10 +86,7 @@ public class AuthController {
 
         customerService.changePassword(email, dto);
 
-        return new PasswordResetResponse(
-                true,
-                "Password updated successfully."
-        );
+        return new PasswordResetResponse(true, "Password updated successfully.");
     }
 
     public record VerifyEmailResponse(

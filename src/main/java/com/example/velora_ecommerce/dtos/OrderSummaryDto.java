@@ -1,5 +1,6 @@
 package com.example.velora_ecommerce.dtos;
 
+import com.example.velora_ecommerce.entities.PaymentCard;
 import com.example.velora_ecommerce.enums.OrderStatus;
 import lombok.*;
 
@@ -25,7 +26,7 @@ public class OrderSummaryDto {
 
     private LocalDateTime orderDate;
 
-    private String paymentMethod;
+    private PaymentCardResponseDto paymentCard;
 
     private OrderStatus status;
 }

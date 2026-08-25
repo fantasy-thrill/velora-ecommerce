@@ -10,23 +10,22 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PaymentCardDto {
+public class UpdatePaymentCardDto {
+    private Long id;
+
     @NotBlank(message = "Name is required")
     private String cardholderName;
 
-    @NotNull
+    @NotNull(message = "Card processor is required")
     private CardProcessor cardProcessor;
 
-    @NotNull
+    @NotNull(message = "Card type is required")
     private CardType cardType;
 
-    @NotBlank(message = "Card number is required")
     private String cardNumber;
 
-//    @NotBlank(message = "Expiration date is required")
-    @NotNull
+    @NotNull(message = "Card must have an expiration date")
     private LocalDate expirationDate;
 
-    @NotBlank(message = "CVV is required")
     private String cvv;
 }

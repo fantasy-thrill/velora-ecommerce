@@ -36,7 +36,7 @@ public class OrderController {
         OrderSummaryDto order = orderService.getOrderDetails(email, id);
         model.addAttribute("order", order);
 
-        return "orders/details";
+        return "account/order-details";
     }
 
 }

@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <title>Account Profile | Velora</title>
-
     <link rel="stylesheet" th:href="@{/css/global.css}">
     <link rel="stylesheet" th:href="@{/css/profile.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -77,7 +78,7 @@
     </nav>
 </header>
 <main class="profile-page">
-    <div th:if="${updateSuccess}" class="flash-message" th:text="${updateSuccess}"></div>
+    <div class="update-message"></div>
 
     <!-- Breadcrumb -->
     <div class="breadcrumb">
@@ -213,13 +214,13 @@
     <div class="profile-modal password-modal">
         <h2>Change your password</h2>
 
+        <div class="form-error"></div>
+
         <form th:action="@{/account/change-password}" th:object="${changePassword}" method="post">
             <div class="profile-form-row">
                 <label for="current-password">Current password:</label>
                 <input type="password" id="current-password" th:field="*{currentPassword}" required>
             </div>
-
-            <div th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}" class="field-error"></div>
 
             <div class="profile-form-row">
                 <label for="new-password">New password:</label>

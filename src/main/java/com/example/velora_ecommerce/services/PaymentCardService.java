@@ -1,17 +1,20 @@
 package com.example.velora_ecommerce.services;
 
-import com.example.velora_ecommerce.dtos.PaymentCardDto;
+import com.example.velora_ecommerce.dtos.AddPaymentCardDto;
+import com.example.velora_ecommerce.dtos.PaymentCardResponseDto;
+import com.example.velora_ecommerce.dtos.UpdatePaymentCardDto;
 import com.example.velora_ecommerce.entities.Customer;
 import com.example.velora_ecommerce.entities.PaymentCard;
+import com.example.velora_ecommerce.mappers.PaymentCardMapper;
 import com.example.velora_ecommerce.repositories.PaymentCardRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class PaymentCardService {
-
     private final PaymentCardRepository paymentCardRepository;
     private final CustomerService customerService;
 
@@ -20,31 +23,36 @@ public class PaymentCardService {
         this.customerService = customerService;
     }
 
-    public List<PaymentCard> getPaymentCardsByCustomer(String email) {
+    public List<PaymentCardResponseDto> getPaymentCardsByCustomer(String email) {
         Customer customer = customerService.getCustomerByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
-        return paymentCardRepository.findAllByCustomer(customer);
+        return paymentCardRepository.findAllByCustomer(customer).stream()
+                .map(PaymentCardMapper::toResponseDto)
+                .toList();
     }
 
-    public PaymentCard addPaymentCard(String customerEmail, PaymentCardDto dto) {
+    public PaymentCard addPaymentCard(String customerEmail, AddPaymentCardDto dto) {
         Customer customer = customerService.getCustomerByEmail(customerEmail)
                     .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
         PaymentCard paymentCard = new PaymentCard();
 
+        paymentCard.setCardholderName(dto.getCardholderName());
         paymentCard.setCardType(dto.getCardType());
         paymentCard.setCardProcessor(dto.getCardProcessor());
-        paymentCard.setLastFourDigits(dto.getCardNumber()
-                .substring(dto.getCardNumber().length() - 4)
-        );
+        paymentCard.setLastFourDigits(dto.getCardNumber().substring(dto.getCardNumber().length() - 4));
+
+        if (dto.getExpirationDate().isBefore(LocalDate.now()))
+            throw new IllegalStateException("Expiration date is in the past");
+
         paymentCard.setExpirationDate(dto.getExpirationDate());
         paymentCard.setCustomer(customer);
 
         return paymentCardRepository.save(paymentCard);
     }
 
-    public void updatePaymentCard(String email, Long id, PaymentCardDto dto) {
+    public void updatePaymentCard(String email, Long id, UpdatePaymentCardDto dto) {
         Customer customer = customerService.getCustomerByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
@@ -58,11 +66,18 @@ public class PaymentCardService {
         if (!cardToUpdate.getCustomer().getId().equals(customer.getId()))
             throw new IllegalStateException("Credit or debit card does not belong to customer");
 
+        cardToUpdate.setCardholderName(dto.getCardholderName());
         cardToUpdate.setCardProcessor(dto.getCardProcessor());
         cardToUpdate.setCardType(dto.getCardType());
-        cardToUpdate.setLastFourDigits(dto.getCardNumber()
-                .substring(dto.getCardNumber().length() - 4)
-        );
+
+        if (dto.getCardNumber() != null && !dto.getCardNumber().isEmpty())
+            cardToUpdate.setLastFourDigits(dto.getCardNumber()
+                    .substring(dto.getCardNumber().length() - 4)
+            );
+
+        if (dto.getExpirationDate().isBefore(LocalDate.now()))
+            throw new IllegalStateException("Expiration date is in the past");
+
         cardToUpdate.setExpirationDate(dto.getExpirationDate());
 
         paymentCardRepository.save(cardToUpdate);

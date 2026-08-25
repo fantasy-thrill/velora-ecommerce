@@ -41,7 +41,7 @@ public class CheckoutController {
         model.addAttribute("address", checkoutPage.getAddress());
         model.addAttribute("states", State.values());
         model.addAttribute("paymentCards", checkoutPage.getPaymentCards());
-        model.addAttribute("newPaymentMethod", new PaymentCardDto());
+        model.addAttribute("newPaymentMethod", new AddPaymentCardDto());
         model.addAttribute("cardTypes", CardType.values());
         model.addAttribute("cardProcessors", CardProcessor.values());
         model.addAttribute("newAddress", new AddressDto());
@@ -122,7 +122,7 @@ public class CheckoutController {
     @ResponseBody
     public ResponseEntity<PaymentCardResponseDto> addPaymentMethod(
             Authentication authentication,
-            @Valid @ModelAttribute("newPaymentMethod") PaymentCardDto paymentDto,
+            @Valid @ModelAttribute("newPaymentMethod") AddPaymentCardDto paymentDto,
             BindingResult bindingResult,
             @ModelAttribute("checkout") CheckoutDto checkoutDto
     ) {
