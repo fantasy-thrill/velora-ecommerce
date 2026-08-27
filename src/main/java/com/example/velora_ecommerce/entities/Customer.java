@@ -51,7 +51,4 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer")
     private List<PaymentCard> paymentCards = new ArrayList<>();
-
-    @OneToMany(mappedBy = "customer")
-    private List<GiftCard> giftCards = new ArrayList<>();
 }

@@ -1,12 +1,10 @@
 package com.example.velora_ecommerce.services;
 
-import com.example.velora_ecommerce.dtos.GiftCardDto;
-import com.example.velora_ecommerce.entities.Customer;
 import com.example.velora_ecommerce.entities.GiftCard;
 import com.example.velora_ecommerce.repositories.GiftCardRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,20 +15,15 @@ public class GiftCardService {
         this.giftCardRepository = giftCardRepository;
     }
 
-    public List<GiftCard> getGiftCardsForCustomer(Customer customer) {
-        return giftCardRepository.findAllGiftCardsByCustomer(customer);
+    public GiftCard getGiftCardByCode(String code) {
+        GiftCard giftCard = giftCardRepository.findGiftCardByCode(code)
+                .orElseThrow(() -> new EntityNotFoundException("Gift card not found"));
+
+        return giftCard;
     }
 
-    public Optional<GiftCard> getGiftCardByCode(String code) {
-        return giftCardRepository.findGiftCardByCode(code);
-    }
-
-    public GiftCard addGiftCard(Customer customer, GiftCardDto dto) {
-        GiftCard giftCard = new GiftCard();
-        giftCard.setBalance(dto.getBalance());
-        giftCard.setCode(dto.getCode());
-        giftCard.setCustomer(customer);
-
-        return giftCardRepository.save(giftCard);
+    public boolean giftCardExists(String code) {
+        Optional<GiftCard> giftCard = giftCardRepository.findGiftCardByCode(code);
+        return giftCard.isPresent();
     }
 }

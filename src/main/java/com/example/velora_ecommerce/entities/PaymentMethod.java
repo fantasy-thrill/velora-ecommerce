@@ -13,10 +13,6 @@ public abstract class PaymentMethod {
     @Column(nullable = false)
     private CardType cardType;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
     public String displayString() {
         return "";
     }

@@ -1,8 +1,6 @@
 package com.example.velora_ecommerce.services;
 
-import com.example.velora_ecommerce.dtos.AddPaymentCardDto;
-import com.example.velora_ecommerce.dtos.PaymentCardResponseDto;
-import com.example.velora_ecommerce.dtos.UpdatePaymentCardDto;
+import com.example.velora_ecommerce.dtos.*;
 import com.example.velora_ecommerce.entities.Customer;
 import com.example.velora_ecommerce.entities.PaymentCard;
 import com.example.velora_ecommerce.mappers.PaymentCardMapper;
@@ -10,7 +8,7 @@ import com.example.velora_ecommerce.repositories.PaymentCardRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 @Service
@@ -43,10 +41,10 @@ public class PaymentCardService {
         paymentCard.setCardProcessor(dto.getCardProcessor());
         paymentCard.setLastFourDigits(dto.getCardNumber().substring(dto.getCardNumber().length() - 4));
 
-        if (dto.getExpirationDate().isBefore(LocalDate.now()))
-            throw new IllegalStateException("Expiration date is in the past");
+        int month = dto.getExpirationMonth();
+        int year = dto.getExpirationYear();
 
-        paymentCard.setExpirationDate(dto.getExpirationDate());
+        paymentCard.setExpirationDate(YearMonth.of(year, month).atEndOfMonth());
         paymentCard.setCustomer(customer);
 
         return paymentCardRepository.save(paymentCard);
@@ -67,18 +65,12 @@ public class PaymentCardService {
             throw new IllegalStateException("Credit or debit card does not belong to customer");
 
         cardToUpdate.setCardholderName(dto.getCardholderName());
-        cardToUpdate.setCardProcessor(dto.getCardProcessor());
         cardToUpdate.setCardType(dto.getCardType());
 
-        if (dto.getCardNumber() != null && !dto.getCardNumber().isEmpty())
-            cardToUpdate.setLastFourDigits(dto.getCardNumber()
-                    .substring(dto.getCardNumber().length() - 4)
-            );
+        int month = dto.getExpirationMonth();
+        int year = dto.getExpirationYear();
 
-        if (dto.getExpirationDate().isBefore(LocalDate.now()))
-            throw new IllegalStateException("Expiration date is in the past");
-
-        cardToUpdate.setExpirationDate(dto.getExpirationDate());
+        cardToUpdate.setExpirationDate(YearMonth.of(year, month).atEndOfMonth());
 
         paymentCardRepository.save(cardToUpdate);
     }

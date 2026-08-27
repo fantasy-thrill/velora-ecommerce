@@ -10,8 +10,5 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class GiftCardDto {
     @NotBlank
-    private BigDecimal balance;
-
-    @NotBlank
     private String code;
 }

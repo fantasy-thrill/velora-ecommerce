@@ -148,6 +148,34 @@
             </div>
         </section>
 
+        <!-- GIFT CARDS AND COUPON CODES -->
+        <section id="gift-card-section" class="checkout-section">
+            <div id="gift-card-selection">
+                <h2>Gift cards and coupon codes</h2>
+
+                <button type="button" id="add-gift-card-button" class="add-payment-button">
+                    <span class="add-gift-card-icon">+</span>
+                    Add a gift card
+                </button>
+
+                <button type="button" id="add-coupon-button" class="add-payment-button">
+                    <span class="add-coupon-icon">+</span>
+                    Add a coupon code
+                </button>
+            </div>
+
+            <!-- Gift card applied state -->
+            <div id="gift-card-applied" class="gift-card-applied hidden">
+                <div id="confirmed-gift-card">
+                    <strong>$10 Gift Card</strong> applied
+                </div>
+
+                <button type="button" id="add-another-gift-card-button" class="primary-button">
+                    Add another gift card or coupon
+                </button>
+            </div>
+        </section>
+
         <!-- PRODUCTS -->
         <section class="checkout-items">
             <article class="checkout-item" th:each="item : ${items}">
@@ -188,9 +216,9 @@
                 <strong th:text="${#numbers.formatCurrency(summary.discount)}">$0.00</strong>
             </div>
 
-            <div class="summary-row" th:if="${summary.giftCardAmount != null and summary.giftCardAmount.compareTo(T(java.math.BigDecimal).ZERO) > 0}">
+            <div class="summary-row hidden" style="color: #32a852">
                 <span>Gift card:</span>
-                <strong th:text="${#numbers.formatCurrency(summary.giftCardAmount)}">$0.00</strong>
+                <strong th:text="${#numbers.formatCurrency(summary.giftCardAmount)}" id="gift-card-amount">$0.00</strong>
             </div>
 
             <div class="summary-row grand-total">
@@ -299,7 +327,7 @@
             <div class="form-group">
                 <label for="expiration-month">Expiration date:</label>
                 <div class="expiration-date">
-                    <select id="expiration-month" name="expirationMonth" required>
+                    <select id="expiration-month" th:field="*{expirationMonth}" required>
                         <option value="" selected disabled>MM</option>
                         <option value="01">01</option>
                         <option value="02">02</option>
@@ -315,7 +343,7 @@
                         <option value="12">12</option>
                     </select>
 
-                    <select id="expiration-year" name="expirationYear" required>
+                    <select id="expiration-year" th:field="*{expirationYear}" required>
                         <option value="" selected disabled>YYYY</option>
                         <option value="2026">2026</option>
                         <option value="2027">2027</option>
@@ -329,8 +357,30 @@
                         <option value="2035">2035</option>
                     </select>
                 </div>
+            </div>
 
-                <input type="hidden" id="expiration-date" th:field="*{expirationDate}">
+            <button type="submit" class="primary-button">Submit</button>
+        </form>
+    </div>
+</div>
+
+<!-- GIFT CARD MODAL -->
+<div id="gift-card-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+
+    <div class="modal-content">
+        <button type="button" id="close-gift-card-modal" class="modal-close">
+            &times;
+        </button>
+
+        <h2>Enter gift card code</h2>
+
+        <div id="gift-card-error" class="form-error hidden"></div>
+
+        <form th:action="@{/checkout/gift-card}" th:object="${giftCard}" method="post">
+            <div class="form-group">
+                <label for="gift-card-code">Gift card code:</label>
+                <input id="gift-card-code" type="text" th:field="*{code}" required>
             </div>
 
             <button type="submit" class="primary-button">Submit</button>

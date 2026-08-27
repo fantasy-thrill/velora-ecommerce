@@ -17,6 +17,10 @@ public class PaymentCard extends PaymentMethod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
     @Column
     private String cardholderName;
 

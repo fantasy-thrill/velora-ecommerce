@@ -1,6 +1,7 @@
 package com.example.velora_ecommerce.controllers;
 
 import com.example.velora_ecommerce.dtos.*;
+import com.example.velora_ecommerce.entities.GiftCard;
 import com.example.velora_ecommerce.entities.Order;
 import com.example.velora_ecommerce.entities.PaymentCard;
 import com.example.velora_ecommerce.enums.*;
@@ -16,15 +17,18 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/checkout")
 @RequiredArgsConstructor
 @SessionAttributes({"checkout", "summary"})
 public class CheckoutController {
     private final CheckoutService checkoutService;
-
     private final PaymentCardService paymentCardService;
-
+    private final GiftCardService giftCardService;
     private final OrderService orderService;
 
     @GetMapping
@@ -134,12 +138,7 @@ public class CheckoutController {
         PaymentCardResponseDto newCardDto = PaymentCardMapper.toResponseDto(card);
 
         checkoutDto.setPaymentMethodId(card.getId());
-        System.out.print(
-                "New payment card added: " +
-                card.getCardProcessor() +
-                " ending in " +
-                card.getLastFourDigits()
-        );
+        System.out.print("New payment card added: " + card.getCardProcessor() + " ending in " + card.getLastFourDigits());
 
         return ResponseEntity.ok(newCardDto);
     }
@@ -155,9 +154,7 @@ public class CheckoutController {
         checkoutDto.setShippingSpeed(shippingSpeed);
 
         CheckoutSummaryDto updatedSummary = checkoutService.buildCheckoutSummary(authentication.getName(), checkoutDto);
-
-        summaryDto.setShipping(updatedSummary.getShipping());
-        summaryDto.setTotal(updatedSummary.getTotal());
+        summaryDto = updatedSummary;
 
         System.out.println("Shipping speed updated: " + checkoutDto.getShippingSpeed() + " $" + summaryDto.getShipping());
         System.out.println("New total: $" + summaryDto.getTotal());
@@ -165,8 +162,29 @@ public class CheckoutController {
     }
 
     @PostMapping("/gift-card")
-    public String applyGiftCard(@ModelAttribute("checkout") CheckoutDto checkoutDto) {
-        return "redirect:/checkout";
+    @ResponseBody
+    public ResponseEntity<Object> applyGiftCard(
+            @ModelAttribute("checkout") CheckoutDto checkoutDto,
+            @ModelAttribute("giftCard") GiftCardDto giftCardDto,
+            BindingResult bindingResult,
+            @ModelAttribute("summary") CheckoutSummaryDto summaryDto,
+            Authentication authentication
+    ) {
+        if (!giftCardService.giftCardExists(giftCardDto.getCode())) {
+            String errorMessage = "Gift card does not exist";
+            bindingResult.rejectValue("code", "code.invalid", errorMessage);
+
+            return ResponseEntity.badRequest().body(Map.of("error", errorMessage));
+        }
+
+        checkoutDto.setGiftCardCode(giftCardDto.getCode());
+        CheckoutSummaryDto updatedSummary = checkoutService.buildCheckoutSummary(authentication.getName(), checkoutDto);
+
+        summaryDto = updatedSummary;
+        System.out.println("Gift card added. Checkout summary updated.");
+        System.out.println("$" + summaryDto.getGiftCardAmount() + " subtracted from total.");
+
+        return ResponseEntity.ok(summaryDto);
     }
 
     @PostMapping("/place-order")

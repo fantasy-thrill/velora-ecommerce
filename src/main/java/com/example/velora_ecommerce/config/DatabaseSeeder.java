@@ -1,8 +1,11 @@
 package com.example.velora_ecommerce.config;
 
+import com.example.velora_ecommerce.entities.GiftCard;
 import com.example.velora_ecommerce.entities.Product;
 import com.example.velora_ecommerce.enums.Brand;
+import com.example.velora_ecommerce.enums.CardType;
 import com.example.velora_ecommerce.enums.Category;
+import com.example.velora_ecommerce.repositories.GiftCardRepository;
 import com.example.velora_ecommerce.repositories.ProductRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -13,9 +16,11 @@ import java.util.Map;
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
     private final ProductRepository productRepository;
+    private final GiftCardRepository giftCardRepository;
 
-    public DatabaseSeeder(ProductRepository productRepository) {
+    public DatabaseSeeder(ProductRepository productRepository, GiftCardRepository giftCardRepository) {
         this.productRepository = productRepository;
+        this.giftCardRepository = giftCardRepository;
     }
 
     public void addProduct(
@@ -42,8 +47,34 @@ public class DatabaseSeeder implements CommandLineRunner {
         productRepository.save(product);
     }
 
+    public void addGiftCard(String code, BigDecimal balance) {
+        GiftCard giftCard = new GiftCard();
+
+        giftCard.setCardType(CardType.GIFT_CARD);
+        giftCard.setCode(code);
+        giftCard.setBalance(balance);
+
+        giftCardRepository.save(giftCard);
+    }
+
     @Override
     public void run(String... args) throws Exception {
+        if (giftCardRepository.count() > 0) return;
+
+        // Adding gift cards
+        addGiftCard("VELORA-3H7K-91PX", new BigDecimal("10.00"));
+        addGiftCard("VELORA-8Q2M-47ZT", new BigDecimal("10.00"));
+        addGiftCard("VELORA-5N9R-63VK", new BigDecimal("10.00"));
+        addGiftCard("VELORA-1F6P-84WX", new BigDecimal("10.00"));
+
+        addGiftCard("VELORA-7B4L-29QM", new BigDecimal("20.00"));
+        addGiftCard("VELORA-2X8C-51RJ", new BigDecimal("20.00"));
+        addGiftCard("VELORA-9M3D-76HF", new BigDecimal("20.00"));
+        addGiftCard("VELORA-4K7V-18NS", new BigDecimal("20.00"));
+
+        addGiftCard("VELORA-6P2Y-93GL", new BigDecimal("50.00"));
+        addGiftCard("VELORA-8T5W-41BQ", new BigDecimal("50.00"));
+
         if (productRepository.count() > 0) return;
 
         // Adding keyboards

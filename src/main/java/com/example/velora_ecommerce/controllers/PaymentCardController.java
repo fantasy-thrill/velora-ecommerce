@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -52,8 +53,8 @@ public class PaymentCardController {
         List<String> errors = new ArrayList<>();
 
         if (bindingResult.hasErrors()) {
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                System.out.println(error.getField() + ": " + error.getDefaultMessage());
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                System.out.println(error.getObjectName() + ": " + error.getDefaultMessage());
                 errors.add(error.getDefaultMessage());
             }
 
@@ -70,27 +71,9 @@ public class PaymentCardController {
             return "account/payment-methods";
         }
 
-        try {
-            paymentCardService.addPaymentCard(authentication.getName(), cardDto);
-
-        } catch (IllegalStateException error) {
-            bindingResult.rejectValue("expirationDate", "expirationDate.invalid", error.getMessage());
-            errors.add(error.getMessage());
-
-            model.addAttribute(
-                    "paymentCards",
-                    paymentCardService.getPaymentCardsByCustomer(authentication.getName())
-            );
-            model.addAttribute("updatePaymentCard", new UpdatePaymentCardDto());
-            model.addAttribute("cardTypes", CardType.values());
-            model.addAttribute("processors", CardProcessor.values());
-            model.addAttribute("addErrorMessages", errors);
-            model.addAttribute("openNewPaymentModal", true);
-
-            return "account/payment-methods";
-        }
-
+        paymentCardService.addPaymentCard(authentication.getName(), cardDto);
         redirectAttributes.addFlashAttribute("successMessage", "Payment method added successfully!");
+
         return "redirect:/account/payment-methods";
     }
 
@@ -106,8 +89,8 @@ public class PaymentCardController {
         List<String> errors = new ArrayList<>();
 
         if (bindingResult.hasErrors()) {
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                System.out.println(error.getField() + ": " + error.getDefaultMessage());
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                System.out.println(error.getObjectName() + ": " + error.getDefaultMessage());
                 errors.add(error.getDefaultMessage());
             }
 
@@ -124,26 +107,7 @@ public class PaymentCardController {
             return "account/payment-methods";
         }
 
-        try {
-            paymentCardService.updatePaymentCard(authentication.getName(), id, updateDto);
-
-        } catch (IllegalStateException error) {
-            bindingResult.rejectValue("expirationDate", "expirationDate.invalid", error.getMessage());
-            errors.add(error.getMessage());
-
-            model.addAttribute(
-                    "paymentCards",
-                    paymentCardService.getPaymentCardsByCustomer(authentication.getName())
-            );
-            model.addAttribute("newPaymentCard", new AddPaymentCardDto());
-            model.addAttribute("cardTypes", CardType.values());
-            model.addAttribute("processors", CardProcessor.values());
-            model.addAttribute("editErrorMessages", errors);
-            model.addAttribute("openEditPaymentModal", true);
-
-            return "account/payment-methods";
-        }
-
+        paymentCardService.updatePaymentCard(authentication.getName(), id, updateDto);
         redirectAttributes.addFlashAttribute("successMessage", "Payment method updated successfully!");
 
         return "redirect:/account/payment-methods";

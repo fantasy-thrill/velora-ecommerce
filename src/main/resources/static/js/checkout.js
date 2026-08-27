@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const addressModal = document.getElementById("address-modal");
     const paymentModal = document.getElementById("payment-modal");
+    const giftCardModal = document.getElementById("gift-card-modal");
 
     const differentAddressButton = document.getElementById("different-address-button");
     const confirmAddressButton = document.getElementById("confirm-address-button");
@@ -24,11 +25,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const changePaymentButton = document.getElementById("change-payment-button");
     const closePaymentModal = document.getElementById("close-payment-modal");
 
+    const giftCardSelection = document.getElementById("gift-card-selection")
+    const giftCardApplied = document.getElementById("gift-card-applied")
+    const addGiftCardButton = document.getElementById("add-gift-card-button");
+    const closeGiftCardModal = document.getElementById("close-gift-card-modal");
+    const addAnotherGiftCardButton = document.getElementById("add-another-gift-card-button");
+
     const confirmShippingButton = document.getElementById("confirm-shipping-button");
     const changeShippingButton = document.getElementById("change-shipping-button");
 
     const newAddressForm = document.querySelector("#address-modal form");
     const newPaymentForm = document.querySelector("#payment-modal form");
+    const giftCardForm = document.querySelector("#gift-card-modal form")
+
+    const subtotal = document.getElementById("subtotal")
+    const shipping = document.getElementById("shipping")
+    const giftCardAmount = document.getElementById("gift-card-amount")
+    const finalTotal = document.getElementById("total")
 
     function getCsrfHeaders() {
         const headers = {};
@@ -235,10 +248,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (estimatedDelivery)
                     estimatedDelivery.textContent = `${formatDate(earliestDay)} - ${formatDate(latestDay)}`;
 
-                const subtotal = document.getElementById("subtotal")
-                const shipping = document.getElementById("shipping")
-                const finalTotal = document.getElementById("total")
-
                 if (subtotal && shipping && finalTotal) {
                     subtotal.textContent = formatCurrency(summary.subtotal);
                     shipping.textContent = formatCurrency(summary.shipping);
@@ -315,16 +324,6 @@ document.addEventListener("DOMContentLoaded", () => {
         newPaymentForm.addEventListener("submit", async (event) => {
             event.preventDefault();
 
-            const expirationMonth = document.getElementById("expiration-month").value;
-            const expirationYear = document.getElementById("expiration-year").value;
-
-            if (!expirationMonth || !expirationYear) {
-                console.error("Expiration month and year are required.");
-                return;
-            }
-
-            document.getElementById("expiration-date").value = `${expirationYear}-${expirationMonth}-01`;
-
             const formData = new FormData(newPaymentForm);
 
             try {
@@ -362,6 +361,84 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    if (giftCardForm) {
+        giftCardForm.addEventListener("submit", async (event) => {
+            event.preventDefault()
+
+            const formData = new FormData(giftCardForm)
+
+            try {
+                const response = await fetch("/checkout/gift-card", {
+                    method: "POST",
+                    headers: getCsrfHeaders(),
+                    body: formData
+                })
+
+                if (!response.ok) {
+                    const errorResponse = await response.json()
+
+                    const giftCardError = document.getElementById("gift-card-error")
+                    giftCardError.classList.remove("hidden")
+                    giftCardError.textContent = errorResponse.error
+
+                    console.error("Unable to add gift card.");
+                    return;
+                }
+
+                const newSummary = await response.json()
+
+                const confirmedGiftCardText = document.getElementById("confirmed-gift-card")
+                confirmedGiftCardText.innerHTML = `<strong>$${newSummary["giftCardAmount"]} Gift Card</strong> applied`
+
+                const giftCardRow = giftCardAmount.parentElement
+                giftCardRow.classList.remove("hidden")
+
+                if (giftCardAmount && finalTotal) {
+                    giftCardAmount.textContent = `-${formatCurrency(newSummary.giftCardAmount)}`
+                    finalTotal.textContent = formatCurrency(newSummary.total)
+                }
+
+                giftCardModal.classList.add("hidden");
+                giftCardSelection.classList.add("hidden")
+                giftCardApplied.classList.remove("hidden")
+
+                console.log("Gift card amount added to total.")
+
+            } catch (error) {
+                console.error("Error adding gift card: ", error)
+            }
+        })
+    }
+
+    // GIFT CARDS
+    if (addGiftCardButton) {
+        addGiftCardButton.addEventListener("click", () => {
+            giftCardModal.classList.remove("hidden");
+        });
+    }
+
+    if (addAnotherGiftCardButton) {
+        addAnotherGiftCardButton.addEventListener("click", () => {
+            giftCardModal.classList.remove("hidden");
+        });
+    }
+
+    if (closeGiftCardModal) {
+        closeGiftCardModal.addEventListener("click", () => {
+            giftCardModal.classList.add("hidden");
+        });
+    }
+
+    if (giftCardModal) {
+        const giftCardOverlay = giftCardModal.querySelector(".modal-overlay");
+
+        if (giftCardOverlay) {
+            giftCardOverlay.addEventListener("click", () => {
+                giftCardModal.classList.add("hidden");
+            });
+        }
+    }
+
     // CLOSE MODALS WITH ESCAPE
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
@@ -371,6 +448,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (paymentModal) {
                 paymentModal.classList.add("hidden");
+            }
+
+            if (giftCardModal) {
+                giftCardModal.classList.add("hidden");
             }
         }
     });

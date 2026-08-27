@@ -62,8 +62,7 @@ public class CheckoutService {
         }
 
         if (checkoutDto.getGiftCardCode() != null) {
-            GiftCard giftCard = giftCardService.getGiftCardByCode(checkoutDto.getGiftCardCode())
-                    .orElseThrow(() -> new EntityNotFoundException("Gift card not found"));
+            GiftCard giftCard = giftCardService.getGiftCardByCode(checkoutDto.getGiftCardCode());
 
             total = total.subtract(giftCard.getBalance());
             summaryDto.setGiftCardAmount(giftCard.getBalance());
