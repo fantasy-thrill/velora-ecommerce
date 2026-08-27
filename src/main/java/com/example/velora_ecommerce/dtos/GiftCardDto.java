@@ -9,6 +9,6 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 public class GiftCardDto {
-    @NotBlank
+    @NotBlank(message = "Please enter a gift card code")
     private String code;
 }

@@ -1,0 +1,90 @@
+/* Support page */
+.support-page {
+    width: 100%;
+    box-sizing: border-box;
+    padding-bottom: 80px;
+}
+
+.support-page .breadcrumb {
+    margin: 28px auto 0;
+    width: 90%;
+    max-width: 1100px;
+}
+
+.support-intro {
+    text-align: center;
+    margin: 50px auto 0;
+}
+
+.support-intro h1 {
+    margin: 0 0 30px;
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.support-intro p {
+    margin: 0 0 22px;
+    font-size: 22px;
+    line-height: 1.25;
+}
+
+.faq-section {
+    width: 90%;
+    max-width: 1100px;
+    margin: 78px auto 0;
+}
+
+.faq-section h2 {
+    margin: 0 0 32px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.faq-item {
+    margin-bottom: 24px;
+}
+
+.faq-item h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.faq-item p {
+    margin: 0;
+    font-size: 19px;
+    line-height: 1.4;
+}
+
+.contact-section {
+    width: 90%;
+    max-width: 1100px;
+    margin: 78px auto 0;
+}
+
+.contact-section h2 {
+    margin: 0 0 32px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.contact-section p {
+    margin: 0 0 24px;
+    font-size: 19px;
+    line-height: 1.4;
+}
+
+.support-hours {
+    margin-top: 8px;
+}
+
+.support-hours h3 {
+    margin: 0 0 2px;
+    font-size: 19px;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.support-hours p {
+    margin-bottom: 26px;
+}

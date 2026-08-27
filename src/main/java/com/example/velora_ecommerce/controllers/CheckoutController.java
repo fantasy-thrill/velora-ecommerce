@@ -170,6 +170,10 @@ public class CheckoutController {
             @ModelAttribute("summary") CheckoutSummaryDto summaryDto,
             Authentication authentication
     ) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(Map.of("error", bindingResult.getFieldError().getDefaultMessage()));
+        }
+
         if (!giftCardService.giftCardExists(giftCardDto.getCode())) {
             String errorMessage = "Gift card does not exist";
             bindingResult.rejectValue("code", "code.invalid", errorMessage);

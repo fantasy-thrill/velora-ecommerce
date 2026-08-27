@@ -101,6 +101,13 @@
                             name="query"
                             th:value="${filterDto.query}">
 
+                    <!-- Preserve category -->
+                    <input
+                            th:if="${filterDto.category != null}"
+                            type="hidden"
+                            name="category"
+                            th:value="${filterDto.category}">
+
                     <!--  BRAND FILTER  -->
                     <fieldset class="filter-group">
                         <legend>Filter by brand</legend>

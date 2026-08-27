@@ -20,15 +20,18 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final PaymentCardRepository paymentCardRepository;
     private final CustomerService customerService;
+    private final GiftCardService giftCardService;
 
     public OrderService(
             OrderRepository orderRepository,
             PaymentCardRepository paymentCardRepository,
-            CustomerService customerService
+            CustomerService customerService,
+            GiftCardService giftCardService
     ) {
         this.orderRepository = orderRepository;
         this.paymentCardRepository = paymentCardRepository;
         this.customerService = customerService;
+        this.giftCardService = giftCardService;
     }
 
     @Transactional
@@ -74,7 +77,13 @@ public class OrderService {
         ));
 
         if (summaryDto.getDiscount() != null) order.getSummary().put("Discount", summaryDto.getDiscount());
-        if (summaryDto.getGiftCardAmount() != null) order.getSummary().put("Gift card", summaryDto.getGiftCardAmount());
+
+        if (summaryDto.getGiftCardAmount() != null) {
+            GiftCard giftCard = giftCardService.getGiftCardByCode(checkoutDto.getGiftCardCode());
+            giftCard.setBalance(BigDecimal.ZERO);
+
+            order.getSummary().put("Gift card", summaryDto.getGiftCardAmount());
+        }
 
         for (CartItem item : cartItems) {
             OrderItem orderItem = new OrderItem();

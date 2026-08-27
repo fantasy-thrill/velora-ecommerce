@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Velora</title>
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <style>
+        #about-section {
+            margin: 50px 150px;
+        }
+
+        #about-heading {
+            margin: 24px 0;
+            text-align: center;
+        }
+
+        .about-paragraph {
+            margin: 20px 0;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+    <div class="header-top">
+        <div class="logo-container">
+            <a th:href="@{/}">
+                <img th:src="@{/images/velora_logo.png}" alt="Velora Logo">
+            </a>
+        </div>
+
+        <div class="search-container">
+            <form th:action="@{/products/search}" method="get">
+                <input type="text" name="query" placeholder="Search products...">
+
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+
+        <div class="cart-container">
+            <a th:href="@{/cart}" class="cart-link">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-count" th:if="${cartItemCount > 0}" th:text="${cartItemCount}">0</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="dropdown">
+            <button class="nav-button">Account</button>
+
+            <div class="dropdown-content" sec:authorize="isAnonymous()">
+                <a th:href="@{/auth/login}">Login</a>
+                <a th:href="@{/auth/register}">Register</a>
+            </div>
+
+            <div class="dropdown-content" sec:authorize="isAuthenticated()">
+                <a th:href="@{/orders}">My Orders</a>
+                <a th:href="@{/account}">My Account</a>
+
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit" class="logout-button">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <button class="nav-button">Shop</button>
+
+            <div class="dropdown-content">
+                <a th:href="@{/products/all}">All products</a>
+                <a th:each="category : ${categories}"
+                   th:href="@{/products/all(category=${category.name})}"
+                   th:text="${category.getDisplayName()}">
+                    Category Name
+                </a>
+            </div>
+        </div>
+
+        <a th:href="@{/deals}">Deals</a>
+        <a th:href="@{/about}">About</a>
+        <a th:href="@{/support}">Support</a>
+    </nav>
+</header>
+<main id="about-section">
+    <h1 id="about-heading">About Velora</h1>
+    <p class="about-paragraph">Velora Incorporated is a growing electronics retailer dedicated to making modern technology accessible to customers wherever they are. Founded two years ago and headquartered in Nashville, Tennessee, Velora was created with a simple goal: to provide customers with reliable technology products, a convenient shopping experience, and the kind of service they can trust.</p>
+
+    <p class="about-paragraph">Since its founding, Velora has experienced steady growth and has established itself as a developing presence in the southeastern United States. The company offers a wide range of technology products, including smartphones, tablets, computers, and other consumer electronics. With approximately $500,000 in annual revenue, Velora has achieved considerable success in a relatively short period of time.</p>
+
+    <p class="about-paragraph">As the company has grown, so has its physical presence. Velora has opened several retail locations throughout Tennessee and has recently begun expanding beyond the state, establishing a presence in neighboring southeastern markets such as Georgia and northern Florida. These locations have allowed Velora to build relationships with customers and communities while providing them with convenient access to the latest technology products.</p>
+
+    <p class="about-paragraph">However, expanding a physical retail business across multiple states presents significant challenges. Opening and operating new stores requires substantial investments in property, staffing, inventory, and other operational expenses. In addition, differences in business regulations and tax policies from state to state can make expansion increasingly difficult and expensive. While Velora remains committed to expanding its physical presence, the company recognized that another approach could allow it to reach more customers without requiring the same level of investment as opening additional brick-and-mortar stores.</p>
+
+    <p class="about-paragraph">That realization led to the development of Velora's e-commerce platform.</p>
+
+    <p class="about-paragraph">The Velora website provides customers with a convenient way to browse the company's products, place orders, and have their purchases shipped directly to their homes. By bringing its inventory online, Velora can serve customers who may live hundreds of miles away from one of its physical locations while continuing to serve customers within the southeastern region.</p>
+
+    <p class="about-paragraph">The company's online presence is especially important for customers who do not have convenient access to a Velora store. Rather than limiting its customer base to the communities surrounding its physical locations, Velora can now make its products available to customers throughout a much larger portion of the country. Customers can shop from the comfort of their own homes while receiving the same commitment to quality and service that Velora strives to provide in its physical stores.</p>
+
+    <p class="about-paragraph">The e-commerce platform also represents an important step toward Velora's long-term growth. Revenue generated through online sales can help the company strengthen its operations and invest in future expansion, including the possibility of opening additional physical locations in new markets. In this way, the online store is more than simply another way to purchase products—it is an important part of Velora's strategy for building a larger and more accessible retail business.</p>
+
+    <p class="about-paragraph">Velora began as a small and growing electronics retailer in Tennessee, but its vision extends far beyond its original locations. Through its expanding selection of technology products, physical stores, and e-commerce platform, Velora aims to make purchasing technology simple and accessible to more customers across the country.</p>
+
+    <p class="about-paragraph">As Velora continues to grow, the company remains focused on the same principle that guided its beginnings: bringing quality technology closer to the people who need it, no matter where they live.</p>
+</main>
+<footer>
+    <p>© 2026 Velora Electronics. This is not a real company.</p>
+
+    <div class="footer-links">
+        <a th:href="@{/about}">About Velora</a>
+        <a th:href="@{/contact}">Contact Us</a>
+        <a th:href="@{/privacy}">Privacy Policy</a>
+        <a th:href="@{/terms}">Terms and Conditions</a>
+    </div>
+</footer>
+</body>
+</html>

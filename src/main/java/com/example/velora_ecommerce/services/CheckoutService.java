@@ -65,6 +65,8 @@ public class CheckoutService {
             GiftCard giftCard = giftCardService.getGiftCardByCode(checkoutDto.getGiftCardCode());
 
             total = total.subtract(giftCard.getBalance());
+            if (total.compareTo(BigDecimal.ZERO) < 0) total = BigDecimal.ZERO;
+
             summaryDto.setGiftCardAmount(giftCard.getBalance());
         }
 

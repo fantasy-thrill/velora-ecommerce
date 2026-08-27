@@ -19,7 +19,7 @@ public class GiftCard extends PaymentMethod {
     @Column(nullable = false)
     private BigDecimal balance;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String code;
 
     public String displayString() {

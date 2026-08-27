@@ -138,9 +138,4 @@ public class CustomerService {
     public void deleteCustomer(Long id) {
         customerRepository.deleteById(id);
     }
-
-//    private Customer getCustomer(String email) {
-//        return this.getCustomerByEmail(email)
-//                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
-//    }
 }
