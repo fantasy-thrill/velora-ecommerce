@@ -67,7 +67,7 @@ public class CheckoutService {
             total = total.subtract(giftCard.getBalance());
             if (total.compareTo(BigDecimal.ZERO) < 0) total = BigDecimal.ZERO;
 
-            summaryDto.setGiftCardAmount(giftCard.getBalance());
+            summaryDto.setGiftCard(GiftCardMapper.toResponseDto(giftCard));
         }
 
         summaryDto.setSubtotal(customerCart.calculateSubtotal());

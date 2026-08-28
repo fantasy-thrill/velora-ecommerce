@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,20 +71,22 @@ public class OrderService {
         order.setTotalPrice(totalPrice);
         order.setDate(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);
-        order.setSummary(Map.ofEntries(
-                Map.entry("Subtotal", summaryDto.getSubtotal()),
-                Map.entry("Shipping", summaryDto.getShipping()),
-                Map.entry("Total", summaryDto.getTotal())
-        ));
 
-        if (summaryDto.getDiscount() != null) order.getSummary().put("Discount", summaryDto.getDiscount());
+        Map<String, BigDecimal> summary = new HashMap<>();
+        summary.put("Subtotal", summaryDto.getSubtotal());
+        summary.put("Shipping", summaryDto.getShipping());
+        summary.put("Total", summaryDto.getTotal());
 
-        if (summaryDto.getGiftCardAmount() != null) {
+        if (summaryDto.getDiscount() != null) summary.put("Discount", summaryDto.getDiscount());
+
+        if (summaryDto.getGiftCard() != null) {
             GiftCard giftCard = giftCardService.getGiftCardByCode(checkoutDto.getGiftCardCode());
             giftCard.setBalance(BigDecimal.ZERO);
 
-            order.getSummary().put("Gift card", summaryDto.getGiftCardAmount());
+            summary.put("Gift card", summaryDto.getGiftCard().getBalance());
         }
+
+        order.setSummary(summary);
 
         for (CartItem item : cartItems) {
             OrderItem orderItem = new OrderItem();
@@ -115,7 +118,7 @@ public class OrderService {
         Customer customer = customerService.getCustomerByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
-        return orderRepository.findByCustomer(customer).stream()
+        return orderRepository.findByCustomerOrderByDateDesc(customer).stream()
                 .map(OrderMapper::toResponseDto)
                 .toList();
     }
@@ -135,18 +138,11 @@ public class OrderService {
     public void cancelOrder(String customerEmail, Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
-        LocalDateTime currentDateAndTime = LocalDateTime.now();
 
         if (!order.getCustomer().getEmail().equals(customerEmail))
             throw new IllegalStateException("Order does not belong to customer");
 
-        if (currentDateAndTime.isAfter(order.getDate().plusHours(12))) {
-            throw new IllegalStateException(
-                    "Order has been placed more than 12 hours ago. Therefore, it cannot be canceled."
-            );
-        } else {
-            order.setStatus(OrderStatus.CANCELED);
-            orderRepository.save(order);
-        }
+        order.setStatus(OrderStatus.CANCELED);
+        orderRepository.save(order);
     }
 }

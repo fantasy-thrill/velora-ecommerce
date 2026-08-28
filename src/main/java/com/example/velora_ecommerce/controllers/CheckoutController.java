@@ -1,7 +1,6 @@
 package com.example.velora_ecommerce.controllers;
 
 import com.example.velora_ecommerce.dtos.*;
-import com.example.velora_ecommerce.entities.GiftCard;
 import com.example.velora_ecommerce.entities.Order;
 import com.example.velora_ecommerce.entities.PaymentCard;
 import com.example.velora_ecommerce.enums.*;
@@ -17,8 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -39,7 +36,6 @@ public class CheckoutController {
         if (!model.containsAttribute("checkout")) {
             CheckoutDto checkout = new CheckoutDto();
             model.addAttribute("checkout", checkout);
-//            System.out.println("Current value of shipping speed: " + checkout.getShippingSpeed());
         }
 
         model.addAttribute("address", checkoutPage.getAddress());
@@ -50,7 +46,7 @@ public class CheckoutController {
         model.addAttribute("cardProcessors", CardProcessor.values());
         model.addAttribute("newAddress", new AddressDto());
         model.addAttribute("shippingSpeed", ShippingSpeed.values());
-        model.addAttribute("giftCard", new GiftCardDto());
+        model.addAttribute("giftCard", new AddGiftCardDto());
         model.addAttribute("items", checkoutPage.getItems());
 
         CheckoutSummaryDto summary = checkoutService.buildCheckoutSummary(
@@ -148,26 +144,26 @@ public class CheckoutController {
     public CheckoutSummaryDto selectShippingSpeed(
             @RequestParam ShippingSpeed shippingSpeed,
             @ModelAttribute("checkout") CheckoutDto checkoutDto,
-            @ModelAttribute("summary") CheckoutSummaryDto summaryDto,
+            Model model,
             Authentication authentication
     ) {
         checkoutDto.setShippingSpeed(shippingSpeed);
 
         CheckoutSummaryDto updatedSummary = checkoutService.buildCheckoutSummary(authentication.getName(), checkoutDto);
-        summaryDto = updatedSummary;
+        model.addAttribute("summary", updatedSummary);
 
-        System.out.println("Shipping speed updated: " + checkoutDto.getShippingSpeed() + " $" + summaryDto.getShipping());
-        System.out.println("New total: $" + summaryDto.getTotal());
-        return summaryDto;
+        System.out.println("Shipping speed updated: " + checkoutDto.getShippingSpeed() + " $" + updatedSummary.getShipping());
+        System.out.println("New total: $" + updatedSummary.getTotal());
+        return updatedSummary;
     }
 
     @PostMapping("/gift-card")
     @ResponseBody
     public ResponseEntity<Object> applyGiftCard(
             @ModelAttribute("checkout") CheckoutDto checkoutDto,
-            @ModelAttribute("giftCard") GiftCardDto giftCardDto,
+            @ModelAttribute("giftCard") AddGiftCardDto giftCardDto,
             BindingResult bindingResult,
-            @ModelAttribute("summary") CheckoutSummaryDto summaryDto,
+            Model model,
             Authentication authentication
     ) {
         if (bindingResult.hasErrors()) {
@@ -184,11 +180,11 @@ public class CheckoutController {
         checkoutDto.setGiftCardCode(giftCardDto.getCode());
         CheckoutSummaryDto updatedSummary = checkoutService.buildCheckoutSummary(authentication.getName(), checkoutDto);
 
-        summaryDto = updatedSummary;
+        model.addAttribute("summary", updatedSummary);
         System.out.println("Gift card added. Checkout summary updated.");
-        System.out.println("$" + summaryDto.getGiftCardAmount() + " subtracted from total.");
+        System.out.println("$" + updatedSummary.getGiftCard().getBalance() + " subtracted from total.");
 
-        return ResponseEntity.ok(summaryDto);
+        return ResponseEntity.ok(updatedSummary);
     }
 
     @PostMapping("/place-order")
@@ -198,6 +194,10 @@ public class CheckoutController {
             SessionStatus sessionStatus,
             @ModelAttribute("summary") CheckoutSummaryDto summaryDto
     ) {
+        System.out.println("Subtotal: " + summaryDto.getSubtotal());
+        System.out.println("Shipping: " + summaryDto.getShipping());
+        System.out.println("Gift card: -" + summaryDto.getGiftCard().getBalance());
+
         Order order = orderService.placeOrder(authentication.getName(), checkoutDto, summaryDto);
         sessionStatus.setComplete();
 

@@ -18,9 +18,5 @@ public class CheckoutPageDto {
 
     private List<PaymentCardResponseDto> paymentCards;
 
-//    private PaymentCardResponseDto selectedPaymentMethod;
-
     private ShippingSpeed shippingSpeed;
-
-//    private CheckoutSummaryDto summary;
 }

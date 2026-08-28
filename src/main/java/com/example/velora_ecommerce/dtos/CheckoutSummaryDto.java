@@ -15,7 +15,7 @@ public class CheckoutSummaryDto {
 
     private BigDecimal discount;
 
-    private BigDecimal giftCardAmount;
+    private GiftCardResponseDto giftCard;
 
     private BigDecimal total;
 }

@@ -78,6 +78,8 @@
 </header>
 
 <main class="order-details-page">
+    <div class="flash-message" th:if="${successMessage != null}" th:text="${successMessage}"></div>
+
     <!-- Breadcrumb -->
     <div class="breadcrumb">
         <a th:href="@{/}">Home</a>
@@ -197,10 +199,10 @@
                 <span th:text="${'$' + order.summary.get('Shipping')}">$0.00</span>
             </div>
 
-<!--            <div class="summary-row">-->
-<!--                <span>Estimated tax:</span>-->
-<!--                <span th:text="${'$' + order.summary.get('tax')}">$0.00</span>-->
-<!--            </div>-->
+            <div class="summary-row" th:if="${order.summary.get('Gift card') != null}">
+                <span>Gift card:</span>
+                <span th:text="${'-$' + order.summary.get('Gift card')}">$0.00</span>
+            </div>
 
             <div class="summary-row grand-total">
                 <span>Grand total:</span>
@@ -250,11 +252,47 @@
     <div class="order-detail-actions">
         <a th:href="@{/orders}" class="order-action-button secondary">Back to order list</a>
 
-        <a th:href="@{/support/orders/{id}(id=${order.orderId})}" class="order-action-button primary">
+        <a
+                th:href="@{/support/orders/{id}(id=${order.orderId})}"
+                th:if="${order.status != T(com.example.velora_ecommerce.enums.OrderStatus).PENDING}"
+                class="order-action-button primary">
             Get help with this order
+        </a>
+
+        <a
+                id="cancel-order-button"
+                class="order-action-button primary"
+                th:unless="${order.status != T(com.example.velora_ecommerce.enums.OrderStatus).PENDING}">
+            Cancel order
         </a>
     </div>
 </main>
+
+<div id="cancel-order-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+
+    <div class="modal-content">
+        <button type="button" id="close-cancel-order-modal" class="modal-close">&times;</button>
+
+        <h2>Cancel order?</h2>
+        <p style="text-align: center">Are you sure you want to cancel this order?</p>
+
+        <div class="cancel-order-actions">
+            <button type="button" id="forget-cancel-order" class="secondary-button">
+                No
+            </button>
+
+            <form id="cancel-order-form" th:action="@{/orders/cancel-order/{id}(id=${order.orderId})}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                <button type="submit" class="primary-button">
+                    Yes
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <footer>
     <p>© 2026 Velora Electronics. This is not a real company.</p>
 
@@ -265,5 +303,6 @@
         <a th:href="@{/terms}">Terms and Conditions</a>
     </div>
 </footer>
+<script th:src="@{/js/order-details.js}" defer></script>
 </body>
 </html>

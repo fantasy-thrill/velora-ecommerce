@@ -15,6 +15,11 @@
         <img th:src="@{/images/velora_logo.png}" alt="Velora Logo">
     </a>
 
+    <a th:href="@{/cart}" id="back-link">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to cart
+    </a>
+
     <h1>Checkout</h1>
 
     <form id="checkout-form" th:action="@{/checkout/place-order}" th:object="${checkout}" method="post">
@@ -218,7 +223,7 @@
 
             <div class="summary-row hidden" style="color: #32a852">
                 <span>Gift card:</span>
-                <strong th:text="${#numbers.formatCurrency(summary.giftCardAmount)}" id="gift-card-amount">$0.00</strong>
+                <strong id="gift-card-amount">$0.00</strong>
             </div>
 
             <div class="summary-row grand-total">

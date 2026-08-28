@@ -1,6 +1,5 @@
 package com.example.velora_ecommerce.dtos;
 
-import com.example.velora_ecommerce.entities.PaymentCard;
 import com.example.velora_ecommerce.enums.OrderStatus;
 import lombok.*;
 

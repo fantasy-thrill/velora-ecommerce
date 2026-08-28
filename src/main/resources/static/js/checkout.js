@@ -388,13 +388,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 const newSummary = await response.json()
 
                 const confirmedGiftCardText = document.getElementById("confirmed-gift-card")
-                confirmedGiftCardText.innerHTML = `<strong>$${newSummary["giftCardAmount"]} Gift Card</strong> applied`
+                confirmedGiftCardText.innerHTML = `<strong>${newSummary.giftCard.displayString}</strong> applied`
 
                 const giftCardRow = giftCardAmount.parentElement
                 giftCardRow.classList.remove("hidden")
 
                 if (giftCardAmount && finalTotal) {
-                    giftCardAmount.textContent = `-${formatCurrency(newSummary.giftCardAmount)}`
+                    giftCardAmount.textContent = `-${formatCurrency(newSummary.giftCard.balance)}`
                     finalTotal.textContent = formatCurrency(newSummary.total)
                 }
 
