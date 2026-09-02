@@ -5,6 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class MiscPageController {
+    @GetMapping("/deals")
+    public String dealsPage() {
+        return "deals";
+    }
+
     @GetMapping("/about")
     public String aboutPage() {
         return "about";
@@ -13,11 +18,6 @@ public class MiscPageController {
     @GetMapping("/support")
     public String supportPage() {
         return "support";
-    }
-
-    @GetMapping("/contact")
-    public String contactPage() {
-        return "contact";
     }
 
     @GetMapping("/privacy")

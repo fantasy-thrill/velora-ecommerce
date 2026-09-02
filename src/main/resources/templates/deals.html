@@ -4,10 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Help and Support | Velora</title>
-
+    <title>Deals | Velora</title>
     <link rel="stylesheet" th:href="@{/css/global.css}">
-    <link rel="stylesheet" th:href="@{/css/support.css}">
+    <style>
+        #deals-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 1500px;
+            column-gap: 1em;
+            row-gap: 1em;
+            margin: 50px auto;
+        }
+    </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
@@ -77,95 +85,51 @@
         <a th:href="@{/support}">Support</a>
     </nav>
 </header>
-<main class="support-page">
-    <!-- Breadcrumb -->
-    <div class="breadcrumb">
-        <a th:href="@{/}">Home</a>
-        <span>&gt;</span>
-        <span>Help and support</span>
+<main style="margin: 30px 60px">
+    <h1 style="text-align: center">Our Latest Deals</h1>
+
+    <div id="deals-grid">
+        <div class="deals-container">
+            <a th:href="@{/products/all(category=${T(com.example.velora_ecommerce.enums.Category).LAPTOPS})}">
+                <img th:src="@{/images/deal_posters/deals 1.png}" alt="Deal for laptops">
+            </a>
+        </div>
+        <div class="deals-container">
+            <a th:href="@{/products/all(category=${T(com.example.velora_ecommerce.enums.Category).KEYBOARDS})}">
+                <img th:src="@{/images/deal_posters/deals 2.png}" alt="Deal for keyboards">
+            </a>
+        </div>
+        <div class="deals-container">
+            <a th:href="@{/products/all(category=${T(com.example.velora_ecommerce.enums.Category).ACCESSORIES})}">
+                <img th:src="@{/images/deal_posters/deals 3.png}" alt="Deal for ">
+            </a>
+        </div>
+        <div class="deals-container">
+            <a th:href="@{/products/all(category=${T(com.example.velora_ecommerce.enums.Category).MONITORS})}">
+                <img th:src="@{/images/deal_posters/deals 4.png}" alt="Deal for ">
+            </a>
+        </div>
+        <div class="deals-container">
+            <a th:href="@{/products/all(category=${T(com.example.velora_ecommerce.enums.Category).MICE})}">
+                <img th:src="@{/images/deal_posters/deals 5.png}" alt="Deal for ">
+            </a>
+        </div>
+        <div class="deals-container">
+            <a th:href="@{/products/all(category=${T(com.example.velora_ecommerce.enums.Category).ACCESSORIES})}">
+                <img th:src="@{/images/deal_posters/deals 6.png}" alt="Deal for ">
+            </a>
+        </div>
+        <div class="deals-container">
+            <a th:href="@{/products/all(category=${T(com.example.velora_ecommerce.enums.Category).ACCESSORIES})}">
+                <img th:src="@{/images/deal_posters/deals 7.png}" alt="Deal for ">
+            </a>
+        </div>
+        <div class="deals-container">
+            <a th:href="@{/products/all(category=${T(com.example.velora_ecommerce.enums.Category).DESKTOPS})}">
+                <img th:src="@{/images/deal_posters/deals 8.png}" alt="Deal for ">
+            </a>
+        </div>
     </div>
-
-    <!-- Support introduction -->
-    <section class="support-intro">
-        <h1>Help and support</h1>
-        <p>How can we help you today?</p>
-        <p>Browse frequently asked questions or contact our support<br>team for assistance.</p>
-    </section>
-
-    <!-- Frequently asked questions -->
-    <section class="faq-section">
-        <h2>Frequently Asked Questions (FAQ)</h2>
-
-        <div class="faq-item">
-            <h3>How can I track my order?</h3>
-            <p>
-                Visit <em>Your Account → Orders</em> to view your order history and current order status.
-            </p>
-        </div>
-
-        <div class="faq-item">
-            <h3>How do I update my payment method?</h3>
-            <p>
-                Go to <em>Your Account → Payment Methods</em> to add, edit, or remove saved payment methods.
-            </p>
-        </div>
-
-        <div class="faq-item">
-            <h3>Can I cancel an order?</h3>
-            <p>
-                Orders may be canceled before they have shipped. Visit your order history or contact customer support.
-            </p>
-        </div>
-
-        <div class="faq-item">
-            <h3>How long does shipping take?</h3>
-            <p>
-                Standard shipping typically arrives in 3–5 business days. Express shipping arrives in 1–2 business days.
-            </p>
-        </div>
-
-        <div class="faq-item">
-            <h3>How do I change my password?</h3>
-            <p>
-                Visit <em>Your Account → Profile &amp; Login Information</em> and select Change Password.
-            </p>
-        </div>
-
-        <div class="faq-item">
-            <h3>How do I return a product?</h3>
-            <p>
-                Contact our support team with your order number to begin the return process.
-            </p>
-        </div>
-    </section>
-
-    <!-- Contact information -->
-    <section class="contact-section">
-        <h2>Contact us</h2>
-
-        <p><strong>Phone:</strong> (800) 555-0123</p>
-
-        <p><strong>Email:</strong> support@veloraelectronics.com</p>
-
-        <div class="support-hours">
-            <h3>Hours</h3>
-
-            <p>
-                <strong>Monday – Friday</strong><br>
-                8:00 AM – 6:00 PM
-            </p>
-
-            <p>
-                <strong>Saturday</strong><br>
-                9:00 AM – 4:00 PM
-            </p>
-
-            <p>
-                <strong>Sunday</strong><br>
-                Closed
-            </p>
-        </div>
-    </section>
 </main>
 <footer>
     <p>© 2026 Velora Electronics. This is not a real company.</p>

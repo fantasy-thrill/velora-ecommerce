@@ -1,8 +1,6 @@
 package com.example.velora_ecommerce.controllers;
 
-import com.example.velora_ecommerce.dtos.AddPaymentCardDto;
-import com.example.velora_ecommerce.dtos.PaymentCardResponseDto;
-import com.example.velora_ecommerce.dtos.UpdatePaymentCardDto;
+import com.example.velora_ecommerce.dtos.*;
 import com.example.velora_ecommerce.enums.CardProcessor;
 import com.example.velora_ecommerce.enums.CardType;
 import com.example.velora_ecommerce.services.PaymentCardService;

@@ -26,6 +26,7 @@ public class SecurityConfig {
                                 "/images/**",
                                 "/products/**",
                                 "/auth/**",
+                                "/deals",
                                 "/about",
                                 "/support"
                         )
