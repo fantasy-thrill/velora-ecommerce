@@ -62,7 +62,6 @@ public class CustomerServiceTest {
         customerService.registerCustomer(dto);
 
         // Assert
-
         ArgumentCaptor<Customer> customerCaptor = ArgumentCaptor.forClass(Customer.class);
         verify(customerRepository).save(customerCaptor.capture());
         Customer savedCustomer = customerCaptor.getValue();

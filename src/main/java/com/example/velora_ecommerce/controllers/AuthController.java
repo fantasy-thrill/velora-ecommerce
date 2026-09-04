@@ -31,6 +31,11 @@ public class AuthController {
         return "auth/register";
     }
 
+//    @GetMapping("/registration-successful")
+//    public String registrationConfirmation() {
+//        return ;
+//    }
+
     @PostMapping("/register")
     public String registerCustomer(
             Model model,
@@ -43,7 +48,7 @@ public class AuthController {
         }
 
         customerService.registerCustomer(dto);
-        return "redirect:/auth/login";
+        return "auth/registration-successful";
     }
 
     @GetMapping("/forgot-password")

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Successful | Velora</title>
+    <style>
+        .logo img {
+            width: 190px;
+            margin-bottom: 45px;
+        }
+
+        .logo {
+            display: block;
+            margin: 16px auto;
+            width: fit-content;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <a th:href="@{/}" class="logo">
+        <img th:src="@{/images/velora_logo.png}" alt="Velora Logo">
+    </a>
+    <h1>
+        Account registration successful! Click <a th:href="@{/auth/login}">here</a> to log in.
+    </h1>
+</body>
+</html>
