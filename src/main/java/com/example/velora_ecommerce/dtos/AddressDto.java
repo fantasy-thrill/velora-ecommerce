@@ -23,6 +23,9 @@ public class AddressDto {
     private State state;
 
     @NotBlank
-    @Pattern(regexp = "^\\d{5}$")
+    @Pattern(
+            regexp = "^\\d{5}$",
+            message = "ZIP code must be exactly 5 digits long."
+    )
     private String zipCode;
 }

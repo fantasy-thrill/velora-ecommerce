@@ -1,4 +1,8 @@
 /*  PAGE LAYOUT  */
+* {
+    font-family: Arial, sans-serif;
+}
+
 .page-container {
     min-height: 100vh;
     display: flex;
@@ -18,7 +22,6 @@
 /*  LOGO  */
 .logo img {
     width: 190px;
-    margin-bottom: 45px;
 }
 
 /*  TITLE  */
@@ -121,7 +124,7 @@
     margin-bottom: 12px;
 }
 
-.password-hint {
+.input-hint {
     grid-column: 2;
     color: #667;
     font-size: .85rem;

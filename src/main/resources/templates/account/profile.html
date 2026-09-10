@@ -79,6 +79,7 @@
 </header>
 <main class="profile-page">
     <div class="update-message"></div>
+    <div th:if="${updateSuccess}" class="flash-message" th:text="${updateSuccess}"></div>
 
     <!-- Breadcrumb -->
     <div class="breadcrumb">

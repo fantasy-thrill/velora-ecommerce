@@ -77,7 +77,6 @@ public class CheckoutController {
         }
 
         checkoutDto.setAddress(addressDto);
-        System.out.println("Address saved to checkout session.");
 
         return ResponseEntity.ok().build();
     }
@@ -94,14 +93,6 @@ public class CheckoutController {
         }
 
         checkoutDto.setAddress(addressDto);
-        System.out.print(
-                "New address added:\n" +
-                checkoutDto.getAddress().getCustomerFullName() + "\n" +
-                checkoutDto.getAddress().getStreet() + "\n" +
-                checkoutDto.getAddress().getCity() + ", " +
-                checkoutDto.getAddress().getState() + " " +
-                checkoutDto.getAddress().getZipCode()
-        );
 
         return ResponseEntity.ok(addressDto);
     }
@@ -114,7 +105,6 @@ public class CheckoutController {
     ) {
         checkoutDto.setPaymentMethodId(paymentMethodId);
 
-        System.out.println("Payment method added to checkout session.");
         return ResponseEntity.ok().build();
     }
 
@@ -134,7 +124,6 @@ public class CheckoutController {
         PaymentCardResponseDto newCardDto = PaymentCardMapper.toResponseDto(card);
 
         checkoutDto.setPaymentMethodId(card.getId());
-        System.out.print("New payment card added: " + card.getCardProcessor() + " ending in " + card.getLastFourDigits());
 
         return ResponseEntity.ok(newCardDto);
     }
@@ -152,8 +141,6 @@ public class CheckoutController {
         CheckoutSummaryDto updatedSummary = checkoutService.buildCheckoutSummary(authentication.getName(), checkoutDto);
         model.addAttribute("summary", updatedSummary);
 
-        System.out.println("Shipping speed updated: " + checkoutDto.getShippingSpeed() + " $" + updatedSummary.getShipping());
-        System.out.println("New total: $" + updatedSummary.getTotal());
         return updatedSummary;
     }
 
@@ -181,8 +168,6 @@ public class CheckoutController {
         CheckoutSummaryDto updatedSummary = checkoutService.buildCheckoutSummary(authentication.getName(), checkoutDto);
 
         model.addAttribute("summary", updatedSummary);
-        System.out.println("Gift card added. Checkout summary updated.");
-        System.out.println("$" + updatedSummary.getGiftCard().getBalance() + " subtracted from total.");
 
         return ResponseEntity.ok(updatedSummary);
     }
@@ -194,10 +179,6 @@ public class CheckoutController {
             SessionStatus sessionStatus,
             @ModelAttribute("summary") CheckoutSummaryDto summaryDto
     ) {
-        System.out.println("Subtotal: " + summaryDto.getSubtotal());
-        System.out.println("Shipping: " + summaryDto.getShipping());
-        System.out.println("Gift card: -" + summaryDto.getGiftCard().getBalance());
-
         Order order = orderService.placeOrder(authentication.getName(), checkoutDto, summaryDto);
         sessionStatus.setComplete();
 

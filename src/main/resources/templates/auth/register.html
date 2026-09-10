@@ -68,6 +68,8 @@
                     <label for="phoneNumber">Phone number:</label>
                     <input id="phoneNumber" type="tel" th:field="*{phoneNumber}" required>
 
+                    <small class="input-hint">Enter 10 digits without spaces, dashes, or parentheses.</small>
+
                     <div class="validation-error"
                          th:if="${#fields.hasErrors('phoneNumber')}"
                          th:errors="*{phoneNumber}">
@@ -78,7 +80,7 @@
                     <label for="password">Password:</label>
                     <input id="password" type="password" th:field="*{password}" required>
 
-                    <div class="password-hint">
+                    <div class="input-hint">
                         Password must contain:
                         <br>
                         • At least 8 characters

@@ -8,8 +8,18 @@ public class PasswordsMatchValidator implements ConstraintValidator<PasswordsMat
     @Override
     public boolean isValid(PasswordConfirmation dto, ConstraintValidatorContext context) {
         if (dto == null) return true;
-        if (dto.getPassword() == null || dto.getConfirmPassword() == null) return false;
+        if (dto.getPassword() == null || dto.getConfirmPassword() == null) return true;
 
-        return dto.getPassword().equals(dto.getConfirmPassword());
+        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+            context.disableDefaultConstraintViolation();
+
+            context.buildConstraintViolationWithTemplate("Passwords do not match.")
+                    .addPropertyNode("confirmPassword")
+                    .addConstraintViolation();
+
+            return false;
+        }
+
+        return true;
     }
 }

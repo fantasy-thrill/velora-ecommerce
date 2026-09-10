@@ -5,8 +5,6 @@ import com.example.velora_ecommerce.enums.State;
 import com.example.velora_ecommerce.services.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,11 +28,6 @@ public class AuthController {
 
         return "auth/register";
     }
-
-//    @GetMapping("/registration-successful")
-//    public String registrationConfirmation() {
-//        return ;
-//    }
 
     @PostMapping("/register")
     public String registerCustomer(
@@ -69,10 +62,7 @@ public class AuthController {
         }
 
         boolean accountExists = customerService.accountWithEmailExists(emailDto.getEmail());
-
-        if (!accountExists) {
-            return new VerifyEmailResponse(accountExists, "Invalid e-mail address");
-        }
+        if (!accountExists) return new VerifyEmailResponse(accountExists, "Invalid e-mail address");
 
         return new VerifyEmailResponse(accountExists, null);
     }
@@ -84,7 +74,6 @@ public class AuthController {
             @Valid @RequestBody ChangePasswordDto dto,
             BindingResult bindingResult
     ) {
-
         if (bindingResult.hasErrors()) {
             return new PasswordResetResponse(false, "Please correct the highlighted fields.");
         }

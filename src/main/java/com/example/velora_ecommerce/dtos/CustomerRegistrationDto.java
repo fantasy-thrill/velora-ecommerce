@@ -20,6 +20,10 @@ public class CustomerRegistrationDto implements PasswordConfirmation {
 
     @NotBlank(message = "E-mail is required.")
     @Email(message = "Please enter a valid e-mail address.")
+    @Pattern(
+            regexp = "^[^@\\s]+@[^@.\\s]+\\.[A-Za-z]{3}$",
+            message = "Please enter a valid e-mail address."
+    )
     private String email;
 
     @NotNull
@@ -27,13 +31,18 @@ public class CustomerRegistrationDto implements PasswordConfirmation {
     private AddressDto address = new AddressDto();
 
     @NotBlank(message = "Phone number is required.")
-    @Pattern(regexp = "^\\d{10}$")
+    @Pattern(
+            regexp = "^\\d{10}$",
+            message = "Phone number must not contain dashes, spaces, or other characters."
+    )
     private String phoneNumber;
 
     @NotBlank(message = "Password is required.")
     @Size(min = 8, message = "Password must be at least 8 characters long.")
-    @Pattern(regexp = SecurityConfig.REG_EXP,
-            message = "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.")
+    @Pattern(
+            regexp = SecurityConfig.REG_EXP,
+            message = "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character."
+    )
     private String password;
 
     @NotBlank(message = "Please confirm your password.")
