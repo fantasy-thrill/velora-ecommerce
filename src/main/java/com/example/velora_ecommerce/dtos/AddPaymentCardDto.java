@@ -15,10 +15,10 @@ public class AddPaymentCardDto implements PaymentCardExpiration {
     @NotBlank(message = "Name is required")
     private String cardholderName;
 
-    @NotNull
+    @NotNull(message = "Please select a card processor")
     private CardProcessor cardProcessor;
 
-    @NotNull
+    @NotNull(message = "Please select a card type")
     private CardType cardType;
 
     @NotBlank(message = "Card number is required")
@@ -32,5 +32,6 @@ public class AddPaymentCardDto implements PaymentCardExpiration {
     private Integer expirationYear;
 
     @NotBlank(message = "CVV is required")
+    @Size(min = 3, max = 3, message = "Invalid CVV")
     private String cvv;
 }

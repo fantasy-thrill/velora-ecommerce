@@ -13,9 +13,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -110,14 +115,27 @@ public class CheckoutController {
 
     @PostMapping("/payment/new")
     @ResponseBody
-    public ResponseEntity<PaymentCardResponseDto> addPaymentMethod(
+    public ResponseEntity<Object> addPaymentMethod(
             Authentication authentication,
             @Valid @ModelAttribute("newPaymentMethod") AddPaymentCardDto paymentDto,
             BindingResult bindingResult,
             @ModelAttribute("checkout") CheckoutDto checkoutDto
     ) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().build();
+            List<FormErrorResponse> responseErrors = new ArrayList<>();
+
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                if (error instanceof FieldError) {
+                    String field = ((FieldError) error).getField();
+                    responseErrors.add(new FormErrorResponse(field, error.getDefaultMessage()));
+
+                } else if (error.getDefaultMessage().contains("Expiration date")) {
+                    responseErrors.add(new FormErrorResponse("expiration-date", error.getDefaultMessage()));
+
+                } else responseErrors.add(new FormErrorResponse(null, error.getDefaultMessage()));
+            }
+
+            return ResponseEntity.badRequest().body(responseErrors);
         }
 
         PaymentCard card = paymentCardService.addPaymentCard(authentication.getName(), paymentDto);
@@ -194,4 +212,9 @@ public class CheckoutController {
 
         return "order-confirmation";
     }
+
+    public record FormErrorResponse(
+            String field,
+            String message
+    ) {}
 }

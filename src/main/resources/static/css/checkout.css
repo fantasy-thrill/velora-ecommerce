@@ -261,6 +261,11 @@ body {
     border: none;
 }
 
+.field-error {
+    font-size: 0.9em;
+    color: #d62828;
+}
+
 .hidden {
     display: none !important;
 }

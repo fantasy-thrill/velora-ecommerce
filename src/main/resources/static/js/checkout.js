@@ -324,6 +324,13 @@ document.addEventListener("DOMContentLoaded", () => {
         newPaymentForm.addEventListener("submit", async (event) => {
             event.preventDefault();
 
+            const formSections = newPaymentForm.querySelectorAll(".form-group")
+
+            for (const section of formSections) {
+                const errorSpan = section.querySelector(".field-error")
+                if (errorSpan) section.removeChild(errorSpan)
+            }
+
             const formData = new FormData(newPaymentForm);
 
             try {
@@ -334,6 +341,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
                 if (!response.ok) {
+                    const errors = await response.json()
+
+                    for (const error of errors) {
+                        if (error.field) {
+                            const selectorString = error.field === "expiration-date" ?
+                                ".expiration-date" :
+                                `input[name=${error.field}]`
+
+                            const inputField = newPaymentForm.querySelector(selectorString)
+                            const divParent = inputField.parentElement
+
+                            const errorSpan = document.createElement("span")
+                            errorSpan.classList.add("field-error")
+                            errorSpan.textContent = error.message
+
+                            divParent.appendChild(errorSpan)
+
+                        } else console.error(error.message)
+                    }
+
                     console.error("Unable to add new payment card.");
                     return;
                 }
@@ -343,8 +370,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const confirmedPaymentText = document.getElementById("confirmed-payment-text");
 
                 if (confirmedPaymentText) {
+                    const processor = newCard.displayString.split(" ending in ")[0]
+
                     confirmedPaymentText.innerHTML = `
-                        <strong>${newCard.cardProcessor}</strong> ending in <strong>${newCard.lastFourDigits}</strong>
+                        <strong>${processor}</strong> ending in <strong>${newCard.lastFourDigits}</strong>
                     `;
                 }
 
