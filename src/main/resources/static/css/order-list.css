@@ -2,6 +2,7 @@
     max-width: 1100px;
     margin: 0 auto;
     padding: 25px 20px 70px;
+    min-height: 62vh;
 }
 
 /*  Breadcrumb  */
@@ -146,9 +147,23 @@
     background-color: #333;
 }
 
+.no-orders {
+    text-align: center;
+}
+
+.start-shopping-button {
+    padding: 9px 16px;
+    display: block;
+    margin: 20px auto;
+    border-radius: 4px;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    width: fit-content;
+}
+
 /*  Responsive design  */
 @media (max-width: 900px) {
-
     .order-header {
         flex-wrap: wrap;
         gap: 20px 30px;
@@ -161,7 +176,6 @@
 }
 
 @media (max-width: 650px) {
-
     .orders-page {
         padding-left: 15px;
         padding-right: 15px;
@@ -197,7 +211,6 @@
 }
 
 @media (max-width: 450px) {
-
     .order-header {
         display: grid;
         grid-template-columns: 1fr 1fr;

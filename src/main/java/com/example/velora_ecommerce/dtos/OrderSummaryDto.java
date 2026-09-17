@@ -25,7 +25,7 @@ public class OrderSummaryDto {
 
     private LocalDateTime orderDate;
 
-    private PaymentCardResponseDto paymentCard;
+    private OrderPaymentCardDto paymentCard;
 
     private OrderStatus status;
 }

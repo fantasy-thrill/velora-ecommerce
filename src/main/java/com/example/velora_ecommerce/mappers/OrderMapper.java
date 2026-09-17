@@ -42,7 +42,7 @@ public class OrderMapper {
         orderDto.setOrderDate(order.getDate());
         orderDto.setShippingAddress(addressDto);
         orderDto.setSummary(order.getSummary());
-        orderDto.setPaymentCard(PaymentCardMapper.toResponseDto(order.getPaymentCard()));
+        orderDto.setPaymentCard(PaymentCardMapper.toOrderCardDto(order.getPaymentCardInfo()));
         orderDto.setStatus(order.getStatus());
 
         return orderDto;

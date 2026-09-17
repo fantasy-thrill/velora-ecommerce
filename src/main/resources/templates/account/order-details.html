@@ -178,10 +178,9 @@
             <h2>Payment method:</h2>
             <p>
                 <img
-                        th:src="@{${order.paymentCard.cardProcessor.logoUrl}}"
-                        th:alt="${order.paymentCard.cardProcessor.displayString}"
+                        th:src="@{${order.paymentCard.processorLogo}}"
                         class="processor-logo">
-                <span th:text="${order.paymentCard.displayString}">MasterCard ending in 5678</span>
+                <span th:text="${order.paymentCard.cardInfo}">MasterCard ending in 5678</span>
             </p>
         </div>
 
@@ -191,7 +190,7 @@
 
             <div class="summary-row">
                 <span>Subtotal:</span>
-                <span th:text="${'$' + order.summary.get('Subtotal')}">$0.00</span>
+                <span th:text="${'$' + #numbers.formatDecimal(order.summary.get('Subtotal'), 1, 'COMMA', 2, 'POINT')}">$0.00</span>
             </div>
 
             <div class="summary-row">
@@ -206,7 +205,7 @@
 
             <div class="summary-row grand-total">
                 <span>Grand total:</span>
-                <span th:text="${'$' + order.totalPrice}">$0.00</span>
+                <span th:text="${'$' + #numbers.formatDecimal(order.totalPrice, 1, 'COMMA', 2, 'POINT')}">$0.00</span>
             </div>
         </div>
     </section>

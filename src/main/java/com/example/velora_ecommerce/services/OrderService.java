@@ -42,6 +42,7 @@ public class OrderService {
 
         Order order = new Order();
         Address address = new Address();
+        PaymentCardSnapshot cardSnapshot = new PaymentCardSnapshot();
         AddressDto dtoAddress = checkoutDto.getAddress();
         List<CartItem> cartItems = customer.getCart().getItems();
         BigDecimal totalPrice = summaryDto.getTotal();
@@ -57,7 +58,11 @@ public class OrderService {
                 .equals(customer.getId()))
             throw new IllegalStateException("Credit or debit card does not belong to customer");
 
-        order.setPaymentCard(paymentCard);
+        cardSnapshot.setCardType(paymentCard.getCardType());
+        cardSnapshot.setCardProcessor(paymentCard.getCardProcessor());
+        cardSnapshot.setLastFourDigits(paymentCard.getLastFourDigits());
+
+        order.setPaymentCardInfo(cardSnapshot);
 
         address.setCustomerFirstName(dtoAddress.getCustomerFullName().split(" ")[0]);
         address.setCustomerLastName(dtoAddress.getCustomerFullName().split(" ")[1]);

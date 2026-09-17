@@ -14,7 +14,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/orders")
 @RequiredArgsConstructor
-public class OrderController {
+public class  OrderController {
     private final OrderService orderService;
 
     @GetMapping

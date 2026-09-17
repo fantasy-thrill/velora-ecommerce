@@ -1,13 +1,9 @@
 package com.example.velora_ecommerce.controllers;
 
 import com.example.velora_ecommerce.dtos.*;
-import com.example.velora_ecommerce.entities.PaymentCard;
-import com.example.velora_ecommerce.enums.CardProcessor;
-import com.example.velora_ecommerce.enums.CardType;
 import com.example.velora_ecommerce.enums.State;
 import com.example.velora_ecommerce.services.CustomerDetailsService;
 import com.example.velora_ecommerce.services.CustomerService;
-import com.example.velora_ecommerce.services.PaymentCardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

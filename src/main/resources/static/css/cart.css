@@ -50,7 +50,6 @@
     position: relative;
     display: flex;
     align-items: flex-start;
-    /*min-height: 150px;*/
     padding: 15px 10px;
     border-bottom: 1px solid #777;
 }

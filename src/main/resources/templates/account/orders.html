@@ -93,8 +93,7 @@
     </section>
 
     <!-- Orders -->
-    <section class="orders-list">
-
+    <section class="orders-list" th:if="${orders != null and !orders.isEmpty()}">
         <div class="order-card" th:each="order : ${orders}">
             <!-- Order header -->
             <div class="order-header">
@@ -128,7 +127,9 @@
                 <!-- Total -->
                 <div class="order-header-item">
                     <span class="order-header-label">Total</span>
-                    <span class="order-header-value" th:text="${'$' + order.totalPrice}">
+                    <span
+                            class="order-header-value"
+                            th:text="${'$' + #numbers.formatDecimal(order.totalPrice, 1, 'COMMA', 2, 'POINT')}">
                         $0.00
                     </span>
                 </div>
@@ -181,6 +182,11 @@
                 </div>
             </div>
         </div>
+    </section>
+    <section class="no-orders" th:if="${orders != null and orders.isEmpty()}">
+        <h2>You have not placed any orders yet.</h2>
+        <p>Click the button below to start shopping around.</p>
+        <a class="start-shopping-button" th:href="@{/products/all}">Continue shopping</a>
     </section>
 </main>
 <!-- Footer -->

@@ -2,8 +2,7 @@ package com.example.velora_ecommerce.entities;
 
 import com.example.velora_ecommerce.enums.State;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Embeddable
@@ -26,6 +25,7 @@ public class Address {
     @Column(nullable = false)
     private String city;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private State state;

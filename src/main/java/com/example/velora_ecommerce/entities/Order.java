@@ -46,9 +46,9 @@ public class Order {
     @Column(name = "charge_value")
     private Map<String, BigDecimal> summary = new HashMap<>();
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "payment_card_id", nullable = false)
-    private PaymentCard paymentCard;
+    @Embedded
+    @NotNull
+    private PaymentCardSnapshot paymentCardInfo;
 
     @ManyToOne
     @JoinColumn(name = "gift_card_id")
